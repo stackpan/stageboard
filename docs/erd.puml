@@ -1,0 +1,57 @@
+@startuml Kanban App Project Entity Relationship Diagram
+
+entity User {
+    * id : string
+    * name : string
+    * first_name : string
+    * last_name : string
+    email : string
+    * password : string
+    * created_at : timestamp
+    * updated_at : timestamp
+}
+
+entity Board {
+    * id : string
+    * name : string
+    * thumbnail_url : string
+    * created_at : timestamp
+    * updated_at : timestamp
+    ---
+    * user_id : string
+}
+
+entity UserBoardActivity {
+    * opened_at : timestamp
+    ---
+    * user_id : string
+    * board_id : string
+}
+
+entity Column {
+    * id : string
+    * name : string
+    * created_at : timestamp
+    * updated_at : timestamp
+    ---
+    * board_id : string
+    next_column_id : string
+}
+
+entity Card {
+    * id : string
+    body: string
+    * created_at : timestamp
+    * updated_at : timestamp
+    ---
+    * column_id : string
+}
+
+User ||--o{ Board
+User ||--o{ UserBoardActivity
+Board ||--o{ UserBoardActivity
+Board ||--o{ Column
+Column ||--o| Column
+Column ||--o{ Card 
+
+@enduml

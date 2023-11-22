@@ -1,0 +1,60 @@
+openapi: '3.0.2'
+info:
+  title: Kanban App Project API Specs (Web)
+  version: '1.0'
+components:
+  parameters:
+    pathIdParam:
+      name: id
+      in: path
+      schema:
+        type: string
+      required: true
+paths:
+  /login:
+    get:
+      description: 'Open login page'
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html: {}
+
+  /signup:
+    get:
+      description: 'Open signup page'
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html: {}
+  /home:
+    get:
+      description: 'Open home page'
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html: {}
+  /profile:
+    get:
+      description: 'Open user profile page'
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html: {}
+  /board/{id}:
+    get:
+      description: 'Open board page'
+      parameters:
+        - $ref: '#/components/parameters/pathIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html: {}

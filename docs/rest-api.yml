@@ -1,0 +1,516 @@
+openapi: '3.0.2'
+info:
+  title: Kanban App Project API Specs (Rest)
+  version: '1.0'
+components:
+  parameters:
+    pathBoardIdParam:
+      name: boardId
+      in: path
+      schema:
+        type: string
+      required: true
+    pathColumnIdParam:
+      name: columnId
+      in: path
+      schema:
+        type: string
+      required: true
+    pathCardIdParam:
+      name: cardId
+      in: path
+      schema:
+        type: string
+      required: true
+  schemas:
+    plainResponse:
+      type: object
+      properties:
+        name:
+          type: string
+paths:
+  /api/boards:
+    get:
+      description: 'Get all user boards'
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        thumbnail_url:
+                          type: string
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                        opened_at:
+                          type: string
+                        '_links':
+                          type: object
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+    post:
+      description: 'Create board'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+    
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{id}:
+    get:
+      description: 'Get board details'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                      columns:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            created_at:
+                              type: string
+                            updated_at:
+                              type: string
+                            next_column_id:
+                              type: string
+                            '_links':
+                              type: object
+                              properties:
+                                self:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                                move:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                  '_links':
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                      columns:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+    patch:
+      description: 'Patch board'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+    delete:
+      description: 'Delete board'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{boardId}/columns:
+    post:
+      description: 'Create column inside board'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{boardId}/columns/{columnId}:
+    get:
+      description: 'Get column details'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+                      next_column_id:
+                        type: number
+                      cards:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            body:
+                              type: string
+                            created_at:
+                              type: string
+                            updated_at:
+                              type: string
+                            '_links':
+                              type: object
+                              properties:
+                                self:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                                move:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                  '_links':
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                      move:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+    patch:
+      description: 'Patch column'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+    delete:
+      description: 'Delete column'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{boardId}/columns/{columnId}/move:
+    post:
+      description: 'Move column order inside board'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                position:
+                  type: string
+                  enum:
+                    - next
+                    - prev
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '400':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{boardId}/columns/{columnId}/cards:
+    post:
+      description: 'Create card inside column'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{boardId}/columns/{columnId}/cards/{cardId}:
+    get:
+      description: 'Get card details'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+        - $ref: '#/components/parameters/pathCardIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      body:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+                  '_links':
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                      move:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+    patch:
+      description: 'Patch card'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+        - $ref: '#/components/parameters/pathCardIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+    delete:
+      description: 'Delete card'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+        - $ref: '#/components/parameters/pathCardIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+  /api/boards/{boardId}/columns/{columnId}/cards/{cardId}/move:
+    post:
+      description: 'Move card to column'
+      parameters:
+        - $ref: '#/components/parameters/pathBoardIdParam'
+        - $ref: '#/components/parameters/pathColumnIdParam'
+        - $ref: '#/components/parameters/pathCardIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                destinationColumnId:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '400':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
