@@ -4,8 +4,9 @@ entity User {
     * id : string
     * name : string
     * first_name : string
-    * last_name : string
+    last_name : string
     email : string
+    email_verified_at: timestamp
     * password : string
     * created_at : timestamp
     * updated_at : timestamp
@@ -14,7 +15,7 @@ entity User {
 entity Board {
     * id : string
     * name : string
-    * thumbnail_url : string
+    thumbnail_url : string
     * created_at : timestamp
     * updated_at : timestamp
     ---

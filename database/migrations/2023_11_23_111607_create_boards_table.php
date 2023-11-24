@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('boards', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->string('name', 16);
-            $table->string('first_name', 24);
-            $table->string('last_name', 64)->nullable();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('name', 32);
+            $table->string('thumbnail_url')->nullable();
             $table->timestamps();
+            $table->foreignUlid('user_id')->constrained();
         });
     }
 
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('boards');
     }
 };
