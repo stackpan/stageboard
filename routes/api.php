@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->name('api.')->group(function () {
     Route::apiResource('boards', BoardController::class);
     Route::apiResource('boards.columns', ColumnController::class);
     Route::post('/boards/{board}/columns/{column}/move', [ColumnController::class, 'move'])->name('boards.columns.move');

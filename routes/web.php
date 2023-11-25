@@ -36,8 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/home', HomeController::class)->name('home');
-    Route::get('/board/{board}', [BoardController::class, 'show'])->name('board.show');
+    Route::get('/home', HomeController::class)->name('web.home');
+    Route::get('/board/{board}', [BoardController::class, 'show'])->name('web.boards.show');
 });
 
 require __DIR__.'/auth.php';
