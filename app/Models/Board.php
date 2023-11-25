@@ -35,6 +35,10 @@ class Board extends Model
 {
     use HasFactory, HasUlids;
     
+    protected $fillable = [
+        'name',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);    

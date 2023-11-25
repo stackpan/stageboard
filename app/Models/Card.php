@@ -30,6 +30,10 @@ class Card extends Model
 {
     use HasFactory, HasUlids;
     
+    protected $fillable = [
+        'body',
+    ];
+
     public function column(): BelongsTo
     {
         return $this->belongsTo(Column::class);    

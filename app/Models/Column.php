@@ -34,6 +34,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Column extends Model
 {
     use HasFactory, HasUlids;
+
+    protected $fillable = [
+        'name',
+        'next_column_id',
+    ];
     
     public function board(): BelongsTo
     {

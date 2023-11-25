@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->string('name', 16);
-            $table->string('first_name', 24);
+            $table->string('name', 24);
+            $table->string('first_name', 32);
             $table->string('last_name', 64)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

@@ -53,6 +53,6 @@ User ||--o{ UserBoardActivity
 Board ||--o{ UserBoardActivity
 Board ||--o{ Column
 Column ||--o| Column
-Column ||--o{ Card 
+Column ||--o{ Card
 
 @enduml
