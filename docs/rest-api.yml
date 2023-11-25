@@ -82,14 +82,24 @@ paths:
               properties:
                 name:
                   type: string
-
       responses:
         '201':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/plainResponse'
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      board:
+                        type: object
+                        properties:
+                          id:
+                            type: string
   /api/boards/{id}:
     get:
       description: 'Get board details'

@@ -63,6 +63,11 @@ class BoardTest extends TestCase
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonStructure([
                 'message',
+                'data' => [
+                    'board' => [
+                        'id',
+                    ],
+                ],
             ])
             ->assertJsonPath('message', 'Board created successfully.');
 

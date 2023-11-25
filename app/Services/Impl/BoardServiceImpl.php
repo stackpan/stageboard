@@ -22,7 +22,7 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getAllByUserId($userId);
     }
     
-    public function create(array $validated, string $userId): bool
+    public function create(array $validated, string $userId): string
     {
         $data = new BoardDto(name: $validated['name']);
         
@@ -34,15 +34,15 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getById($id);
     }
     
-    public function updateById(string $id, array $validated): bool
+    public function updateById(string $id, array $validated): void
     {
         $data = new BoardDto(name: $validated['name']);
         
-        return $this->boardRepository->updateById($id, $data);
+        $this->boardRepository->updateById($id, $data);
     }
     
-    public function deleteById(string $id): bool
+    public function deleteById(string $id): void
     {
-        return $this->boardRepository->deleteById($id);
+        $this->boardRepository->deleteById($id);
     }
 }

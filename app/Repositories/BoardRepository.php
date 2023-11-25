@@ -10,11 +10,11 @@ interface BoardRepository
 {
     public function getAllByUserId(string $userId): Collection;
     
-    public function create(BoardDto $data, string $userId): bool;
+    public function create(BoardDto $data, string $userId): string;
     
     public function getById(string $id): ?Board;
 
-    public function updateById(string $id, BoardDto $data): bool;
+    public function updateById(string $id, BoardDto $data): void;
     
-    public function deleteById(string $id): bool;
+    public function deleteById(string $id): void;
 }

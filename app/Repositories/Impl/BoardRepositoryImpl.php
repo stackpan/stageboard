@@ -15,41 +15,29 @@ class BoardRepositoryImpl implements BoardRepository
         return Board::whereUserId($userId)->with('user:id,name')->get();
     }
     
-    public function create(BoardDto $data, string $userId): bool
+    public function create(BoardDto $data, string $userId): string
     {
-        $user = User::find($userId);
-        
-        $user->boards()->create([
-            'name' => $data->name(),
-        ]);
-        
-        return true;
+        return User::findOrFail($userId)
+            ->boards()
+            ->create([
+                'name' => $data->name(),
+            ])
+            ->id;
     }
     
     public function getById(string $id): ?Board
     {
-        return Board::whereId($id)->with('user:id,name')->first();
+        return Board::whereId($id)->with('user:id,name')->firstOrFail();
     }
     
-    public function updateById(string $id, BoardDto $data): bool
+    public function updateById(string $id, BoardDto $data): void
     {
-        if (!$board = Board::find($id)) {
-            return false;
-        }
-        
-        $board->update(['name' => $data->name()]);
-        
-        return $board->wasChanged();
+        Board::findOrFail($id)
+            ->update(['name' => $data->name()]);
     }
     
-    public function deleteById(string $id): bool
+    public function deleteById(string $id): void
     {
-        if (!$board = Board::find($id)) {
-            return false;
-        }
-        
-        $board->delete();
-        
-        return true;
+        Board::findOrFail($id)->delete();
     }
 }

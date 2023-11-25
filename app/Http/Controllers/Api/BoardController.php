@@ -37,24 +37,22 @@ class BoardController extends Controller
 
         $validated = $request->validated();
 
-        $this->boardService->create($validated, $user->id);
+        $boardId = $this->boardService->create($validated, $user->id);
 
         return response()
             ->json([
                 'message' => 'Board created successfully.',
-            ])
-            ->setStatusCode(201);
+                'data' => [
+                    'board' => [
+                        'id' => $boardId,
+                    ]
+                ]
+            ], 201);
     }
 
     public function show(string $id): JsonResponse
     {
-        if (!$board = $this->boardService->getById($id)) {
-            return response()
-                ->json([
-                    'message' => 'Board not found.'
-                ])
-                ->setStatusCode(404);
-        }
+        $board = $this->boardService->getById($id);
 
         return response()
             ->json([
@@ -67,15 +65,7 @@ class BoardController extends Controller
     {
         $validated = $request->validated();
 
-        $status = $this->boardService->updateById($id, $validated);
-
-        if (!$status) {
-            return response()
-                ->json([
-                    'message' => 'Board not found.'
-                ])
-                ->setStatusCode(404);
-        }
+        $this->boardService->updateById($id, $validated);
 
         return response()
             ->json([
@@ -83,17 +73,9 @@ class BoardController extends Controller
             ]);
     }
 
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        $status = $this->boardService->deleteById($id);
-
-        if (!$status) {
-            return response()
-                ->json([
-                    'message' => 'Board not found.'
-                ])
-                ->setStatusCode(404);
-        }
+        $this->boardService->deleteById($id);
 
         return response()
             ->json([
