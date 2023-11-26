@@ -12,7 +12,8 @@ class BoardTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_get_all_user_boards_success() {
+    public function test_get_all_user_boards_success(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $response = $this
@@ -47,7 +48,8 @@ class BoardTest extends TestCase
             ->assertJsonPath('data.0.user.id', $user->id);
     }
 
-    public function test_create_board_success() {
+    public function test_create_board_success(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $requestBody = [
@@ -76,7 +78,8 @@ class BoardTest extends TestCase
         ]);
     }
 
-    public function test_get_board_details_success() {
+    public function test_get_board_details_success(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $board = $user->boards()->first();
@@ -114,7 +117,8 @@ class BoardTest extends TestCase
             ->assertJsonPath('data.name', $board->name);
     }
 
-    public function test_get_board_details_not_found() {
+    public function test_get_board_details_not_found(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $response = $this
@@ -130,7 +134,8 @@ class BoardTest extends TestCase
             ->assertJsonPath('message', 'Board not found.');
     }
 
-    public function test_rename_board_success() {
+    public function test_rename_board_success(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $board = $user->boards()->first();
@@ -160,7 +165,8 @@ class BoardTest extends TestCase
         ]);
     }
 
-    public function test_rename_board_not_found() {
+    public function test_rename_board_not_found(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $requestBody = [
@@ -180,7 +186,8 @@ class BoardTest extends TestCase
             ->assertJsonPath('message', 'Board not found.');
     }
 
-    public function test_delete_board_success() {
+    public function test_delete_board_success(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $board = $user->boards()->first();
@@ -200,7 +207,8 @@ class BoardTest extends TestCase
         $this->assertModelMissing($board);
     }
 
-    public function test_delete_board_not_found() {
+    public function test_delete_board_not_found(): void
+    {
         $user = User::whereEmail('test@example.com')->first();
 
         $response = $this

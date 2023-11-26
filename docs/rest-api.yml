@@ -245,13 +245,26 @@ paths:
               properties:
                 name:
                   type: string
+                next_column_id:
+                  type: string
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/plainResponse'
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      column:
+                        type: object
+                        properties:
+                          id:
+                            type: string
   /api/boards/{boardId}/columns/{columnId}:
     get:
       description: 'Get column details'

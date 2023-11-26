@@ -10,7 +10,7 @@ interface BoardService
 {
     public function getAllByUserId(string $userId): Collection;
     
-    public function create(array $validated, string $userId): string;
+    public function create(string $userId, array $validated): string;
     
     public function getById(string $id): ?Board;
     

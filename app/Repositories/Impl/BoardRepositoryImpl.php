@@ -21,7 +21,7 @@ class BoardRepositoryImpl implements BoardRepository
             ->get();
     }
     
-    public function create(BoardDto $data, string $userId): string
+    public function create(string $userId, BoardDto $data,): string
     {
         return User::findOrFail($userId)
             ->boards()

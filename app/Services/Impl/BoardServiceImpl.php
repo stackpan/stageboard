@@ -22,13 +22,13 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getAllByUserId($userId);
     }
     
-    public function create(array $validated, string $userId): string
+    public function create(string $userId, array $validated): string
     {
         $data = new BoardDto(
-            name: $validated['name']
+            name: $validated['name'],
         );
         
-        return $this->boardRepository->create($data, $userId);
+        return $this->boardRepository->create($userId, $data);
     }
     
     public function getById(string $id): ?Board

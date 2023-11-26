@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\CreateColumnRequest;
 use App\Http\Resources\ColumnResource;
 use App\Services\ColumnService;
 use Illuminate\Http\JsonResponse;
@@ -22,14 +23,26 @@ class ColumnController extends Controller
         $columns = $this->columnService->getAllByBoardId($boardId);
 
         return response()->json([
-            'message' => 'Success',
+            'message' => 'Success.',
             'data' => ColumnResource::collection($columns),
         ]);
     }
     
-    public function store(Request $request, string $boardId)
+    public function store(CreateColumnRequest $request, string $boardId): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $columnId = $this->columnService->create($boardId, $validated);
+
+        return response()
+            ->json([
+                'message' => 'Column created successfully.',
+                'data' => [
+                    'column' => [
+                        'id' => $columnId,
+                    ]
+                ]
+            ], 201);
     }
 
     public function show(string $boardId, string $columnId)
