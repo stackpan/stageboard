@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Dto\ColumnDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CreateColumnRequest;
 use App\Http\Resources\ColumnResource;
@@ -32,7 +33,12 @@ class ColumnController extends Controller
     {
         $validated = $request->validated();
 
-        $columnId = $this->columnService->create($boardId, $validated);
+        $data = new ColumnDto(
+            name: $validated['name'],
+            nextColumnId: $validated['next_column_id'] ?? null,
+        );
+
+        $columnId = $this->columnService->create($boardId, $data);
 
         return response()
             ->json([

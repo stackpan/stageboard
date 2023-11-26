@@ -21,13 +21,8 @@ class ColumnServiceImpl implements ColumnService
         return $this->columnRepository->getAllByBoardId($boardId);
     }
 
-    public function create(string $boardId, array $validated): string
+    public function create(string $boardId, ColumnDto $data): string
     {
-        $data = new ColumnDto(
-            name: $validated['name'],
-            nextColumnId: $validated['next_column_id'] ?? null,
-        );
-
         return $this->columnRepository->create($boardId, $data);
     }
 }

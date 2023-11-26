@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Dto\BoardDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BoardRequest;
 use App\Http\Resources\BoardResource;
@@ -35,7 +36,11 @@ class BoardController extends Controller
 
         $validated = $request->validated();
 
-        $boardId = $this->boardService->create($validated, $user->id);
+        $data = new BoardDto(
+            name: $validated['name'],
+        );
+
+        $boardId = $this->boardService->create($user->id, $data);
 
         return response()
             ->json([
@@ -62,8 +67,12 @@ class BoardController extends Controller
     public function update(BoardRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
+        
+        $data = new BoardDto(
+            name: $validated['name'],
+        );
 
-        $this->boardService->updateById($id, $validated);
+        $this->boardService->updateById($id, $data);
 
         return response()
             ->json([

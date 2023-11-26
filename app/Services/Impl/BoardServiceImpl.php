@@ -22,12 +22,8 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getAllByUserId($userId);
     }
     
-    public function create(string $userId, array $validated): string
+    public function create(string $userId, BoardDto $data): string
     {
-        $data = new BoardDto(
-            name: $validated['name'],
-        );
-        
         return $this->boardRepository->create($userId, $data);
     }
     
@@ -36,12 +32,8 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getById($id);
     }
     
-    public function updateById(string $id, array $validated): void
+    public function updateById(string $id, BoardDto $data): void
     {
-        $data = new BoardDto(
-            name: $validated['name']
-        );
-        
         $this->boardRepository->updateById($id, $data);
     }
     
