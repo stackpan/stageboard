@@ -12,7 +12,9 @@ class BoardRepositoryImpl implements BoardRepository
 {
     public function getAllByUserId(string $userId): Collection
     {
-        return Board::whereUserId($userId)->with('user:id,name')->get();
+        return Board::whereUserId($userId)
+            ->with('user:id,name')
+            ->get();
     }
     
     public function create(BoardDto $data, string $userId): string
@@ -27,17 +29,22 @@ class BoardRepositoryImpl implements BoardRepository
     
     public function getById(string $id): ?Board
     {
-        return Board::whereId($id)->with('user:id,name')->firstOrFail();
+        return Board::whereId($id)
+            ->with('user:id,name')
+            ->firstOrFail();
     }
     
     public function updateById(string $id, BoardDto $data): void
     {
         Board::findOrFail($id)
-            ->update(['name' => $data->name()]);
+            ->update([
+                'name' => $data->name(),
+            ]);
     }
     
     public function deleteById(string $id): void
     {
-        Board::findOrFail($id)->delete();
+        Board::findOrFail($id)
+            ->delete();
     }
 }

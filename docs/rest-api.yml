@@ -196,7 +196,7 @@ paths:
                 $ref: '#/components/schemas/plainResponse'
   /api/boards/{boardId}/columns:
     get:
-      description: 'Get all column inside board'
+      description: 'Get all columns inside board'
       parameters:
         - $ref: '#/components/parameters/pathBoardIdParam'
       responses:
@@ -217,10 +217,6 @@ paths:
                         id:
                           type: string
                         name:
-                          type: string
-                        created_at:
-                          type: string
-                        updated_at:
                           type: string
                         next_column_id:
                           type: string
