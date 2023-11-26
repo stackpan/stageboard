@@ -12,8 +12,12 @@ class BoardRepositoryImpl implements BoardRepository
 {
     public function getAllByUserId(string $userId): Collection
     {
-        return Board::whereUserId($userId)
+        return Board::select([
+                'id', 'name', 'thumbnail_url', 'user_id',
+            ])
+            ->whereUserId($userId)
             ->with('user:id,name')
+            ->with('opened_at')
             ->get();
     }
     
@@ -29,7 +33,10 @@ class BoardRepositoryImpl implements BoardRepository
     
     public function getById(string $id): ?Board
     {
-        return Board::whereId($id)
+        return Board::select([
+                'id', 'name', 'created_at', 'updated_at', 'user_id',
+            ])
+            ->whereId($id)
             ->with('user:id,name')
             ->firstOrFail();
     }

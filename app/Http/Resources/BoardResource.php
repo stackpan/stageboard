@@ -17,15 +17,20 @@ class BoardResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'thumbnail_url' => $this->thumbnail_url,
+            'created_at' => $this->whenHas('created_at'),
+            'updated_at' => $this->whenHas('updated_at'),
+            'thumbnail_url' => $this->whenHas('thumbnail_url'),
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ],
-            'opened_at' => $this->opened_at,
+            'opened_at' => $this->whenHas('opened_at'),
             'links' => [
                 'self' => [
                     'href' => route('api.boards.show', $this->id),   
+                ],
+                'columns' => [
+                    'href' => route('api.boards.columns.index', $this->id),
                 ],
             ],
         ];

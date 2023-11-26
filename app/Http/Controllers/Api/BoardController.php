@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BoardRequest;
-use App\Http\Resources\BoardDetailsResource;
 use App\Http\Resources\BoardResource;
 use App\Services\BoardService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class BoardController extends Controller
 {
@@ -57,7 +55,7 @@ class BoardController extends Controller
         return response()
             ->json([
                 'message' => 'Success.',
-                'data' => new BoardDetailsResource($board)
+                'data' => new BoardResource($board)
             ]);
     }
 

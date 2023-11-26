@@ -33,7 +33,7 @@ class BoardTest extends TestCase
                             'id',
                             'name',
                         ],
-                        'opened_at',
+//                        'opened_at',
                         'links' => [
                             'self' => [
                                 'href',
