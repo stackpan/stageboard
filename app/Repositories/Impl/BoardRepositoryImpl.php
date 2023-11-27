@@ -17,7 +17,7 @@ class BoardRepositoryImpl implements BoardRepository
             ])
             ->whereUserId($userId)
             ->with('user:id,name')
-            ->with('opened_at')
+//            ->with('opened_at')
             ->get();
     }
     
@@ -26,7 +26,7 @@ class BoardRepositoryImpl implements BoardRepository
         return User::findOrFail($userId)
             ->boards()
             ->create([
-                'name' => $data->name(),
+                'name' => $data->name,
             ])
             ->id;
     }
@@ -45,7 +45,7 @@ class BoardRepositoryImpl implements BoardRepository
     {
         Board::findOrFail($id)
             ->update([
-                'name' => $data->name(),
+                'name' => $data->name,
             ]);
     }
     
