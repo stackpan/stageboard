@@ -25,18 +25,18 @@ class DatabaseSeeder extends Seeder
              ]);
 
          foreach ($user->boards as $board) {
-             $openColumn = Column::factory()
+             $doneColumn = Column::factory()
                 ->for($board)
-                ->hasCards(4)
-                ->create(['name' => 'Open']);
+                ->hasCards(3)
+                ->create(['name' => 'Done']);
              $inProgressColumn = Column::factory()
                 ->for($board)
                 ->hasCards(2)
-                ->create(['name' => 'In Progress', 'next_column_id' => $openColumn->id]);
+                ->create(['name' => 'In Progress', 'next_column_id' => $doneColumn->id]);
              Column::factory()
                 ->for($board)
-                ->hasCards(3)
-                ->create(['name' => 'Done', 'next_column_id' => $inProgressColumn->id]);
+                ->hasCards(4)
+                ->create(['name' => 'Open', 'next_column_id' => $inProgressColumn->id]);
          }
     }
 }

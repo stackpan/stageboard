@@ -20,6 +20,7 @@ return new class extends Migration
         
         Schema::table('columns', function (Blueprint $table) {
             $table->foreignUlid('next_column_id')->nullable()->constrained(table: 'columns')->cascadeOnUpdate()->nullOnDelete();
+            $table->unique('next_column_id');
         });
     }
 

@@ -22,8 +22,38 @@ class ColumnRepositoryImpl implements ColumnRepository
         return Board::findOrFail($boardId)
             ->columns()
             ->create([
-                'name' => $data->name(),
-                'next_column_id' => $data->nextColumnId(),
+                'name' => $data->name,
+                'next_column_id' => $data->nextColumnId,
+            ])
+            ->id;
+    }
+
+    public function getLast(string $boardId): ?Column
+    {
+        return Column::whereBoardId($boardId)
+            ->whereNull('next_column_id')
+            ->first();
+    }
+
+    public function getPrev(string $columnId): ?Column
+    {
+        return Column::whereNextColumnId($columnId)
+            ->first();
+    }
+
+    public function unlink(string $id): void
+    {
+        Column::findOrFail($id)
+            ->update([
+                'next_column_id' => null,
+            ]);
+    }
+
+    public function link(string $id, string $nextId): void
+    {
+        Column::findOrFail($id)
+            ->update([
+                'next_column_id' => $nextId,
             ]);
     }
 }
