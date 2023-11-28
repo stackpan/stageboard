@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereUpdatedAt($value)
+ * @method static \Database\Factories\CardFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class Card extends Model

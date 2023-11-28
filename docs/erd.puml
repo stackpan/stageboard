@@ -34,9 +34,9 @@ entity Column {
     * name : string
     * created_at : timestamp
     * updated_at : timestamp
+    * order : unsigned tinyint
     ---
     * board_id : string
-    next_column_id : string
 }
 
 entity Card {

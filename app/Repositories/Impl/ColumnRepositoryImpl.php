@@ -12,9 +12,14 @@ class ColumnRepositoryImpl implements ColumnRepository
 {
     public function getAllByBoardId(string $boardId): Collection
     {
-        return Column::select(['id', 'name', 'next_column_id', 'board_id'])
+        return Column::select(['id', 'name', 'order', 'board_id'])
             ->whereBoardId($boardId)
             ->get();
+    }
+
+    public function getCountByBoardId(string $boardId): int
+    {
+        return Column::whereBoardId($boardId)->count();
     }
 
     public function create(string $boardId, ColumnDto $data): string
@@ -23,37 +28,62 @@ class ColumnRepositoryImpl implements ColumnRepository
             ->columns()
             ->create([
                 'name' => $data->name,
-                'next_column_id' => $data->nextColumnId,
+                'order' => $data->order,
             ])
             ->id;
     }
 
-    public function getLast(string $boardId): ?Column
+    public function get(string $id, ?bool $nullable = false): ?Column
     {
-        return Column::whereBoardId($boardId)
-            ->whereNull('next_column_id')
-            ->first();
+        $query = Column::whereId($id)
+            ->with('cards:id,body,column_id');
+
+        return $nullable ? $query->first() : $query->firstOrFail();
     }
 
-    public function getPrev(string $columnId): ?Column
-    {
-        return Column::whereNextColumnId($columnId)
-            ->first();
-    }
-
-    public function unlink(string $id): void
+    public function update(string $id, ColumnDto $data): void
     {
         Column::findOrFail($id)
             ->update([
-                'next_column_id' => null,
+                'name' => $data->name,
             ]);
     }
 
-    public function link(string $id, string $nextId): void
+    public function delete(string $id): void
+    {
+        Column::findOrFail($id)
+            ->delete();
+    }
+
+    public function shiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void
+    {
+        $query = Column::whereBoardId($boardId)
+            ->where('order', '>=', $fromOrder);
+
+        if (!is_null($toOrder)) {
+            $query->where('order', '<=', $toOrder);
+        }
+
+        $query->increment('order');
+    }
+
+    public function unshiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void
+    {
+        $query = Column::whereBoardId($boardId)
+            ->where('order', '>=', $fromOrder);
+
+        if (!is_null($toOrder)) {
+            $query->where('order', '<=', $toOrder);
+        }
+
+        $query->decrement('order');
+    }
+
+    public function move(string $id, int $toOrder): void
     {
         Column::findOrFail($id)
             ->update([
-                'next_column_id' => $nextId,
+                'order' => $toOrder,
             ]);
     }
 }

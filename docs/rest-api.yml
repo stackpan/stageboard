@@ -218,8 +218,8 @@ paths:
                           type: string
                         name:
                           type: string
-                        next_column_id:
-                          type: string
+                        order:
+                          type: number
                         links:
                           type: object
                           properties:
@@ -245,8 +245,8 @@ paths:
               properties:
                 name:
                   type: string
-                next_column_id:
-                  type: string
+                order:
+                  type: number
       responses:
         '201':
           description: Created
@@ -292,7 +292,7 @@ paths:
                         type: string
                       updated_at:
                         type: string
-                      next_column_id:
+                      order:
                         type: number
                       cards:
                         type: array
@@ -303,11 +303,7 @@ paths:
                               type: string
                             body:
                               type: string
-                            created_at:
-                              type: string
-                            updated_at:
-                              type: string
-                            '_links':
+                            links:
                               type: object
                               properties:
                                 self:
@@ -320,7 +316,7 @@ paths:
                                   properties:
                                     href:
                                       type: string
-                  '_links':
+                  links:
                     type: object
                     properties:
                       self:
@@ -378,7 +374,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/plainResponse'
   /api/boards/{boardId}/columns/{columnId}/move:
-    post:
+    patch:
       description: 'Move column order inside board'
       parameters:
         - $ref: '#/components/parameters/pathBoardIdParam'
@@ -389,11 +385,8 @@ paths:
             schema:
               type: object
               properties:
-                position:
-                  type: string
-                  enum:
-                    - next
-                    - prev
+                order:
+                  type: number
       responses:
         '200':
           description: Success
@@ -402,7 +395,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/plainResponse'
         '400':
-          description: Not Found
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -413,7 +406,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/plainResponse'
-  /api/boards/{boardId}/columns/{columnId}/cards:
+  /api/columns/{columnId}/cards:
     post:
       description: 'Create card inside column'
       parameters:
@@ -434,7 +427,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/plainResponse'
-  /api/boards/{boardId}/columns/{columnId}/cards/{cardId}:
+  /api/columns/{columnId}/cards/{cardId}:
     get:
       description: 'Get card details'
       parameters:
@@ -462,7 +455,7 @@ paths:
                         type: string
                       updated_at:
                         type: string
-                  '_links':
+                  links:
                     type: object
                     properties:
                       self:
@@ -521,8 +514,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/plainResponse'
-  /api/boards/{boardId}/columns/{columnId}/cards/{cardId}/move:
-    post:
+  /api/columns/{columnId}/cards/{cardId}/move:
+    patch:
       description: 'Move card to column'
       parameters:
         - $ref: '#/components/parameters/pathBoardIdParam'

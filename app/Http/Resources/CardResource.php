@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ColumnResource extends JsonResource
+class CardResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,17 +16,15 @@ class ColumnResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'body' => $this->body,
             'created_at' => $this->whenHas('created_at'),
             'updated_at' => $this->whenHas('updated_at'),
-            'order' => $this->order,
-            'cards' => CardResource::collection($this->whenLoaded('cards')),
             'links' => [
                 'self' => [
-                    'href' => route('api.boards.columns.show', [$this->board_id, $this->id]),
+                    'href' => route('api.columns.cards.show', [$this->column_id, $this->id]),
                 ],
                 'move' => [
-                    'href' => route('api.boards.columns.move', [$this->board_id, $this->id]),
+                    'href' => route('api.columns.cards.move', [$this->column_id, $this->id]),
                 ],
             ],
         ];

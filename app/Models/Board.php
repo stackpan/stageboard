@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereThumbnailUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereUserId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $opened_at
+ * @property-read int|null $opened_at_count
+ * @method static \Database\Factories\BoardFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class Board extends Model

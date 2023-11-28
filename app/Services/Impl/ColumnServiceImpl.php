@@ -3,10 +3,10 @@
 namespace App\Services\Impl;
 
 use App\Dto\ColumnDto;
+use App\Models\Column;
 use App\Repositories\ColumnRepository;
 use App\Services\ColumnService;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ColumnServiceImpl implements ColumnService
 {
@@ -24,23 +24,45 @@ class ColumnServiceImpl implements ColumnService
 
     public function create(string $boardId, ColumnDto $data): string
     {
-        return DB::transaction(function () use ($boardId, $data) {
-            if ($data->nextColumnId) {
-                $prevColumn = $this->columnRepository->getPrev($data->nextColumnId);
-                if (!is_null($prevColumn)) {
-                    $this->columnRepository->unlink($prevColumn->id);
-                }
-            } else {
-                $prevColumn = $this->columnRepository->getLast($boardId);
-            }
+        $this->columnRepository->shiftByBoardId($boardId, $data->order);
+        return $this->columnRepository->create($boardId, $data);
+    }
 
-            $newColumnId = $this->columnRepository->create($boardId, $data);
+    public function get(string $id): ?Column
+    {
+        return $this->columnRepository->get($id);
+    }
 
-            if (!is_null($prevColumn)) {
-                $this->columnRepository->link($prevColumn->id, $newColumnId);
-            }
+    public function update(string $id, ColumnDto $data): void
+    {
+        $this->columnRepository->update($id, $data);
+    }
 
-            return $newColumnId;
-        });
+    public function delete(string $id): void
+    {
+        $this->columnRepository->delete($id);
+    }
+
+    public function move(string $boardId, string $columnId, int $destinationOrder): void
+    {
+        $column = $this->columnRepository->get($columnId);
+        $targetIndex = $column->order;
+        $deltaStep = $destinationOrder - $targetIndex;
+
+        if ($deltaStep > 0) {
+            $this->columnRepository->unshiftByBoardId(
+                boardId: $boardId,
+                fromOrder: $targetIndex + 1,
+                toOrder: $targetIndex + $deltaStep
+            );
+        } else {
+            $this->columnRepository->shiftByBoardId(
+                boardId: $boardId,
+                fromOrder: $destinationOrder,
+                toOrder: $destinationOrder - $deltaStep - 1
+            );
+        }
+
+        $this->columnRepository->move($columnId, $destinationOrder);
     }
 }

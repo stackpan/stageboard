@@ -156,11 +156,8 @@ class BoardTest extends TestCase
             ])
             ->assertJsonPath('message', 'Board updated successfully.');
 
-        $this->assertDatabaseMissing('boards', [
-            'name' => $board->name,
-        ]);
-
         $this->assertDatabaseHas('boards', [
+            'id' => $board->id,
             'name' => $requestBody['name'],
         ]);
     }

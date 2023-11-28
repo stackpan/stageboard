@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Dto\ColumnDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CreateColumnRequest;
+use App\Http\Requests\Api\MoveColumnRequest;
+use App\Http\Requests\Api\UpdateColumnRequest;
 use App\Http\Resources\ColumnResource;
 use App\Services\ColumnService;
 use Illuminate\Http\JsonResponse;
@@ -35,7 +37,7 @@ class ColumnController extends Controller
 
         $data = new ColumnDto(
             name: $validated['name'],
-            nextColumnId: $validated['next_column_id'] ?? null,
+            order: $validated['order'],
         );
 
         $columnId = $this->columnService->create($boardId, $data);
@@ -51,22 +53,52 @@ class ColumnController extends Controller
             ], 201);
     }
 
-    public function show(string $boardId, string $columnId)
+    public function show(string $boardId, string $columnId): JsonResponse
     {
-        //
+        $column = $this->columnService->get($columnId);
+
+        return response()
+            ->json([
+                'message' => 'Success.',
+                'data' => new ColumnResource($column),
+            ]);
     }
 
-    public function update(Request $request,  string $boardId, string $columnId)
+    public function update(UpdateColumnRequest $request,  string $boardId, string $columnId): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $data = new ColumnDto(
+            name: $validated['name'],
+        );
+
+        $this->columnService->update($columnId, $data);
+
+        return response()
+            ->json([
+                'message' => 'Column updated successfully.',
+            ]);
     }
 
-    public function destroy(string $boardId, string $columnId)
+    public function destroy(string $boardId, string $columnId): JsonResponse
     {
-        //
+        $this->columnService->delete($columnId);
+
+        return response()
+            ->json([
+                'message' => 'Column was successfully deleted.',
+            ]);
     }
     
-    public function move(Request $request, string $boardId, string $columnId) {
-        //
+    public function move(MoveColumnRequest $request, string $boardId, string $columnId): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $this->columnService->move($boardId, $columnId, $validated['order']);
+
+        return response()
+            ->json([
+                'message' => 'Column was successfully moved.',
+            ]);
     }
 }

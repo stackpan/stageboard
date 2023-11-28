@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereNextColumnId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereUpdatedAt($value)
+ * @property int $order
+ * @method static \Database\Factories\ColumnFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Column whereOrder($value)
  * @mixin \Eloquent
  */
 class Column extends Model
@@ -37,7 +40,7 @@ class Column extends Model
 
     protected $fillable = [
         'name',
-        'next_column_id',
+        'order',
     ];
     
     public function board(): BelongsTo

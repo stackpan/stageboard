@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use App\Rules\InColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateColumnRequest extends FormRequest
+class MoveColumnRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,8 @@ class CreateColumnRequest extends FormRequest
     public function rules(): array
     {
         $boardId = $this->route('board');
-
+        
         return [
-            'name' => ['required', 'string', 'max:24'],
             'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($boardId)],
         ];
     }

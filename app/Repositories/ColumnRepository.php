@@ -10,13 +10,20 @@ interface ColumnRepository
 {
     public function getAllByBoardId(string $boardId): Collection;
 
+    public function getCountByBoardId(string $boardId): int;
+
     public function create(string $boardId, ColumnDto $data): string;
 
-    public function getLast(string $boardId): ?Column;
-    
-    public function getPrev(string $columnId): ?Column;
+    public function get(string $id, ?bool $nullable = false): ?Column;
 
+    public function update(string $id, ColumnDto $data): void;
 
-    public function unlink(string $id): void;
-    public function link(string $id, string $nextId): void;
+    public function delete(string $id): void;
+
+    public function shiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void;
+
+    public function unshiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void;
+
+    public function move(string $id, int $toOrder): void;
+
 }

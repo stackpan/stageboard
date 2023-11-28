@@ -15,12 +15,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name', 24);
             $table->timestamps();
-            $table->foreignUlid('board_id')->constrained()->cascadeOnDelete();
-        });
-        
-        Schema::table('columns', function (Blueprint $table) {
-            $table->foreignUlid('next_column_id')->nullable()->constrained(table: 'columns')->cascadeOnUpdate()->nullOnDelete();
-            $table->unique('next_column_id');
+            $table->unsignedTinyInteger('order');
+            $table->foreignUlid('board_id')->constrained();
         });
     }
 

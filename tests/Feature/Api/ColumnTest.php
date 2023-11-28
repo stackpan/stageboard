@@ -4,9 +4,7 @@ namespace Tests\Feature\Api;
 
 use App\Models\Column;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ColumnTest extends TestCase
@@ -31,7 +29,7 @@ class ColumnTest extends TestCase
                     '*' => [
                         'id',
                         'name',
-                        'next_column_id',
+                        'order',
                         'links' => [
                             'self' => [
                                 'href',
@@ -56,6 +54,7 @@ class ColumnTest extends TestCase
 
         $requestBody = [
             'name' => 'Test Column',
+            'order' => 0,
         ];
 
         $response = $this
@@ -74,83 +73,15 @@ class ColumnTest extends TestCase
             'name' => $requestBody['name'],
         ]);
     }
-    
-    public function test_create_column_to_first_order(): void
-    {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $firstColumn = $board->columns()->whereName('Open')->first();
 
-        $requestBody = [
-            'name' => 'Test Column',
-            'next_column_id' => $firstColumn->id,
-        ];
-
-        $response = $this
-            ->actingAs($user)
-            ->post(route('api.boards.columns.store', $board->id), $requestBody);
-
-        $response->assertCreated();
-
-        $columns = $board->columns()->get();
-        $sortedColumns = $this->sort($columns);
-
-        $this->assertEquals($requestBody['name'], $sortedColumns->first()->name);
-    }
-
-    public function test_create_column_in_middle_order(): void
-    {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $secondColumn = $board->columns()->whereName('In Progress')->first();
-
-        $requestBody = [
-            'name' => 'Test Column',
-            'next_column_id' => $secondColumn->id,
-        ];
-
-        $response = $this
-            ->actingAs($user)
-            ->post(route('api.boards.columns.store', $board->id), $requestBody);
-
-        $response->assertCreated();
-
-        $columns = $board->columns()->get();
-        $sortedColumns = $this->sort($columns);
-
-        $this->assertEquals($requestBody['name'], $sortedColumns->get(1)->name);
-    }
-
-    public function test_create_column_at_last_order(): void
+    public function test_create_column_out_of_available_columns(): void
     {
         $user = User::whereEmail('test@example.com')->first();
         $board = $user->boards()->first();
 
         $requestBody = [
             'name' => 'Test Column',
-        ];
-
-        $response = $this
-            ->actingAs($user)
-            ->post(route('api.boards.columns.store', $board->id), $requestBody);
-
-        $response->assertCreated();
-
-        $columns = $board->columns()->get();
-        $sortedColumns = $this->sort($columns);
-
-        $this->assertEquals($requestBody['name'], $sortedColumns->last()->name);
-    }
-
-    public function test_create_column_out_of_board_member(): void
-    {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $column = Column::whereNot('board_id', $board->id)->first();
-
-        $requestBody = [
-            'name' => 'Test Column',
-            'next_column_id' => $column->id,
+            'order' => 4,
         ];
 
         $response = $this
@@ -163,20 +94,209 @@ class ColumnTest extends TestCase
             ->assertJsonStructure([
                 'message'
             ])
-            ->assertJsonPath('message', 'The next column id is out of specified board member.');
+            ->assertJsonPath('message', 'The order is out of available columns.');
     }
 
-    private function sort(Collection $columns): \Illuminate\Support\Collection
+    public function test_column_shifting(): void
     {
-        $result = collect();
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $shiftedColumn = $board->columns()->whereOrder(1)->first();
 
-        $prevColumn = $columns->first(fn (Column $column, int $key) => is_null($column->next_column_id));
+        $requestBody = [
+            'name' => 'Test Column',
+            'order' => 1,
+        ];
 
-        while (!is_null($prevColumn)) {
-            $result->prepend($prevColumn);
-            $prevColumn = $columns->first(fn (Column $column, int $key) => $column->next_column_id === $prevColumn->id);
-        }
+        $response = $this
+            ->actingAs($user)
+            ->post(route('api.boards.columns.store', $board->id), $requestBody);
 
-        return $result;
+        $response
+            ->assertCreated();
+
+        $this->assertEquals(2, $shiftedColumn->fresh()->order);
+    }
+
+    public function test_get_column_details_success(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $column = $board->columns()->first();
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('api.boards.columns.show', [$board->id, $column->id]));
+
+        $response
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                    'order',
+                    'cards' => [
+                        '*' => [
+                            'id',
+                            'body',
+                            'links' => [
+                                'self' => [
+                                    'href',
+                                ],
+                                'move' => [
+                                    'href',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'links' => [
+                        'self' => [
+                            'href',
+                        ],
+                        'move' => [
+                            'href',
+                        ],
+                    ],
+                ],
+            ])
+            ->assertJsonPath('message', 'Success.')
+            ->assertJsonPath('data.id', $column->id)
+            ->assertJsonPath('data.name', $column->name);
+    }
+
+    public function test_get_column_details_not_found(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('api.boards.columns.show', [$board->id, 'fictionalid']));
+
+        $response
+            ->assertNotFound()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column not found.');
+    }
+
+    public function test_update_column_success(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $column = $board->columns()->first();
+
+        $requestBody = [
+            'name' => 'Updated Column',
+        ];
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('api.boards.columns.update', [$board->id, $column->id]), $requestBody);
+
+        $response
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column updated successfully.');
+
+        $this->assertDatabaseHas('columns', [
+            'id' => $column->id,
+            'name' => $requestBody['name'],
+        ]);
+    }
+
+    public function test_update_column_not_found(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('api.boards.columns.update', [$board->id, 'fictionalid']));
+
+        $response
+            ->assertNotFound()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column not found.');
+    }
+
+    public function test_delete_column_success(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $column = $board->columns()->first();
+
+        $response = $this
+            ->actingAs($user)
+            ->delete(route('api.boards.columns.destroy', [$board->id, $column->id]));
+
+        $response
+            ->assertNotFound()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column was successfully deleted.');
+
+        $this->assertDatabaseMissing('columns', [
+            'id' => $column->id,
+        ]);
+    }
+
+    public function test_delete_column_not_found(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+
+        $response = $this
+            ->actingAs($user)
+            ->delete(route('api.boards.columns.destroy', [$board->id, 'fictionalid']));
+
+        $response
+            ->assertNotFound()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column not found.');
+    }
+
+    public function test_move_column_success(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $targetColumn = $board->columns()->whereOrder(0)->first();
+        $shiftedColumn = $board->columns()->whereOrder(1)->first();
+
+        $responseBody = [
+            'order' => $targetColumn->order + 1,
+        ];
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('api.boards.columns.move', [$board->id, $targetColumn->id]), $responseBody);
+
+        $response
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column was successfully moved.');
+
+        $this->assertEquals(1, $targetColumn->fresh()->order);
+        $this->assertEquals(0, $shiftedColumn->fresh()->order);
     }
 }

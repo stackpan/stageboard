@@ -2,11 +2,11 @@
 
 namespace App\Rules;
 
-use App\Models\Column;
+use App\Models\Board;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class ColumnBoardMember implements ValidationRule
+class InColumnSize implements ValidationRule
 {
     public function __construct(
         private readonly string $boardId,
@@ -22,13 +22,10 @@ class ColumnBoardMember implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $column = Column::select('id')
-            ->whereId($value)
-            ->whereBoardId($this->boardId)
-            ->first();
+        $columnsCount = Board::find($this->boardId)->columns()->count();
         
-        if (!$column) {
-            $fail('The :attribute is out of specified board member.');
+        if ($value > $columnsCount) {
+            $fail('The :attribute is out of available columns.');
         }
     }
 }
