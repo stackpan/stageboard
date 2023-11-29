@@ -21,10 +21,10 @@ class CardResource extends JsonResource
             'updated_at' => $this->whenHas('updated_at'),
             'links' => [
                 'self' => [
-                    'href' => route('api.columns.cards.show', [$this->column_id, $this->id]),
+                    'href' => route('api.columns.cards.show', [$this->board_id, $this->column_id, $this->id]),
                 ],
                 'move' => [
-                    'href' => route('api.columns.cards.move', [$this->column_id, $this->id]),
+                    'href' => route('api.columns.cards.move', [$this->board_id, $this->column_id, $this->id]),
                 ],
             ],
         ];

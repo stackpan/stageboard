@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,7 +33,7 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (ZeroDeltaStepException $e, Request $request) {
+        $this->renderable(function (AbstractApplicationErrorException $e, Request $request) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], $e->getCode());

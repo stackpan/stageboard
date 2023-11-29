@@ -407,10 +407,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/plainResponse'
   /api/columns/{columnId}/cards:
+    get:
+      description: 'Get all cards within column'
+      parameters:
+        - $ref: '#/components/parameters/pathColumnIdParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        body:
+                          type: string
+                        links:
+                          type: object
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                            move:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
     post:
       description: 'Create card inside column'
       parameters:
-        - $ref: '#/components/parameters/pathBoardIdParam'
         - $ref: '#/components/parameters/pathColumnIdParam'
       requestBody:
         content:
@@ -431,7 +466,6 @@ paths:
     get:
       description: 'Get card details'
       parameters:
-        - $ref: '#/components/parameters/pathBoardIdParam'
         - $ref: '#/components/parameters/pathColumnIdParam'
         - $ref: '#/components/parameters/pathCardIdParam'
       responses:
@@ -455,23 +489,28 @@ paths:
                         type: string
                       updated_at:
                         type: string
-                  links:
-                    type: object
-                    properties:
-                      self:
+                      links:
                         type: object
                         properties:
-                          href:
-                            type: string
-                      move:
-                        type: object
-                        properties:
-                          href:
-                            type: string
+                          self:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                          move:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/plainResponse'
     patch:
       description: 'Patch card'
       parameters:
-        - $ref: '#/components/parameters/pathBoardIdParam'
         - $ref: '#/components/parameters/pathColumnIdParam'
         - $ref: '#/components/parameters/pathCardIdParam'
       requestBody:
@@ -498,7 +537,6 @@ paths:
     delete:
       description: 'Delete card'
       parameters:
-        - $ref: '#/components/parameters/pathBoardIdParam'
         - $ref: '#/components/parameters/pathColumnIdParam'
         - $ref: '#/components/parameters/pathCardIdParam'
       responses:
@@ -518,7 +556,6 @@ paths:
     patch:
       description: 'Move card to column'
       parameters:
-        - $ref: '#/components/parameters/pathBoardIdParam'
         - $ref: '#/components/parameters/pathColumnIdParam'
         - $ref: '#/components/parameters/pathCardIdParam'
       requestBody:
@@ -527,7 +564,7 @@ paths:
             schema:
               type: object
               properties:
-                destinationColumnId:
+                column_id:
                   type: string
       responses:
         '200':
@@ -537,7 +574,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/plainResponse'
         '400':
-          description: Not Found
+          description: Bad Request
           content:
             application/json:
               schema:

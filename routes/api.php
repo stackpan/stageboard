@@ -25,6 +25,6 @@ Route::middleware('auth')->name('api.')->group(function () {
     Route::apiResource('boards', BoardController::class);
     Route::apiResource('boards.columns', ColumnController::class);
     Route::patch('/boards/{board}/columns/{column}/move', [ColumnController::class, 'move'])->name('boards.columns.move');
-    Route::apiResource('columns.cards', CardController::class);
-    Route::patch('/columns/{column}/cards/{card}/move', [CardController::class, 'move'])->name('columns.cards.move');
+    Route::apiResource('boards.columns.cards', CardController::class);
+    Route::patch('/boards/{board}/columns/{column}/cards/{card}/move', [CardController::class, 'move'])->name('columns.cards.move');
 });

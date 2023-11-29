@@ -4,6 +4,7 @@ namespace App\Repositories\Impl;
 
 use App\Dto\ColumnDto;
 use App\Models\Board;
+use App\Models\Card;
 use App\Models\Column;
 use App\Repositories\ColumnRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -38,7 +39,14 @@ class ColumnRepositoryImpl implements ColumnRepository
         $query = Column::whereId($id)
             ->with('cards:id,body,column_id');
 
-        return $nullable ? $query->first() : $query->firstOrFail();
+        $column =  $nullable ? $query->first() : $query->firstOrFail();
+
+        $mappedCards = $column->cards->map(fn (Card $card) => $card
+            ->setAttribute('board_id', $column->board_id)
+        );
+        $column->setAttribute('cards', $mappedCards);
+        
+        return $column;
     }
 
     public function update(string $id, ColumnDto $data): void
