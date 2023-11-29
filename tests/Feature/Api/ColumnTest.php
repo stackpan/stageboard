@@ -219,9 +219,13 @@ class ColumnTest extends TestCase
         $user = User::whereEmail('test@example.com')->first();
         $board = $user->boards()->first();
 
+        $requestBody = [
+            'name' => 'Updated Column',
+        ];
+
         $response = $this
             ->actingAs($user)
-            ->patch(route('api.boards.columns.update', [$board->id, 'fictionalid']));
+            ->patch(route('api.boards.columns.update', [$board->id, 'fictionalid']), $requestBody);
 
         $response
             ->assertNotFound()
@@ -243,7 +247,7 @@ class ColumnTest extends TestCase
             ->delete(route('api.boards.columns.destroy', [$board->id, $column->id]));
 
         $response
-            ->assertNotFound()
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/json')
             ->assertJsonStructure([
                 'message',
@@ -298,5 +302,55 @@ class ColumnTest extends TestCase
 
         $this->assertEquals(1, $targetColumn->fresh()->order);
         $this->assertEquals(0, $shiftedColumn->fresh()->order);
+    }
+
+    public function test_move_column_backward_success(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $targetColumn = $board->columns()->whereOrder(2)->first();
+        $shiftedColumn = $board->columns()->whereOrder(1)->first();
+
+        $responseBody = [
+            'order' => $targetColumn->order - 1,
+        ];
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('api.boards.columns.move', [$board->id, $targetColumn->id]), $responseBody);
+
+        $response
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'Column was successfully moved.');
+
+        $this->assertEquals(1, $targetColumn->fresh()->order);
+        $this->assertEquals(2, $shiftedColumn->fresh()->order);
+    }
+
+    public function test_move_column_throws_zero_delta(): void
+    {
+        $user = User::whereEmail('test@example.com')->first();
+        $board = $user->boards()->first();
+        $targetColumn = $board->columns()->whereOrder(1)->first();
+
+        $responseBody = [
+            'order' => $targetColumn->order,
+        ];
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('api.boards.columns.move', [$board->id, $targetColumn->id]), $responseBody);
+
+        $response
+            ->assertBadRequest()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                'message',
+            ])
+            ->assertJsonPath('message', 'The column order is same with specified order.');
     }
 }

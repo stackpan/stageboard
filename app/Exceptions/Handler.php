@@ -33,6 +33,12 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (ZeroDeltaStepException $e, Request $request) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+        });
     }
 
     public function render($request, Throwable $e): JsonResponse | Response

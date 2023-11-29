@@ -3,6 +3,7 @@
 namespace App\Services\Impl;
 
 use App\Dto\ColumnDto;
+use App\Exceptions\ZeroDeltaStepException;
 use App\Models\Column;
 use App\Repositories\ColumnRepository;
 use App\Services\ColumnService;
@@ -48,6 +49,10 @@ class ColumnServiceImpl implements ColumnService
         $column = $this->columnRepository->get($columnId);
         $targetIndex = $column->order;
         $deltaStep = $destinationOrder - $targetIndex;
+
+        if ($deltaStep === 0) {
+            throw new ZeroDeltaStepException();
+        }
 
         if ($deltaStep > 0) {
             $this->columnRepository->unshiftByBoardId(
