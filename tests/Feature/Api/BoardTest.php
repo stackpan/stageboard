@@ -4,20 +4,27 @@ namespace Tests\Feature\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class BoardTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed();
+        
+        $this->user = User::whereEmail('test@example.com')->first();
+    }
+
     public function test_get_all_user_boards_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->get(route('api.boards.index'));
 
         $response
@@ -45,19 +52,17 @@ class BoardTest extends TestCase
             ])
             ->assertJsonPath('message', 'Success.')
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0.user.id', $user->id);
+            ->assertJsonPath('data.0.user.id', $this->user->id);
     }
 
     public function test_create_board_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
         $requestBody = [
             'name' => 'Board Test',
         ];
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post(route('api.boards.store'), $requestBody);
 
         $response
@@ -80,12 +85,10 @@ class BoardTest extends TestCase
 
     public function test_get_board_details_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
-        $board = $user->boards()->first();
+        $board = $this->user->boards()->first();
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->get(route('api.boards.show', $board->id));
 
         $response
@@ -119,10 +122,8 @@ class BoardTest extends TestCase
 
     public function test_get_board_details_not_found(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->get(route('api.boards.show', 'randomid'));
 
         $response
@@ -136,16 +137,14 @@ class BoardTest extends TestCase
 
     public function test_rename_board_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
-        $board = $user->boards()->first();
+        $board = $this->user->boards()->first();
 
         $requestBody = [
             'name' => 'Renamed Board',
         ];
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->patch(route('api.boards.update', $board->id), $requestBody);
 
         $response
@@ -164,14 +163,12 @@ class BoardTest extends TestCase
 
     public function test_rename_board_not_found(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
         $requestBody = [
             'name' => 'Renamed Board',
         ];
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->patch(route('api.boards.update', 'randomid'), $requestBody);
 
         $response
@@ -185,12 +182,10 @@ class BoardTest extends TestCase
 
     public function test_delete_board_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
-        $board = $user->boards()->first();
+        $board = $this->user->boards()->first();
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->delete(route('api.boards.destroy', $board->id));
 
         $response
@@ -206,10 +201,8 @@ class BoardTest extends TestCase
 
     public function test_delete_board_not_found(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->delete(route('api.boards.destroy', 'randomid'));
 
         $response

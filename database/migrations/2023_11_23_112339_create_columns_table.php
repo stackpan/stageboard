@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 24);
             $table->timestamps();
             $table->unsignedTinyInteger('order');
-            $table->foreignUlid('board_id')->constrained();
+            $table->foreignUlid('board_id')->constrained()->cascadeOnDelete();
         });
     }
 

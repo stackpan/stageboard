@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Column;
+use App\Models\Board;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,14 +11,24 @@ class ColumnTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+    private Board $board;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed();
+
+        $this->user = User::whereEmail('test@example.com')->first();
+        $this->board = $this->user->boards()->first();
+    }
+
     public function test_get_all_columns_inside_board(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        
         $response = $this
-            ->actingAs($user)
-            ->get(route('api.boards.columns.index', $board->id));
+            ->actingAs($this->user)
+            ->get(route('api.boards.columns.index', $this->board->id));
         
         $response
             ->assertOk()
@@ -46,8 +56,7 @@ class ColumnTest extends TestCase
 
     public function test_create_column_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()
+        $board = $this->user->boards()
             ->create([
                 'name' => 'Empty Board',
             ]);
@@ -58,7 +67,7 @@ class ColumnTest extends TestCase
         ];
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post(route('api.boards.columns.store', $board->id), $requestBody);
 
         $response
@@ -76,17 +85,14 @@ class ColumnTest extends TestCase
 
     public function test_create_column_out_of_available_columns(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-
         $requestBody = [
             'name' => 'Test Column',
             'order' => 4,
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->post(route('api.boards.columns.store', $board->id), $requestBody);
+            ->actingAs($this->user)
+            ->post(route('api.boards.columns.store', $this->board->id), $requestBody);
 
         $response
             ->assertBadRequest()
@@ -99,9 +105,7 @@ class ColumnTest extends TestCase
 
     public function test_column_shifting(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $shiftedColumn = $board->columns()->whereOrder(1)->first();
+        $shiftedColumn = $this->board->columns()->whereOrder(1)->first();
 
         $requestBody = [
             'name' => 'Test Column',
@@ -109,8 +113,8 @@ class ColumnTest extends TestCase
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->post(route('api.boards.columns.store', $board->id), $requestBody);
+            ->actingAs($this->user)
+            ->post(route('api.boards.columns.store', $this->board->id), $requestBody);
 
         $response
             ->assertCreated();
@@ -120,13 +124,11 @@ class ColumnTest extends TestCase
 
     public function test_get_column_details_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $column = $board->columns()->first();
+        $column = $this->board->columns()->first();
 
         $response = $this
-            ->actingAs($user)
-            ->get(route('api.boards.columns.show', [$board->id, $column->id]));
+            ->actingAs($this->user)
+            ->get(route('api.boards.columns.show', [$this->board->id, $column->id]));
 
         $response
             ->assertOk()
@@ -170,12 +172,9 @@ class ColumnTest extends TestCase
 
     public function test_get_column_details_not_found(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-
         $response = $this
-            ->actingAs($user)
-            ->get(route('api.boards.columns.show', [$board->id, 'fictionalid']));
+            ->actingAs($this->user)
+            ->get(route('api.boards.columns.show', [$this->board->id, 'fictionalid']));
 
         $response
             ->assertNotFound()
@@ -188,17 +187,15 @@ class ColumnTest extends TestCase
 
     public function test_update_column_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $column = $board->columns()->first();
+        $column = $this->board->columns()->first();
 
         $requestBody = [
             'name' => 'Updated Column',
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->patch(route('api.boards.columns.update', [$board->id, $column->id]), $requestBody);
+            ->actingAs($this->user)
+            ->patch(route('api.boards.columns.update', [$this->board->id, $column->id]), $requestBody);
 
         $response
             ->assertOk()
@@ -216,16 +213,13 @@ class ColumnTest extends TestCase
 
     public function test_update_column_not_found(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-
         $requestBody = [
             'name' => 'Updated Column',
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->patch(route('api.boards.columns.update', [$board->id, 'fictionalid']), $requestBody);
+            ->actingAs($this->user)
+            ->patch(route('api.boards.columns.update', [$this->board->id, 'fictionalid']), $requestBody);
 
         $response
             ->assertNotFound()
@@ -238,13 +232,11 @@ class ColumnTest extends TestCase
 
     public function test_delete_column_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $column = $board->columns()->first();
+        $column = $this->board->columns()->first();
 
         $response = $this
-            ->actingAs($user)
-            ->delete(route('api.boards.columns.destroy', [$board->id, $column->id]));
+            ->actingAs($this->user)
+            ->delete(route('api.boards.columns.destroy', [$this->board->id, $column->id]));
 
         $response
             ->assertOk()
@@ -261,12 +253,9 @@ class ColumnTest extends TestCase
 
     public function test_delete_column_not_found(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-
         $response = $this
-            ->actingAs($user)
-            ->delete(route('api.boards.columns.destroy', [$board->id, 'fictionalid']));
+            ->actingAs($this->user)
+            ->delete(route('api.boards.columns.destroy', [$this->board->id, 'fictionalid']));
 
         $response
             ->assertNotFound()
@@ -279,18 +268,16 @@ class ColumnTest extends TestCase
 
     public function test_move_column_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $targetColumn = $board->columns()->whereOrder(0)->first();
-        $shiftedColumn = $board->columns()->whereOrder(1)->first();
+        $targetColumn = $this->board->columns()->whereOrder(0)->first();
+        $shiftedColumn = $this->board->columns()->whereOrder(1)->first();
 
         $responseBody = [
             'order' => $targetColumn->order + 1,
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->patch(route('api.boards.columns.move', [$board->id, $targetColumn->id]), $responseBody);
+            ->actingAs($this->user)
+            ->patch(route('api.boards.columns.move', [$this->board->id, $targetColumn->id]), $responseBody);
 
         $response
             ->assertOk()
@@ -306,18 +293,16 @@ class ColumnTest extends TestCase
 
     public function test_move_column_backward_success(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $targetColumn = $board->columns()->whereOrder(2)->first();
-        $shiftedColumn = $board->columns()->whereOrder(1)->first();
+        $targetColumn = $this->board->columns()->whereOrder(2)->first();
+        $shiftedColumn = $this->board->columns()->whereOrder(1)->first();
 
         $responseBody = [
             'order' => $targetColumn->order - 1,
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->patch(route('api.boards.columns.move', [$board->id, $targetColumn->id]), $responseBody);
+            ->actingAs($this->user)
+            ->patch(route('api.boards.columns.move', [$this->board->id, $targetColumn->id]), $responseBody);
 
         $response
             ->assertOk()
@@ -333,17 +318,15 @@ class ColumnTest extends TestCase
 
     public function test_move_column_throws_zero_delta(): void
     {
-        $user = User::whereEmail('test@example.com')->first();
-        $board = $user->boards()->first();
-        $targetColumn = $board->columns()->whereOrder(1)->first();
+        $targetColumn = $this->board->columns()->whereOrder(1)->first();
 
         $responseBody = [
             'order' => $targetColumn->order,
         ];
 
         $response = $this
-            ->actingAs($user)
-            ->patch(route('api.boards.columns.move', [$board->id, $targetColumn->id]), $responseBody);
+            ->actingAs($this->user)
+            ->patch(route('api.boards.columns.move', [$this->board->id, $targetColumn->id]), $responseBody);
 
         $response
             ->assertBadRequest()
