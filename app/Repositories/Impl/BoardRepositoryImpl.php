@@ -31,17 +31,18 @@ class BoardRepositoryImpl implements BoardRepository
             ->id;
     }
     
-    public function getById(string $id): ?Board
+    public function get(string $id): ?Board
     {
         return Board::select([
                 'id', 'name', 'created_at', 'updated_at', 'user_id',
             ])
             ->whereId($id)
             ->with('user:id,name')
+            ->with('columns:id,name,order,board_id')
             ->firstOrFail();
     }
     
-    public function updateById(string $id, BoardDto $data): void
+    public function update(string $id, BoardDto $data): void
     {
         Board::findOrFail($id)
             ->update([
@@ -49,7 +50,7 @@ class BoardRepositoryImpl implements BoardRepository
             ]);
     }
     
-    public function deleteById(string $id): void
+    public function delete(string $id): void
     {
         Board::findOrFail($id)
             ->delete();

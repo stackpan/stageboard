@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Board;
 use App\Models\Column;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,14 +41,7 @@ class CardTest extends TestCase
                     '*' => [
                         'id',
                         'body',
-                        'links' => [
-                            'self' => [
-                                'href',
-                            ],
-                            'move' => [
-                                'href',
-                            ],
-                        ],
+                        '_links',
                     ],
                 ],
             ])
@@ -90,7 +82,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->get(route('api.columns.cards.show', [$this->column->id, $card->id]));
+            ->get(route('api.cards.show', $card->id));
 
         $response
             ->assertOk()
@@ -99,17 +91,10 @@ class CardTest extends TestCase
                 'message',
                 'data' => [
                     'id',
-                    'name',
+                    'body',
                     'created_at',
                     'updated_at',
-                    'links' => [
-                        'self' => [
-                            'href',
-                        ],
-                        'columns' => [
-                            'href',
-                        ],
-                    ],
+                    '_links',
                 ],
             ])
             ->assertJsonPath('message', 'Success.')
@@ -121,7 +106,7 @@ class CardTest extends TestCase
     {
         $response = $this
             ->actingAs($this->user)
-            ->get(route('api.columns.cards.show', 'fictionalid'));
+            ->get(route('api.cards.show', 'fictionalid'));
 
         $response
             ->assertNotFound()
@@ -142,7 +127,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.columns.cards.update', [$this->column->id, $card->id]), $requestBody);
+            ->patch(route('api.cards.update', $card->id), $requestBody);
 
         $response
             ->assertOk()
@@ -166,7 +151,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.columns.cards.update', [$this->column->id, 'fictionalid']), $requestBody);
+            ->patch(route('api.cards.update', 'fictionalid'), $requestBody);
 
         $response
             ->assertNotFound()
@@ -183,7 +168,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->delete(route('api.columns.cards.destroy', [$this->column->id, $card->id]));
+            ->delete(route('api.cards.destroy', $card->id));
 
         $response
             ->assertOk()
@@ -200,7 +185,7 @@ class CardTest extends TestCase
     {
         $response = $this
             ->actingAs($this->user)
-            ->delete(route('api.columns.cards.destroy', [$this->column->id, 'fictionalid']));
+            ->delete(route('api.cards.destroy', 'fictionalid'));
 
         $response
             ->assertNotFound()
@@ -214,7 +199,7 @@ class CardTest extends TestCase
     public function test_move_card_success(): void
     {
         $card = $this->column->cards()->first();
-        $destinationColumn = Column::whereBoardId($this->column->id)
+        $destinationColumn = Column::whereBoardId($this->column->board_id)
             ->whereNot('id', $this->column->id)
             ->first();
 
@@ -224,7 +209,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.columns.cards.move', [$this->column->id, $card->id]), $requestBody);
+            ->patch(route('api.cards.move', $card->id), $requestBody);
 
         $response
             ->assertOk()
@@ -232,7 +217,7 @@ class CardTest extends TestCase
             ->assertJsonStructure([
                 'message',
             ])
-            ->assertJsonPath('message', 'Column was successfully moved.');
+            ->assertJsonPath('message', 'Card was successfully moved.');
 
         $this->assertEquals($destinationColumn->id, $card->fresh()->column_id);
     }
@@ -247,7 +232,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.columns.cards.move', [$this->column->id, $card->id]), $requestBody);
+            ->patch(route('api.cards.move', $card->id), $requestBody);
 
         $response
             ->assertBadRequest()
@@ -273,7 +258,7 @@ class CardTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.columns.cards.move', [$this->column->id, $card->id]), $requestBody);
+            ->patch(route('api.cards.move', $card->id), $requestBody);
 
         $response
             ->assertBadRequest()
@@ -294,7 +279,7 @@ class CardTest extends TestCase
         
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.columns.cards.move', [$this->column->id, 'fictionalid']), $requestBody);
+            ->patch(route('api.cards.move', 'fictionalid'), $requestBody);
         
         $response
             ->assertNotFound()

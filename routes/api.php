@@ -23,8 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth')->name('api.')->group(function () {
     Route::apiResource('boards', BoardController::class);
-    Route::apiResource('boards.columns', ColumnController::class);
-    Route::patch('/boards/{board}/columns/{column}/move', [ColumnController::class, 'move'])->name('boards.columns.move');
-    Route::apiResource('boards.columns.cards', CardController::class);
-    Route::patch('/boards/{board}/columns/{column}/cards/{card}/move', [CardController::class, 'move'])->name('columns.cards.move');
+    Route::apiResource('boards.columns', ColumnController::class)->only(['index', 'store']);
+    Route::apiResource('columns', ColumnController::class)->except(['index', 'store']);
+    Route::patch('/columns/{column}/swap', [ColumnController::class, 'swap'])->name('columns.swap');
+    Route::apiResource('columns.cards', CardController::class)->only(['index', 'store']);
+    Route::apiResource('cards', CardController::class)->except(['index', 'store']);
+    Route::patch('/cards/{card}/move', [CardController::class, 'move'])->name('cards.move');
 });

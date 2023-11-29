@@ -5,6 +5,7 @@ namespace App\Services\Impl;
 use App\Dto\CardDto;
 use App\Models\Card;
 use App\Repositories\CardRepository;
+use App\Repositories\ColumnRepository;
 use App\Services\CardService;
 use Illuminate\Database\Eloquent\Collection;
 

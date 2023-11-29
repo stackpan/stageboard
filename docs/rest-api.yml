@@ -265,7 +265,7 @@ paths:
                         properties:
                           id:
                             type: string
-  /api/boards/{boardId}/columns/{columnId}:
+  /api/columns/{columnId}:
     get:
       description: 'Get column details'
       parameters:
@@ -373,7 +373,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/plainResponse'
-  /api/boards/{boardId}/columns/{columnId}/move:
+  /api/columns/{columnId}/move:
     patch:
       description: 'Move column order inside board'
       parameters:
@@ -462,7 +462,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/plainResponse'
-  /api/columns/{columnId}/cards/{cardId}:
+  /api/cards/{cardId}:
     get:
       description: 'Get card details'
       parameters:
@@ -552,7 +552,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/plainResponse'
-  /api/columns/{columnId}/cards/{cardId}/move:
+  /api/cards/{cardId}/move:
     patch:
       description: 'Move card to column'
       parameters:

@@ -21,12 +21,31 @@ class ColumnResource extends JsonResource
             'updated_at' => $this->whenHas('updated_at'),
             'order' => $this->order,
             'cards' => CardResource::collection($this->whenLoaded('cards')),
-            'links' => [
+            '_links' => [
                 'self' => [
-                    'href' => route('api.boards.columns.show', [$this->board_id, $this->id]),
+                    'href' => route('api.columns.show', $this->id),
+                    'rel' => 'self',
+                    'method' => 'GET',
                 ],
-                'move' => [
-                    'href' => route('api.boards.columns.move', [$this->board_id, $this->id]),
+                'update' => [
+                    'href' => route('api.columns.update', $this->id),
+                    'rel' => 'self',
+                    'method' => 'PATCH',
+                ],
+                'delete' => [
+                    'href' => route('api.columns.destroy', $this->id),
+                    'rel' => 'self',
+                    'method' => 'DELETE',
+                ],
+                'swap' => [
+                    'href' => route('api.columns.swap', $this->id),
+                    'rel' => 'self',
+                    'method' => 'PATCH',
+                ],
+                'cards' => [
+                    'href' => route('api.columns.cards.index', $this->id),
+                    'rel' => 'cards',
+                    'method' => 'GET',
                 ],
             ],
         ];

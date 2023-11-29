@@ -20,9 +20,9 @@ interface ColumnRepository
 
     public function delete(string $id): void;
 
-    public function shiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void;
+    public function shift(string $boardId, int $fromOrder, ?int $toOrder = null): void;
 
-    public function unshiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void;
+    public function unshift(string $boardId, int $fromOrder, ?int $toOrder = null): void;
 
     public function move(string $id, int $toOrder): void;
 

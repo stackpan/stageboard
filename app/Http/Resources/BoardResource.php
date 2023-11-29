@@ -25,12 +25,27 @@ class BoardResource extends JsonResource
                 'name' => $this->user->name,
             ],
             'opened_at' => $this->whenHas('opened_at'),
-            'links' => [
+            'columns' => ColumnResource::collection($this->whenLoaded('columns')),
+            '_links' => [
                 'self' => [
-                    'href' => route('api.boards.show', $this->id),   
+                    'href' => route('api.boards.show', $this->id),
+                    'rel' => 'self',
+                    'method' => 'GET',
+                ],
+                'update' => [
+                    'href' => route('api.boards.update', $this->id),
+                    'rel' => 'self',
+                    'method' => 'PATCH',
+                ],
+                'delete' => [
+                    'href' => route('api.boards.destroy', $this->id),
+                    'rel' => 'self',
+                    'method' => 'DELETE',
                 ],
                 'columns' => [
                     'href' => route('api.boards.columns.index', $this->id),
+                    'rel' => 'columns',
+                    'method' => 'GET',
                 ],
             ],
         ];

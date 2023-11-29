@@ -12,9 +12,9 @@ interface BoardService
     
     public function create(string $userId, BoardDto $data): string;
     
-    public function getById(string $id): ?Board;
+    public function get(string $id): ?Board;
     
-    public function updateById(string $id, BoardDto $data): void;
+    public function update(string $id, BoardDto $data): void;
     
-    public function deleteById(string $id): void;
+    public function delete(string $id): void;
 }

@@ -39,14 +39,7 @@ class ColumnRepositoryImpl implements ColumnRepository
         $query = Column::whereId($id)
             ->with('cards:id,body,column_id');
 
-        $column =  $nullable ? $query->first() : $query->firstOrFail();
-
-        $mappedCards = $column->cards->map(fn (Card $card) => $card
-            ->setAttribute('board_id', $column->board_id)
-        );
-        $column->setAttribute('cards', $mappedCards);
-        
-        return $column;
+        return $nullable ? $query->first() : $query->firstOrFail();
     }
 
     public function update(string $id, ColumnDto $data): void
@@ -63,7 +56,7 @@ class ColumnRepositoryImpl implements ColumnRepository
             ->delete();
     }
 
-    public function shiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void
+    public function shift(string $boardId, int $fromOrder, ?int $toOrder = null): void
     {
         $query = Column::whereBoardId($boardId)
             ->where('order', '>=', $fromOrder);
@@ -75,7 +68,7 @@ class ColumnRepositoryImpl implements ColumnRepository
         $query->increment('order');
     }
 
-    public function unshiftByBoardId(string $boardId, int $fromOrder, ?int $toOrder = null): void
+    public function unshift(string $boardId, int $fromOrder, ?int $toOrder = null): void
     {
         $query = Column::whereBoardId($boardId)
             ->where('order', '>=', $fromOrder);

@@ -40,14 +40,7 @@ class ColumnTest extends TestCase
                         'id',
                         'name',
                         'order',
-                        'links' => [
-                            'self' => [
-                                'href',
-                            ],
-                            'move' => [
-                                'href',
-                            ],
-                        ],
+                        '_links',
                     ],
                 ]
             ])
@@ -128,7 +121,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->get(route('api.boards.columns.show', [$this->board->id, $column->id]));
+            ->get(route('api.columns.show', $column->id));
 
         $response
             ->assertOk()
@@ -145,24 +138,10 @@ class ColumnTest extends TestCase
                         '*' => [
                             'id',
                             'body',
-                            'links' => [
-                                'self' => [
-                                    'href',
-                                ],
-                                'move' => [
-                                    'href',
-                                ],
-                            ],
+                            '_links',
                         ],
                     ],
-                    'links' => [
-                        'self' => [
-                            'href',
-                        ],
-                        'move' => [
-                            'href',
-                        ],
-                    ],
+                    '_links',
                 ],
             ])
             ->assertJsonPath('message', 'Success.')
@@ -174,7 +153,7 @@ class ColumnTest extends TestCase
     {
         $response = $this
             ->actingAs($this->user)
-            ->get(route('api.boards.columns.show', [$this->board->id, 'fictionalid']));
+            ->get(route('api.columns.show', 'fictionalid'));
 
         $response
             ->assertNotFound()
@@ -195,7 +174,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.boards.columns.update', [$this->board->id, $column->id]), $requestBody);
+            ->patch(route('api.columns.update', $column->id), $requestBody);
 
         $response
             ->assertOk()
@@ -219,7 +198,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.boards.columns.update', [$this->board->id, 'fictionalid']), $requestBody);
+            ->patch(route('api.columns.update', 'fictionalid'), $requestBody);
 
         $response
             ->assertNotFound()
@@ -236,7 +215,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->delete(route('api.boards.columns.destroy', [$this->board->id, $column->id]));
+            ->delete(route('api.columns.destroy', $column->id));
 
         $response
             ->assertOk()
@@ -255,7 +234,7 @@ class ColumnTest extends TestCase
     {
         $response = $this
             ->actingAs($this->user)
-            ->delete(route('api.boards.columns.destroy', [$this->board->id, 'fictionalid']));
+            ->delete(route('api.columns.destroy', 'fictionalid'));
 
         $response
             ->assertNotFound()
@@ -266,7 +245,7 @@ class ColumnTest extends TestCase
             ->assertJsonPath('message', 'Column not found.');
     }
 
-    public function test_move_column_success(): void
+    public function swap_column_success(): void
     {
         $targetColumn = $this->board->columns()->whereOrder(0)->first();
         $shiftedColumn = $this->board->columns()->whereOrder(1)->first();
@@ -277,7 +256,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.boards.columns.move', [$this->board->id, $targetColumn->id]), $responseBody);
+            ->patch(route('api.columns.swap', $targetColumn->id), $responseBody);
 
         $response
             ->assertOk()
@@ -291,7 +270,7 @@ class ColumnTest extends TestCase
         $this->assertEquals(0, $shiftedColumn->fresh()->order);
     }
 
-    public function test_move_column_backward_success(): void
+    public function swap_column_backward_success(): void
     {
         $targetColumn = $this->board->columns()->whereOrder(2)->first();
         $shiftedColumn = $this->board->columns()->whereOrder(1)->first();
@@ -302,7 +281,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.boards.columns.move', [$this->board->id, $targetColumn->id]), $responseBody);
+            ->patch(route('api.columns.swap', $targetColumn->id), $responseBody);
 
         $response
             ->assertOk()
@@ -316,7 +295,7 @@ class ColumnTest extends TestCase
         $this->assertEquals(2, $shiftedColumn->fresh()->order);
     }
 
-    public function test_move_column_throws_zero_delta(): void
+    public function swap_column_throws_zero_delta(): void
     {
         $targetColumn = $this->board->columns()->whereOrder(1)->first();
 
@@ -326,7 +305,7 @@ class ColumnTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('api.boards.columns.move', [$this->board->id, $targetColumn->id]), $responseBody);
+            ->patch(route('api.columns.swap', $targetColumn->id), $responseBody);
 
         $response
             ->assertBadRequest()

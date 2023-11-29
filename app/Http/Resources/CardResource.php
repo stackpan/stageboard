@@ -19,12 +19,26 @@ class CardResource extends JsonResource
             'body' => $this->body,
             'created_at' => $this->whenHas('created_at'),
             'updated_at' => $this->whenHas('updated_at'),
-            'links' => [
+            '_links' => [
                 'self' => [
-                    'href' => route('api.columns.cards.show', [$this->board_id, $this->column_id, $this->id]),
+                    'href' => route('api.cards.show', $this->id),
+                    'rel' => 'self',
+                    'method' => 'GET',
+                ],
+                'update' => [
+                    'href' => route('api.cards.update', $this->id),
+                    'rel' => 'self',
+                    'method' => 'PATCH',
+                ],
+                'delete' => [
+                    'href' => route('api.cards.destroy', $this->id),
+                    'rel' => 'self',
+                    'method' => 'DELETE',
                 ],
                 'move' => [
-                    'href' => route('api.columns.cards.move', [$this->board_id, $this->column_id, $this->id]),
+                    'href' => route('api.cards.move', $this->id),
+                    'rel' => 'self',
+                    'method' => 'PATCH',
                 ],
             ],
         ];

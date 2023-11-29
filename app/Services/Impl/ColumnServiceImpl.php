@@ -3,7 +3,7 @@
 namespace App\Services\Impl;
 
 use App\Dto\ColumnDto;
-use App\Exceptions\ZeroDeltaStepException;
+use App\Exceptions\ApplicationError\ZeroDeltaStepException;
 use App\Models\Column;
 use App\Repositories\ColumnRepository;
 use App\Services\ColumnService;
@@ -25,7 +25,7 @@ class ColumnServiceImpl implements ColumnService
 
     public function create(string $boardId, ColumnDto $data): string
     {
-        $this->columnRepository->shiftByBoardId($boardId, $data->order);
+        $this->columnRepository->shift($boardId, $data->order);
         return $this->columnRepository->create($boardId, $data);
     }
 
@@ -44,9 +44,9 @@ class ColumnServiceImpl implements ColumnService
         $this->columnRepository->delete($id);
     }
 
-    public function move(string $boardId, string $columnId, int $destinationOrder): void
+    public function move(string $id, int $destinationOrder): void
     {
-        $column = $this->columnRepository->get($columnId);
+        $column = $this->columnRepository->get($id);
         $targetIndex = $column->order;
         $deltaStep = $destinationOrder - $targetIndex;
 
@@ -55,19 +55,19 @@ class ColumnServiceImpl implements ColumnService
         }
 
         if ($deltaStep > 0) {
-            $this->columnRepository->unshiftByBoardId(
-                boardId: $boardId,
+            $this->columnRepository->unshift(
+                boardId: $column->board_id,
                 fromOrder: $targetIndex + 1,
                 toOrder: $targetIndex + $deltaStep
             );
         } else {
-            $this->columnRepository->shiftByBoardId(
-                boardId: $boardId,
+            $this->columnRepository->shift(
+                boardId: $column->board_id,
                 fromOrder: $destinationOrder,
                 toOrder: $destinationOrder - $deltaStep - 1
             );
         }
 
-        $this->columnRepository->move($columnId, $destinationOrder);
+        $this->columnRepository->move($id, $destinationOrder);
     }
 }

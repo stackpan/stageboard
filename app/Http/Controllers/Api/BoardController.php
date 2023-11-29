@@ -55,7 +55,7 @@ class BoardController extends Controller
 
     public function show(string $id): JsonResponse
     {
-        $board = $this->boardService->getById($id);
+        $board = $this->boardService->get($id);
 
         return response()
             ->json([
@@ -72,7 +72,7 @@ class BoardController extends Controller
             name: $validated['name'],
         );
 
-        $this->boardService->updateById($id, $data);
+        $this->boardService->update($id, $data);
 
         return response()
             ->json([
@@ -82,7 +82,7 @@ class BoardController extends Controller
 
     public function destroy(string $id): JsonResponse
     {
-        $this->boardService->deleteById($id);
+        $this->boardService->delete($id);
 
         return response()
             ->json([

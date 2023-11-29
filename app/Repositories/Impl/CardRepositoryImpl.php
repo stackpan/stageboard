@@ -4,6 +4,7 @@ namespace App\Repositories\Impl;
 
 use App\Dto\CardDto;
 use App\Exceptions\ApplicationError\AlreadyOfColumnMemberException;
+use App\Exceptions\ApplicationError\CrossColumnMemberException;
 use App\Models\Card;
 use App\Models\Column;
 use App\Repositories\CardRepository;
@@ -55,8 +56,15 @@ class CardRepositoryImpl implements CardRepository
             throw new AlreadyOfColumnMemberException();
         }
         
+        $column = Column::findOrFail($columnId);
+
+        if ($column->board_id !== $card->column->board_id) {
+            throw new CrossColumnMemberException();
+        }
+
         $card->findOrFail($id)
             ->column()
-            ->associate($columnId);
+            ->associate($columnId)
+            ->save();
     }
 }

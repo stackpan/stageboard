@@ -52,9 +52,9 @@ class CardController extends Controller
             ], 201);
     }
 
-    public function show(string $columnId, string $cardId): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        $card = $this->cardService->get($cardId);
+        $card = $this->cardService->get($id);
 
         return response()
             ->json([
@@ -63,7 +63,7 @@ class CardController extends Controller
             ]);
     }
 
-    public function update(CardRequest $request, string $columnId, string $cardId): JsonResponse
+    public function update(CardRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
 
@@ -71,7 +71,7 @@ class CardController extends Controller
             body: $validated['body'],
         );
 
-        $this->cardService->update($cardId, $data);
+        $this->cardService->update($id, $data);
 
         return response()
             ->json([
@@ -79,9 +79,9 @@ class CardController extends Controller
             ]);
     }
 
-    public function destroy(string $columnId, string $cardId): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
-        $this->cardService->delete($cardId);
+        $this->cardService->delete($id);
 
         return response()
             ->json([
@@ -89,11 +89,11 @@ class CardController extends Controller
             ]);
     }
     
-    public function move(MoveCardRequest $request, string $columnId, string $cardId): JsonResponse
+    public function move(MoveCardRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
 
-        $this->cardService->moveToColumn($cardId, $validated['column_id']);
+        $this->cardService->moveToColumn($id, $validated['column_id']);
 
         return response()
             ->json([

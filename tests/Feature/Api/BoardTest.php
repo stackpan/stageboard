@@ -42,11 +42,7 @@ class BoardTest extends TestCase
                             'name',
                         ],
 //                        'opened_at',
-                        'links' => [
-                            'self' => [
-                                'href',
-                            ],
-                        ],
+                        '_links',
                     ],
                 ],
             ])
@@ -105,14 +101,15 @@ class BoardTest extends TestCase
                         'id',
                         'name',
                     ],
-                    'links' => [
-                        'self' => [
-                            'href',
-                        ],
-                        'columns' => [
-                            'href',
-                        ],
+                    'columns' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'order',
+                            '_links',
+                        ]
                     ],
+                    '_links',
                 ],
             ])
             ->assertJsonPath('message', 'Success.')

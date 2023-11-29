@@ -53,9 +53,9 @@ class ColumnController extends Controller
             ], 201);
     }
 
-    public function show(string $boardId, string $columnId): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        $column = $this->columnService->get($columnId);
+        $column = $this->columnService->get($id);
 
         return response()
             ->json([
@@ -64,7 +64,7 @@ class ColumnController extends Controller
             ]);
     }
 
-    public function update(UpdateColumnRequest $request,  string $boardId, string $columnId): JsonResponse
+    public function update(UpdateColumnRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
 
@@ -72,7 +72,7 @@ class ColumnController extends Controller
             name: $validated['name'],
         );
 
-        $this->columnService->update($columnId, $data);
+        $this->columnService->update($id, $data);
 
         return response()
             ->json([
@@ -80,9 +80,9 @@ class ColumnController extends Controller
             ]);
     }
 
-    public function destroy(string $boardId, string $columnId): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
-        $this->columnService->delete($columnId);
+        $this->columnService->delete($id);
 
         return response()
             ->json([
@@ -90,11 +90,11 @@ class ColumnController extends Controller
             ]);
     }
     
-    public function move(MoveColumnRequest $request, string $boardId, string $columnId): JsonResponse
+    public function swap(MoveColumnRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
 
-        $this->columnService->move($boardId, $columnId, $validated['order']);
+        $this->columnService->move($id, $validated['order']);
 
         return response()
             ->json([
