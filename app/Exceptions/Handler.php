@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -40,7 +41,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e): JsonResponse | Response
+    public function render($request, Throwable $e): JsonResponse | Response | RedirectResponse
     {
         if ($request->is('api/*')) {
             if ($e instanceof RecordsNotFoundException) {

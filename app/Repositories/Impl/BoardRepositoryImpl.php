@@ -13,14 +13,14 @@ class BoardRepositoryImpl implements BoardRepository
     public function getAllByUserId(string $userId): Collection
     {
         return Board::select([
-                'id', 'name', 'thumbnail_url', 'user_id',
+                'id', 'name', 'thumbnail_url', 'user_id', 'created_at', 'updated_at',
             ])
             ->whereUserId($userId)
             ->with('user:id,name')
 //            ->with('opened_at')
             ->get();
     }
-    
+
     public function create(string $userId, BoardDto $data,): string
     {
         return User::findOrFail($userId)
@@ -30,7 +30,7 @@ class BoardRepositoryImpl implements BoardRepository
             ])
             ->id;
     }
-    
+
     public function get(string $id): ?Board
     {
         return Board::select([
@@ -41,7 +41,7 @@ class BoardRepositoryImpl implements BoardRepository
             ->with('columns:id,name,order,board_id')
             ->firstOrFail();
     }
-    
+
     public function update(string $id, BoardDto $data): void
     {
         Board::findOrFail($id)
@@ -49,7 +49,7 @@ class BoardRepositoryImpl implements BoardRepository
                 'name' => $data->name,
             ]);
     }
-    
+
     public function delete(string $id): void
     {
         Board::findOrFail($id)
