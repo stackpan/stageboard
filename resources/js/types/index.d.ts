@@ -5,15 +5,19 @@ export interface User {
   email_verified_at: string
 }
 
-export default interface Board {
+export interface Board {
   id: string
   name: string
   thumbnailUrl: string
-  owner: string
   openedAt: string
   createdAt: string
   updatedAt: string
-  links: Record<string, Link>
+}
+
+export interface Column {
+  id: string
+  name: string
+  order: number
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -22,8 +26,20 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
   }
 }
 
-interface Link {
+export interface Link {
   href: string
   rel: string
-  method: string
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+}
+
+export interface Links {
+  links: Record<string, Link>
+}
+
+export interface ResponseBody {
+  message: string
+}
+
+export interface ResponseBodyWithData<T> extends ResponseBody {
+  data: T
 }

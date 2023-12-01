@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Head } from '@inertiajs/react'
-import type Board from '@/types'
 import { type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
-import { getBoards } from '@/Services/BoardService'
 import BoardTable from '@/Components/BoardTable'
+import { type Boards, boardService } from '@/Services/BoardService'
 
 export default function Home ({ auth }: PageProps): JSX.Element {
-  const [boards, setBoards] = useState<Board[]>([])
+  const [boards, setBoards] = useState<Boards>([])
 
   useEffect(() => {
-    getBoards()
-      .then((boards: Board[]) => {
+    boardService.getAll()
+      .then((boards) => {
         setBoards(boards)
       })
       .catch((e: Error) => {
@@ -33,7 +32,7 @@ export default function Home ({ auth }: PageProps): JSX.Element {
             <BoardCard key={board.id}
               id={board.id}
               name={board.name}
-              owner={board.owner}
+              owner={board.user.name}
               thumbnailUrl={board.thumbnailUrl}
               openedAt={board.openedAt}
               links={board.links}
