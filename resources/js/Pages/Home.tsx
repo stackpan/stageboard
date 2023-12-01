@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { type ChangeEvent, useEffect, useState } from 'react'
 import { Head } from '@inertiajs/react'
 import { type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
 import { type Boards, boardService } from '@/Services/BoardService'
+import CreateBoardModal from '@/Components/CreateBoardModal'
 
 export default function Home ({ auth }: PageProps): JSX.Element {
   const [boards, setBoards] = useState<Boards>([])
@@ -19,10 +20,18 @@ export default function Home ({ auth }: PageProps): JSX.Element {
       })
   }, [])
 
+  const showCreateBoardModal = (id: string): void => {
+    const modal: any = document.getElementById(id)
+    modal.showModal()
+  }
+
+  const onInputNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    console.log(e.target.value)
+  }
+
   return (
     <MainLayout user={auth.user}>
       <Head title="Dashboard" />
-
       <section className="m-6">
         <header className="py-2">
           <h2>Recent Boards</h2>
@@ -41,11 +50,23 @@ export default function Home ({ auth }: PageProps): JSX.Element {
         </div>
       </section>
       <section className="m-6">
-        <header className="py-2">
+        <header className="py-2 flex justify-between items-center">
           <h2>My Boards</h2>
+          <button
+              className="btn btn-neutral btn-sm"
+              onClick={() => { showCreateBoardModal('createBoardModal') }}
+              >Create New</button>
         </header>
-        <div className="py-2">
-          <BoardTable boards={boards} />
+        <div className="py-2 space-y-4">
+          <div className="flex justify-end">
+            <CreateBoardModal
+              id="createBoardModal"
+              onInputNameChange={onInputNameChange}
+            />
+          </div>
+          <div>
+            <BoardTable boards={boards} />
+          </div>
         </div>
       </section>
     </MainLayout>

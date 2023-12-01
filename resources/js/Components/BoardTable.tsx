@@ -1,10 +1,10 @@
 import React from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
-import type Board from '@/types'
 import { formatFromNow, formatToDate } from '@/Utils/datetime'
+import { type Boards } from '@/Services/BoardService'
 
 interface Props {
-  boards: Board[]
+  boards: Boards
 }
 
 export default function BoardTable ({ boards }: Props): JSX.Element {
@@ -21,10 +21,10 @@ export default function BoardTable ({ boards }: Props): JSX.Element {
         </tr>
       </thead>
       <tbody>
-        {boards.map((board: Board) => (
+        {boards.map((board) => (
           <tr key={board.id}>
             <td>{board.name}</td>
-            <td>{board.owner}</td>
+            <td>{board.user.name}</td>
             <td>{formatToDate(board.createdAt)}</td>
             <td>{formatFromNow(board.updatedAt)}</td>
             <td className="float-right">
