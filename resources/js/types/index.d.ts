@@ -20,6 +20,11 @@ export interface Column {
   order: number
 }
 
+export interface Card {
+  id: string
+  body: string
+}
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
   auth: {
     user: User

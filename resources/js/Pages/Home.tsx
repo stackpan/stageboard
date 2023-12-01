@@ -31,7 +31,7 @@ export default function Home ({ auth }: PageProps): JSX.Element {
 
   return (
     <MainLayout user={auth.user}>
-      <Head title="Dashboard" />
+      <Head title="Home" />
       <section className="m-6">
         <header className="py-2">
           <h2>Recent Boards</h2>

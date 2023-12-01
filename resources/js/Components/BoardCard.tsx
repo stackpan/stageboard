@@ -2,6 +2,7 @@ import React from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { type Link } from '@/types'
 import { formatFromNow } from '@/Utils/datetime'
+import { router } from '@inertiajs/react'
 
 interface Props {
   id: string
@@ -13,9 +14,13 @@ interface Props {
 }
 
 export default function BoardCard ({ id, name, thumbnailUrl, owner, openedAt, links }: Props): JSX.Element {
+  const openBoardPage = (): void => {
+    router.get(`/board/${id}`)
+  }
+
   return (
     <div className="card card-compact w-64 bg-base-100 shadow-xl">
-      <figure>
+      <figure onClick={openBoardPage} className="cursor-pointer">
         {thumbnailUrl !== null
           ? <img src={thumbnailUrl} alt={`${name} thumbnail`} />
           : <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />

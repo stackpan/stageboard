@@ -1,9 +1,14 @@
 import httpClient from '@/httpClient'
-import { type Links, type Board, type Link, type ResponseBodyWithData, type User, type Column, type ResponseBody } from '@/types'
+import { type Links, type Board, type Link, type ResponseBodyWithData, type User, type Column, type ResponseBody, type Card } from '@/types'
 import { type AxiosResponse, type AxiosInstance } from 'axios'
 
 export type Boards = Array<Board & Links & { user: Pick<User, 'id' | 'name'> }>
-export type BoardDetail = Omit<Board, 'openedAt' | 'thumbnailUrl'> & Links & { user: Pick<User, 'id' | 'name'>, columns: Column[] }
+export type BoardDetail = Omit<Board, 'openedAt' | 'thumbnailUrl'>
+& Links
+& {
+  user: Pick<User, 'id' | 'name'>
+  columns: Array<Column & Links & { cards: Array<Card & Links> } >
+}
 
 type GetAllResponse = ResponseBodyWithData<Array<{
   id: string
@@ -22,7 +27,10 @@ type GetResponse = ResponseBodyWithData<{
   created_at: string
   updated_at: string
   user: Pick<User, 'id' | 'name'>
-  columns: Column[]
+  columns: Array<Column & {
+    _links: Record<string, Link>
+    cards: Array<Card & { _links: Record<string, Link> }>
+  }>
   _links: Record<string, Link>
 }>
 
@@ -64,7 +72,17 @@ class BoardService {
         user: board.user,
         createdAt: board.created_at,
         updatedAt: board.updated_at,
-        columns: board.columns,
+        columns: board.columns.map((column) => ({
+          id: column.id,
+          name: column.name,
+          order: column.order,
+          links: column._links,
+          cards: column.cards.map((card) => ({
+            id: card.id,
+            body: card.body,
+            links: card._links
+          }))
+        })),
         links: board._links
       }
     } catch (e: any) {
