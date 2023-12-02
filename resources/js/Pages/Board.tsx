@@ -42,8 +42,8 @@ export default function Board ({ auth, id, name }: PageProps<{ id: string, name:
   return (
     <MainLayout user={auth.user}>
       <Head title={board?.name ?? name} />
-      <section className="p-6 flex-1 flex flex-col">
-        <header className="py-2 flex justify-between">
+      <section className="flex-1 flex flex-col">
+        <header className="px-6 pt-8 pb-2 flex justify-between">
           {isLoading
             ? <div className="skeleton h-6 w-28"></div>
             : <h1 className="font-bold text-2xl">{name}</h1>
@@ -54,7 +54,7 @@ export default function Board ({ auth, id, name }: PageProps<{ id: string, name:
             disabled={isLoading}
           >Add Column</button>
         </header>
-        <div className="pt-4 flex gap-4 items-start flex-1">
+        <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-auto">
           {isLoading
             ? (
               <div className="w-full flex justify-center self-stretch">
@@ -69,6 +69,7 @@ export default function Board ({ auth, id, name }: PageProps<{ id: string, name:
                 position={getColumnPosition(column.order)}
                 cards={column.cards}
                 links={column.links}
+                color={column.color}
               />
             ))
           }

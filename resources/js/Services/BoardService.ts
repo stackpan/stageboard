@@ -1,3 +1,4 @@
+import { type Color } from '@/Enums'
 import httpClient from '@/httpClient'
 import { type Links, type Board, type Link, type ResponseBodyWithData, type User, type Column, type ResponseBody, type Card } from '@/types'
 import { type AxiosResponse, type AxiosInstance } from 'axios'
@@ -27,6 +28,7 @@ type GetResponse = ResponseBodyWithData<{
   created_at: string
   updated_at: string
   user: Pick<User, 'id' | 'name'>
+  color: Color
   columns: Array<Column & {
     _links: Record<string, Link>
     cards: Array<Card & { _links: Record<string, Link> }>
@@ -76,10 +78,12 @@ class BoardService {
           id: column.id,
           name: column.name,
           order: column.order,
+          color: column.color,
           links: column._links,
           cards: column.cards.map((card) => ({
             id: card.id,
             body: card.body,
+            color: card.color,
             links: card._links
           }))
         })),

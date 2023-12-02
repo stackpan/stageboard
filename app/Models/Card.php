@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Color;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,11 @@ class Card extends Model
     
     protected $fillable = [
         'body',
+        'color',
+    ];
+
+    protected $casts = [
+        'color' => Color::class
     ];
 
     public function column(): BelongsTo

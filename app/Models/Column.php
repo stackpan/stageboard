@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Color;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,11 @@ class Column extends Model
     protected $fillable = [
         'name',
         'order',
+        'color',
+    ];
+
+    protected $casts = [
+        'color' => Color::class
     ];
     
     public function board(): BelongsTo

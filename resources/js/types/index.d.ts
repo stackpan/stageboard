@@ -1,3 +1,5 @@
+import { type Color } from '@/Enums'
+
 export interface User {
   id: string
   name: string
@@ -18,11 +20,13 @@ export interface Column {
   id: string
   name: string
   order: number
+  color: Color
 }
 
 export interface Card {
   id: string
   body: string
+  color: Color
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {

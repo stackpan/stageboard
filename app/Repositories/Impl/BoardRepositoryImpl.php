@@ -39,8 +39,8 @@ class BoardRepositoryImpl implements BoardRepository
             ->whereId($id)
             ->with('user:id,name')
             ->with([
-                'columns:id,name,order,board_id',
-                'columns.cards:id,body,column_id'
+                'columns:id,name,order,color,board_id',
+                'columns.cards:id,body,color,column_id'
             ])
             ->firstOrFail();
     }
