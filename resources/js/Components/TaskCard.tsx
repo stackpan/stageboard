@@ -60,11 +60,11 @@ export default function TaskCard ({ id, body, color, columnPosition, links }: Pr
             </div>
             <ul className="p-0 shadow-sm menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36 border">
               <li><a>Edit</a></li>
-              {columnPosition !== ColumnPosition.First
+              {columnPosition !== ColumnPosition.Last
                 ? <li><a>Move to Right</a></li>
                 : <li className="disabled"><a>Move to Right</a></li>
               }
-              {columnPosition !== ColumnPosition.Last
+              {columnPosition !== ColumnPosition.First
                 ? <li><a>Move to Left</a></li>
                 : <li className="disabled"><a>Move to Left</a></li>
               }

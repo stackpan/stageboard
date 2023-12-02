@@ -43,10 +43,10 @@ export default function ColumnCard ({ id, name, position, cards, links, color }:
               </div>
               <ul tabIndex={0} className="p-0 shadow menu menu-sm dropdown-content z-30 bg-base-100 rounded-box w-36 border">
                 <li><a>Rename</a></li>
-                {position !== ColumnPosition.First
+                {position !== ColumnPosition.Last
                   ? <li><a>Move to Right</a></li>
                   : <li className="disabled"><a>Move to Right</a></li>}
-                {position !== ColumnPosition.Last
+                {position !== ColumnPosition.First
                   ? <li><a>Move to Left</a></li>
                   : <li className="disabled"><a>Move to Left</a></li>
                 }
