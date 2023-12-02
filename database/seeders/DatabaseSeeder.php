@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
              ]);
 
          foreach ($user->boards as $board) {
-            $columnNames = ['Done', 'In Progress', 'Open'];
+            $columnNames = ['Open', 'In Progress', 'Done'];
              for ($i = 0; $i < count($columnNames); $i++) {
                  Column::factory()
                     ->for($board)
