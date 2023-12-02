@@ -6,14 +6,17 @@ import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
 import { type Boards, boardService } from '@/Services/BoardService'
 import CreateBoardModal from '@/Components/CreateBoardModal'
+import BoardCardSkeleton from '@/Components/BoardCardSkeleton'
 
 export default function Home ({ auth }: PageProps): JSX.Element {
   const [boards, setBoards] = useState<Boards>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     boardService.getAll()
       .then((boards) => {
         setBoards(boards)
+        setIsLoading(false)
       })
       .catch((e: Error) => {
         console.log(e)
@@ -37,25 +40,35 @@ export default function Home ({ auth }: PageProps): JSX.Element {
           <h2>Recent Boards</h2>
         </header>
         <div className="py-2 flex flex-row gap-4">
-          {boards.map((board) => (
-            <BoardCard key={board.id}
-              id={board.id}
-              name={board.name}
-              owner={board.user.name}
-              thumbnailUrl={board.thumbnailUrl}
-              openedAt={board.openedAt}
-              links={board.links}
-            />
-          ))}
+          {isLoading
+            ? (
+              <>
+                <BoardCardSkeleton />
+                <BoardCardSkeleton />
+                <BoardCardSkeleton />
+              </>
+              )
+            : boards.map((board) => (
+              <BoardCard key={board.id}
+                id={board.id}
+                name={board.name}
+                owner={board.user.name}
+                thumbnailUrl={board.thumbnailUrl}
+                openedAt={board.openedAt}
+                links={board.links}
+              />
+            ))
+          }
         </div>
       </section>
       <section className="m-6">
         <header className="py-2 flex justify-between items-center">
           <h2>My Boards</h2>
           <button
-              className="btn btn-neutral btn-sm"
-              onClick={() => { showCreateBoardModal('createBoardModal') }}
-              >Create New</button>
+            className="btn btn-neutral btn-sm"
+            onClick={() => { showCreateBoardModal('createBoardModal') }}
+            disabled={isLoading}
+          >Create New</button>
         </header>
         <div className="py-2 space-y-4">
           <div className="flex justify-end">
@@ -65,7 +78,7 @@ export default function Home ({ auth }: PageProps): JSX.Element {
             />
           </div>
           <div>
-            <BoardTable boards={boards} />
+            <BoardTable boards={boards} isLoading={isLoading} />
           </div>
         </div>
       </section>

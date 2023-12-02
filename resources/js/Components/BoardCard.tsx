@@ -16,7 +16,7 @@ interface Props {
 export default function BoardCard ({ id, name, thumbnailUrl, owner, openedAt, links }: Props): JSX.Element {
   return (
     <div className="card card-compact w-64 bg-base-100 shadow-md">
-      <figure onClick={() => { router.get(`/board/${id}`) }} className="cursor-pointer">
+      <figure onClick={() => { router.get(`/board/${id}`) }} className="cursor-pointer h-32">
         {thumbnailUrl !== null
           ? <img src={thumbnailUrl} alt={`${name} thumbnail`} />
           : <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />
