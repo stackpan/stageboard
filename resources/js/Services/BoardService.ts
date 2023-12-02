@@ -36,6 +36,8 @@ type GetResponse = ResponseBodyWithData<{
   _links: Record<string, Link>
 }>
 
+type CreateResponse = ResponseBodyWithData<{ board: Pick<Board, 'id'> }>
+
 class BoardService {
   readonly #http: AxiosInstance
 
@@ -94,11 +96,11 @@ class BoardService {
     }
   }
 
-  async create (data: { name: string }): Promise<string> {
+  async create (data: { name: string }): Promise<CreateResponse> {
     try {
-      const { data: responseBody }: AxiosResponse<ResponseBodyWithData<{ board: Pick<Board, 'id'> }>, any> = await this.#http.post('/boards', data)
+      const { data: responseBody }: AxiosResponse<CreateResponse, any> = await this.#http.post('/boards', data)
 
-      return responseBody.data.board.id
+      return responseBody
     } catch (e: any) {
       return e
     }

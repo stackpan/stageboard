@@ -11,9 +11,11 @@ interface Props {
   owner: string
   openedAt: string
   links: Record<string, Link>
+  onClickRenameHandler: (id: string, name: string) => void
+  onClickDeleteHandler: (id: string) => void
 }
 
-export default function BoardCard ({ id, name, thumbnailUrl, owner, openedAt, links }: Props): JSX.Element {
+export default function BoardCard ({ id, name, thumbnailUrl, owner, openedAt, links, onClickRenameHandler, onClickDeleteHandler }: Props): JSX.Element {
   return (
     <div className="card card-compact w-64 bg-base-100 shadow-md">
       <figure onClick={() => { router.get(`/board/${id}`) }} className="cursor-pointer h-32">
@@ -29,10 +31,10 @@ export default function BoardCard ({ id, name, thumbnailUrl, owner, openedAt, li
             <div tabIndex={0} role="button" className="btn btn-ghost btn-square btn-xs">
               <EllipsisVerticalIcon className="h-6 w-6" />
             </div>
-            <ul className="p-0 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36">
-              <li><a>Open in New Tab</a></li>
-              <li><a>Rename</a></li>
-              <li><a className="text-error">Delete</a></li>
+            <ul className="p-0 shadow menu menu-sm dropdown-content z-10 bg-base-100 rounded-box w-36">
+              <li><a target="_blank" href={`http://localhost/board/${id}`} rel="noreferrer">Open in New Tab</a></li>
+              <li><button onClick={() => { onClickRenameHandler(id, name) }}>Rename</button></li>
+              <li><button onClick={() => { onClickDeleteHandler(id) }} className="text-error">Delete</button></li>
             </ul>
           </div>
         </div>

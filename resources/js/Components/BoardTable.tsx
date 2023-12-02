@@ -6,9 +6,11 @@ import { type Boards } from '@/Services/BoardService'
 interface Props {
   boards: Boards
   isLoading: boolean
+  onClickRenameHandler: (id: string, name: string) => void
+  onClickDeleteHandler: (id: string) => void
 }
 
-export default function BoardTable ({ boards, isLoading }: Props): JSX.Element {
+export default function BoardTable ({ boards, isLoading, onClickRenameHandler, onClickDeleteHandler }: Props): JSX.Element {
   const RowSkeleton = (): JSX.Element => (
     <tr>
       <td><div className="skeleton h-6 w-28"></div></td>
@@ -51,9 +53,9 @@ export default function BoardTable ({ boards, isLoading }: Props): JSX.Element {
                       <EllipsisVerticalIcon className="h-6 w-6" />
                     </div>
                     <ul className="p-0 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36">
-                      <li><a>Open in New Tab</a></li>
-                      <li><a>Rename</a></li>
-                      <li><a className="text-error">Delete</a></li>
+                      <li><a target="_blank" href={`http://localhost/board/${board.id}`} rel="noreferrer">Open in New Tab</a></li>
+                      <li><button onClick={() => { onClickRenameHandler(board.id, board.name) }}>Rename</button></li>
+                      <li><button onClick={() => { onClickDeleteHandler(board.id) }} className="text-error">Delete</button></li>
                     </ul>
                   </div>
                 </td>
