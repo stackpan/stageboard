@@ -22,7 +22,7 @@ class InColumnSize implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $columnsCount = Board::find($this->boardId)->columns()->count();
+        $columnsCount = Board::findOrFail($this->boardId)->columns()->count();
         
         if ($value > $columnsCount) {
             $fail('The :attribute is out of available columns.');
