@@ -1,42 +1,132 @@
-import { type Link } from '@/types'
-import type Board from '@/types'
-import http from '../httpClient'
+import { type Color } from '@/Enums'
+import httpClient from '@/httpClient'
+import { type Links, type Board, type Link, type ResponseBodyWithData, type User, type Column, type ResponseBody, type Card } from '@/types'
+import { type AxiosResponse, type AxiosInstance } from 'axios'
 
-interface BoardResponseObject {
+export type Boards = Array<Board & Links & { user: Pick<User, 'id' | 'name'> }>
+export type BoardDetail = Omit<Board, 'openedAt' | 'thumbnailUrl'>
+& Links
+& {
+  user: Pick<User, 'id' | 'name'>
+  columns: Array<Column & Links & { cards: Array<Card & Links> } >
+}
+
+type GetAllResponse = ResponseBodyWithData<Array<{
   id: string
   name: string
+  user: Pick<User, 'id' | 'name'>
   thumbnail_url: string
-  user: {
-    id: string
-    name: string
-  }
   opened_at: string
   created_at: string
   updated_at: string
   _links: Record<string, Link>
+}>>
+
+type GetResponse = ResponseBodyWithData<{
+  id: string
+  name: string
+  created_at: string
+  updated_at: string
+  user: Pick<User, 'id' | 'name'>
+  color: Color
+  columns: Array<Column & {
+    _links: Record<string, Link>
+    cards: Array<Card & { _links: Record<string, Link> }>
+  }>
+  _links: Record<string, Link>
+}>
+
+type CreateResponse = ResponseBodyWithData<{ board: Pick<Board, 'id'> }>
+
+class BoardService {
+  readonly #http: AxiosInstance
+
+  constructor (httpClient: AxiosInstance) {
+    this.#http = httpClient
+  }
+
+  async getAll (): Promise<Boards> {
+    try {
+      const { data: responseBody }: AxiosResponse<GetAllResponse, any> = await this.#http.get('/boards')
+      const boards = responseBody.data
+
+      return boards.map((board) => ({
+        id: board.id,
+        name: board.name,
+        thumbnailUrl: board.thumbnail_url,
+        user: board.user,
+        openedAt: board.opened_at,
+        createdAt: board.created_at,
+        updatedAt: board.updated_at,
+        links: board._links
+      }))
+    } catch (e: any) {
+      return e
+    }
+  }
+
+  async get (id: string): Promise<BoardDetail> {
+    try {
+      const { data: responseBody }: AxiosResponse<GetResponse, any> = await this.#http.get(`/boards/${id}`)
+      const board = responseBody.data
+
+      return {
+        id: board.id,
+        name: board.name,
+        user: board.user,
+        createdAt: board.created_at,
+        updatedAt: board.updated_at,
+        columns: board.columns.map((column) => ({
+          id: column.id,
+          name: column.name,
+          order: column.order,
+          color: column.color,
+          links: column._links,
+          cards: column.cards.map((card) => ({
+            id: card.id,
+            body: card.body,
+            color: card.color,
+            links: card._links
+          }))
+        })),
+        links: board._links
+      }
+    } catch (e: any) {
+      return e
+    }
+  }
+
+  async create (data: { name: string }): Promise<CreateResponse> {
+    try {
+      const { data: responseBody }: AxiosResponse<CreateResponse, any> = await this.#http.post('/boards', data)
+
+      return responseBody
+    } catch (e: any) {
+      return e
+    }
+  }
+
+  async edit (id: string, data: { name: string }): Promise<boolean> {
+    try {
+      const { data: responseBody }: AxiosResponse<ResponseBody, any> = await this.#http.patch(`/boards/${id}`, data)
+
+      return responseBody.message !== null
+    } catch (e: any) {
+      return e
+    }
+  }
+
+  async delete (id: string): Promise<boolean> {
+    try {
+      const { data: responseBody }: AxiosResponse<ResponseBody, any> = await this.#http.delete(`/boards/${id}`)
+
+      return responseBody.message !== null
+    } catch (e: any) {
+      return e
+    }
+  }
 }
 
-const getBoards = async (): Promise<Board[]> => {
-  return await new Promise((resolve, reject) => {
-    const boards = http.get('/boards')
-      .then(({ data: responseBody }) => {
-        return responseBody.data.map((board: BoardResponseObject): Board => ({
-          id: board.id,
-          name: board.name,
-          thumbnailUrl: board.thumbnail_url,
-          owner: board.user.name,
-          openedAt: board.opened_at,
-          links: board._links,
-          createdAt: board.created_at,
-          updatedAt: board.updated_at
-        }))
-      })
-      .catch((e: Error) => {
-        reject(e)
-      })
+const boardService = new BoardService(httpClient)
 
-    resolve(boards)
-  })
-}
-
-export { getBoards }
+export { boardService }

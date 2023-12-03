@@ -17,6 +17,7 @@ class CardResource extends JsonResource
         return [
             'id' => $this->id,
             'body' => $this->body,
+            'color' => $this->whenHas('color'),
             'created_at' => $this->whenHas('created_at'),
             'updated_at' => $this->whenHas('updated_at'),
             '_links' => [

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Color;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class CardFactory extends Factory
     {
         return [
             'body' => fake()->sentence(2),
+            'color' => fake()->randomElement(Color::class),
         ];
     }
 }

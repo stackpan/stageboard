@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Enums\Color;
 use App\Models\Column;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -123,6 +124,7 @@ class CardTest extends TestCase
 
         $requestBody = [
             'body' => 'Updated card...',
+            'color' => $card->color->value,
         ];
 
         $response = $this
@@ -140,6 +142,7 @@ class CardTest extends TestCase
         $this->assertDatabaseHas('cards', [
             'id' => $card->id,
             'body' => $requestBody['body'],
+            'color' => $requestBody['color'],
         ]);
     }
 
@@ -147,6 +150,7 @@ class CardTest extends TestCase
     {
         $requestBody = [
             'body' => 'Updated card...',
+            'color' => fake()->randomElement(Color::class)->value,
         ];
 
         $response = $this

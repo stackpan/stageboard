@@ -1,4 +1,5 @@
 import { type User } from '@/types'
+import { router } from '@inertiajs/react'
 import React from 'react'
 
 interface Props {
@@ -7,9 +8,12 @@ interface Props {
 
 export default function Navbar ({ user }: Props): JSX.Element {
   return (
-    <div className="navbar bg-base-100 shadow-md">
+    <div className="navbar bg-base-100 shadow-md z-10">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Stageboard</a>
+        {!route().current('home')
+          ? <a className="btn btn-ghost text-xl" onClick={() => { router.get('/home') }}>Stageboard</a>
+          : <a className="btn btn-ghost text-xl">Stageboard</a>
+        }
       </div>
       <div className="flex-none">
         <div className="dropdown dropdown-end">

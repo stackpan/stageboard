@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Color;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $order
  * @method static \Database\Factories\ColumnFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereOrder($value)
+ * @property Color $color
+ * @method static \Illuminate\Database\Eloquent\Builder|Column whereColor($value)
  * @mixin \Eloquent
  */
 class Column extends Model
@@ -41,6 +44,11 @@ class Column extends Model
     protected $fillable = [
         'name',
         'order',
+        'color',
+    ];
+
+    protected $casts = [
+        'color' => Color::class
     ];
     
     public function board(): BelongsTo

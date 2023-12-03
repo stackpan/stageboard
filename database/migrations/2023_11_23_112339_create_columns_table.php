@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('columns', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name', 24);
+            $table->enum('color', \App\Enums\Color::values());
             $table->timestamps();
             $table->unsignedTinyInteger('order');
             $table->foreignUlid('board_id')->constrained()->cascadeOnDelete();

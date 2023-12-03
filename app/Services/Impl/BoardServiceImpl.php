@@ -27,9 +27,9 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->create($userId, $data);
     }
     
-    public function get(string $id): ?Board
+    public function get(string $id, ?array $columns = null): ?Board
     {
-        return $this->boardRepository->get($id);
+        return $this->boardRepository->get($id, $columns);
     }
     
     public function update(string $id, BoardDto $data): void

@@ -31,14 +31,17 @@ class BoardRepositoryImpl implements BoardRepository
             ->id;
     }
 
-    public function get(string $id): ?Board
+    public function get(string $id, ?array $columns): ?Board
     {
-        return Board::select([
-                'id', 'name', 'created_at', 'updated_at', 'user_id',
-            ])
+        $cols = $columns ?? ['id', 'name', 'created_at', 'updated_at', 'user_id'];
+
+        return Board::select($cols)
             ->whereId($id)
             ->with('user:id,name')
-            ->with('columns:id,name,order,board_id')
+            ->with([
+                'columns:id,name,order,color,board_id',
+                'columns.cards:id,body,color,column_id'
+            ])
             ->firstOrFail();
     }
 

@@ -20,6 +20,7 @@ class ColumnResource extends JsonResource
             'created_at' => $this->whenHas('created_at'),
             'updated_at' => $this->whenHas('updated_at'),
             'order' => $this->order,
+            'color' => $this->whenHas('color'),
             'cards' => CardResource::collection($this->whenLoaded('cards')),
             '_links' => [
                 'self' => [

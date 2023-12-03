@@ -8,11 +8,11 @@ interface Props {
 
 export default function MainLayout ({ user, children }: PropsWithChildren<Props>): JSX.Element {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <header>
         <Navbar user={user} />
       </header>
-      <main>
+      <main className="flex-1 flex flex-col">
         {children}
       </main>
     </div>

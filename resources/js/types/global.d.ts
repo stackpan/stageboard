@@ -10,3 +10,5 @@ declare global {
   let route: typeof ziggyRoute
   let Ziggy: ZiggyConfig
 }
+
+declare module 'daisyui'
