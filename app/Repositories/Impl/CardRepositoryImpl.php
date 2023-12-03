@@ -3,6 +3,7 @@
 namespace App\Repositories\Impl;
 
 use App\Dto\CardDto;
+use App\Enums\Color;
 use App\Exceptions\ApplicationError\AlreadyOfColumnMemberException;
 use App\Exceptions\ApplicationError\CrossColumnMemberException;
 use App\Models\Card;
@@ -14,17 +15,20 @@ class CardRepositoryImpl implements CardRepository
 {
     public function getAllByColumnId(string $columnId): Collection
     {
-        return Card::select(['id', 'body', 'column_id'])
+        return Card::select(['id', 'body', 'color', 'column_id'])
             ->whereColumnId($columnId)
             ->get();
     }
 
     public function create(string $columnId, CardDto $data): string
     {
+        $color = $data->color ?? fake()->randomElement(Color::class);
+
         return Column::findOrFail($columnId)
             ->cards()
             ->create([
                 'body' => $data->body,
+                'color' => $color,
             ])
             ->id;
     }
@@ -39,6 +43,7 @@ class CardRepositoryImpl implements CardRepository
         Card::findOrFail($id)
             ->update([
                 'body' => $data->body,
+                'color' => $data->color,
             ]);
     }
 

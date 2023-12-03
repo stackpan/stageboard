@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Dto\CardDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\CardRequest;
+use App\Http\Requests\Api\CreateCardRequest;
 use App\Http\Requests\Api\MoveCardRequest;
+use App\Http\Requests\Api\UpdateCardRequest;
 use App\Http\Resources\CardResource;
 use App\Services\CardService;
 use Illuminate\Http\JsonResponse;
@@ -31,12 +32,13 @@ class CardController extends Controller
             ]);
     }
 
-    public function store(CardRequest $request, string $columnId): JsonResponse
+    public function store(CreateCardRequest $request, string $columnId): JsonResponse
     {
         $validated = $request->validated();
 
         $data = new CardDto(
             body: $validated['body'],
+            color: $validated['color'] ?? null,
         );
 
         $id = $this->cardService->create($columnId, $data);
@@ -63,12 +65,13 @@ class CardController extends Controller
             ]);
     }
 
-    public function update(CardRequest $request, string $id): JsonResponse
+    public function update(UpdateCardRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
 
         $data = new CardDto(
             body: $validated['body'],
+            color: $validated['color'],
         );
 
         $this->cardService->update($id, $data);

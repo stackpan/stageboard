@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Api;
 
+use App\Enums\Color;
 use App\Models\Board;
+use App\Models\Column;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -40,6 +42,7 @@ class ColumnTest extends TestCase
                         'id',
                         'name',
                         'order',
+                        'color',
                         '_links',
                     ],
                 ]
@@ -170,6 +173,7 @@ class ColumnTest extends TestCase
 
         $requestBody = [
             'name' => 'Updated Column',
+            'color' => $column->color->value,
         ];
 
         $response = $this
@@ -187,6 +191,7 @@ class ColumnTest extends TestCase
         $this->assertDatabaseHas('columns', [
             'id' => $column->id,
             'name' => $requestBody['name'],
+            'color' => $requestBody['color'],
         ]);
     }
 
@@ -194,6 +199,7 @@ class ColumnTest extends TestCase
     {
         $requestBody = [
             'name' => 'Updated Column',
+            'color' => fake()->randomElement(Color::class)->value,
         ];
 
         $response = $this

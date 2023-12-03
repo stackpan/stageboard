@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Enums\Color;
 use App\Rules\InColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateColumnRequest extends FormRequest
 {
@@ -27,6 +29,7 @@ class CreateColumnRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:24'],
             'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($boardId)],
+            'color' => ['nullable', Rule::enum(Color::class)],
         ];
     }
 }

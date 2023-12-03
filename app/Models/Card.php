@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereUpdatedAt($value)
  * @method static \Database\Factories\CardFactory factory($count = null, $state = [])
+ * @property Color $color
+ * @method static \Illuminate\Database\Eloquent\Builder|Card whereColor($value)
  * @mixin \Eloquent
  */
 class Card extends Model

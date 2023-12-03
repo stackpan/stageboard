@@ -38,6 +38,7 @@ class ColumnController extends Controller
         $data = new ColumnDto(
             name: $validated['name'],
             order: $validated['order'],
+            color: $validated['color'] ?? null,
         );
 
         $columnId = $this->columnService->create($boardId, $data);
@@ -70,6 +71,7 @@ class ColumnController extends Controller
 
         $data = new ColumnDto(
             name: $validated['name'],
+            color: $validated['color'],
         );
 
         $this->columnService->update($id, $data);

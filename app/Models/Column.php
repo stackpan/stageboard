@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $order
  * @method static \Database\Factories\ColumnFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereOrder($value)
+ * @property Color $color
+ * @method static \Illuminate\Database\Eloquent\Builder|Column whereColor($value)
  * @mixin \Eloquent
  */
 class Column extends Model

@@ -8,7 +8,7 @@ class CardDto
 {
     public function __construct(
         public readonly ?string $body = null,
-        public readonly ?Color $color = null,
+        public readonly ?string $color = null,
     )
     {
         //
