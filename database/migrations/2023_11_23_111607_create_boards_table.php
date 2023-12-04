@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->string('alias_id', 14)->unique();
             $table->string('name', 32);
             $table->string('thumbnail_url')->nullable();
             $table->timestamps();

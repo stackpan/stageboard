@@ -12,36 +12,33 @@ class BoardRepositoryImpl implements BoardRepository
 {
     public function getAllByUserId(string $userId): Collection
     {
-        return Board::select([
-                'id', 'name', 'thumbnail_url', 'user_id', 'created_at', 'updated_at',
-            ])
-            ->whereUserId($userId)
+        return Board::whereUserId($userId)
             ->with('user:id,name')
 //            ->with('opened_at')
             ->get();
     }
 
-    public function create(string $userId, BoardDto $data,): string
+    public function create(string $userId, BoardDto $data): string
     {
-        return User::findOrFail($userId)
-            ->boards()
-            ->create([
-                'name' => $data->name,
-            ])
-            ->id;
+        $aliasId = $this->generateAliasId();
+
+        $board = new Board;
+        $board->user_id = $userId;
+        $board->alias_id = $aliasId;
+        $board->name = $data->name;
+        $board->save();
+
+        return $board->id;
     }
 
     public function get(string $id, ?array $columns): ?Board
     {
-        $cols = $columns ?? ['id', 'name', 'created_at', 'updated_at', 'user_id'];
+        $cols = $columns ?? '*';
 
         return Board::select($cols)
             ->whereId($id)
             ->with('user:id,name')
-            ->with([
-                'columns:id,name,order,color,board_id',
-                'columns.cards:id,body,color,column_id'
-            ])
+            ->with('columns.cards')
             ->firstOrFail();
     }
 
@@ -57,5 +54,10 @@ class BoardRepositoryImpl implements BoardRepository
     {
         Board::findOrFail($id)
             ->delete();
+    }
+
+    private function generateAliasId(): string
+    {
+        return fake()->lexify('??????-????-??');
     }
 }

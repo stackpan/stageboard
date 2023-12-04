@@ -15,8 +15,7 @@ class CardRepositoryImpl implements CardRepository
 {
     public function getAllByColumnId(string $columnId): Collection
     {
-        return Card::select(['id', 'body', 'color', 'column_id'])
-            ->whereColumnId($columnId)
+        return Card::whereColumnId($columnId)
             ->get();
     }
 
@@ -56,11 +55,11 @@ class CardRepositoryImpl implements CardRepository
     public function moveToColumn(string $id, string $columnId): void
     {
         $card = Card::findOrFail($id);
-        
+
         if ($card->column_id === $columnId) {
             throw new AlreadyOfColumnMemberException();
         }
-        
+
         $column = Column::findOrFail($columnId);
 
         if ($column->board_id !== $card->column->board_id) {

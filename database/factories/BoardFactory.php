@@ -17,6 +17,7 @@ class BoardFactory extends Factory
     public function definition(): array
     {
         return [
+            'alias_id' => fake()->lexify('??????-????-??'),
             'name' => fake()->words(2, true),
         ];
     }

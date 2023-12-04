@@ -14,6 +14,7 @@ entity User {
 
 entity Board {
     * id : string
+    * alias_id: string
     * name : string
     thumbnail_url : string
     * created_at : timestamp
@@ -32,6 +33,7 @@ entity UserBoardActivity {
 entity Column {
     * id : string
     * name : string
+    * color: Color
     * created_at : timestamp
     * updated_at : timestamp
     * order : unsigned tinyint
@@ -42,10 +44,24 @@ entity Column {
 entity Card {
     * id : string
     body: string
+    * color: Color
     * created_at : timestamp
     * updated_at : timestamp
     ---
     * column_id : string
+}
+
+enum Color {
+    STONE
+    RED
+    AMBER
+    LIME
+    EMERALD
+    CYAN
+    BLUE
+    VIOLET
+    FUCHSIA
+    ROSE
 }
 
 User ||--o{ Board

@@ -13,8 +13,8 @@ class ColumnRepositoryImpl implements ColumnRepository
 {
     public function getAllByBoardId(string $boardId): Collection
     {
-        return Column::select(['id', 'name', 'order', 'color', 'board_id'])
-            ->whereBoardId($boardId)
+        return Column::whereBoardId($boardId)
+            ->with('cards')
             ->get();
     }
 
@@ -40,7 +40,7 @@ class ColumnRepositoryImpl implements ColumnRepository
     public function get(string $id, ?bool $nullable = false): ?Column
     {
         $query = Column::whereId($id)
-            ->with('cards:id,body,color,column_id');
+            ->with('cards');
 
         return $nullable ? $query->first() : $query->firstOrFail();
     }

@@ -38,19 +38,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Board extends Model
 {
     use HasFactory, HasUlids;
-    
+
     protected $fillable = [
         'name',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);    
+        return $this->belongsTo(User::class);
     }
-    
+
     public function columns(): HasMany
     {
-        return $this->hasMany(Column::class);    
+        return $this->hasMany(Column::class);
     }
 
     public function opened_at(): BelongsToMany
