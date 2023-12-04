@@ -18,9 +18,9 @@ class BoardController extends Controller
         //
     }
 
-    public function show(Request $request, string $id): Response
+    public function show(Request $request, string $aliasId): Response
     {
-        $board = $this->boardService->get($id, ['id', 'name']);
+        $board = $this->boardService->getByAliasId($aliasId, ['id', 'name']);
 
         return Inertia::render('Board', [
             'id' => $board->id,

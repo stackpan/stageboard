@@ -6,6 +6,7 @@ import { router } from '@inertiajs/react'
 
 interface Props {
   id: string
+  aliasId: string
   name: string
   thumbnailUrl: string
   owner: string
@@ -15,10 +16,10 @@ interface Props {
   onClickDeleteHandler: (id: string) => void
 }
 
-export default function BoardCard ({ id, name, thumbnailUrl, owner, openedAt, links, onClickRenameHandler, onClickDeleteHandler }: Props): JSX.Element {
+export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, openedAt, links, onClickRenameHandler, onClickDeleteHandler }: Props): JSX.Element {
   return (
     <div className="card card-compact w-64 bg-base-100 shadow-md">
-      <figure onClick={() => { router.get(`/board/${id}`) }} className="cursor-pointer h-32">
+      <figure onClick={() => { router.get(`/board/${aliasId}`) }} className="cursor-pointer h-32">
         {thumbnailUrl !== null
           ? <img src={thumbnailUrl} alt={`${name} thumbnail`} />
           : <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />

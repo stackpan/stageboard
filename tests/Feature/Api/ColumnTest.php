@@ -43,6 +43,14 @@ class ColumnTest extends TestCase
                         'name',
                         'order',
                         'color',
+                        'cards' => [
+                            '*' => [
+                                'id',
+                                'body',
+                                'color',
+                                '_links',
+                            ],
+                        ],
                         '_links',
                     ],
                 ]

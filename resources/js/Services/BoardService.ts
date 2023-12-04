@@ -52,6 +52,7 @@ class BoardService {
 
       return boards.map((board) => ({
         id: board.id,
+        aliasId: board.alias_id,
         name: board.name,
         thumbnailUrl: board.thumbnail_url,
         user: board.user,
@@ -72,6 +73,7 @@ class BoardService {
 
       return {
         id: board.id,
+        aliasId: board.alias_id,
         name: board.name,
         user: board.user,
         createdAt: board.created_at,
@@ -127,6 +129,4 @@ class BoardService {
   }
 }
 
-const boardService = new BoardService(httpClient)
-
-export { boardService }
+export const boardService = new BoardService(httpClient)

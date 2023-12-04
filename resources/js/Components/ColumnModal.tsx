@@ -1,11 +1,13 @@
-import React, { type ChangeEvent } from 'react'
+import React, { type FormEvent, type ChangeEvent } from 'react'
 
 interface Props {
   id: string
-  onInputNameChange: (e: ChangeEvent<HTMLInputElement>) => void
+  inputNameValue: string
+  onChangeNameHandler: (e: ChangeEvent<HTMLInputElement>) => void
+  onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void
 }
 
-export default function ColumnModal ({ id, onInputNameChange }: Props): JSX.Element {
+export default function ColumnModal ({ id, inputNameValue, onChangeNameHandler, onSubmitHandler }: Props): JSX.Element {
   return (
     <dialog id={id} className="modal">
       <section className="modal-box">
@@ -15,17 +17,18 @@ export default function ColumnModal ({ id, onInputNameChange }: Props): JSX.Elem
         <header>
           <h3 className="font-bold text-lg">Create New Column</h3>
         </header>
-        <form method="post" className="flex flex-col gap-4 mt-4">
+        <form className="flex flex-col gap-4 mt-4" onSubmit={onSubmitHandler}>
           <div>
             <input
               type="text"
               placeholder="Type the Column name"
               className="input input-sm input-bordered w-full"
-              onChange={(e) => { onInputNameChange(e) }}
+              value={inputNameValue}
+              onChange={onChangeNameHandler}
               />
           </div>
           <div className="flex justify-end">
-            <button className="btn btn-neutral btn-sm">Create</button>
+            <button className="btn btn-neutral btn-sm" type="submit" disabled={inputNameValue === ''}>Create</button>
           </div>
         </form>
       </section>

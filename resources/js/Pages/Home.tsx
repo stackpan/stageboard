@@ -160,6 +160,7 @@ export default function Home ({ auth }: PageProps): JSX.Element {
             : boards.map((board) => (
               <BoardCard key={board.id}
                 id={board.id}
+                aliasId={board.aliasId}
                 name={board.name}
                 owner={board.user.name}
                 thumbnailUrl={board.thumbnailUrl}

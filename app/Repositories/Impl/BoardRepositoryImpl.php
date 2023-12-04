@@ -2,9 +2,10 @@
 
 namespace App\Repositories\Impl;
 
+use App\Models\User;
 use App\Dto\BoardDto;
 use App\Models\Board;
-use App\Models\User;
+use Illuminate\Support\Arr;
 use App\Repositories\BoardRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -37,6 +38,17 @@ class BoardRepositoryImpl implements BoardRepository
 
         return Board::select($cols)
             ->whereId($id)
+            ->with('user:id,name')
+            ->with('columns.cards')
+            ->firstOrFail();
+    }
+
+    public function getByAliasId(string $aliasId, ?array $columns): ?Board
+    {
+        $cols = !is_null($columns) ? [...$columns, 'alias_id'] : '*';
+
+        return Board::select($cols)
+            ->whereAliasId($aliasId)
             ->with('user:id,name')
             ->with('columns.cards')
             ->firstOrFail();

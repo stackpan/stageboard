@@ -21,12 +21,16 @@ export interface Column {
   name: string
   order: number
   color: Color
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Card {
   id: string
   body: string
   color: Color
+  createdAt: string
+  updatedAt: string
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {

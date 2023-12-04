@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/home', HomeController::class)->name('web.home');
-    Route::get('/board/{board}', [BoardController::class, 'show'])->name('web.boards.show');
+    Route::get('/board/{aliasId}', [BoardController::class, 'show'])->name('web.boards.show');
 });
 
 require __DIR__.'/auth.php';
