@@ -1,144 +1,68 @@
-import React, { type ChangeEvent, useEffect, useState, type FormEvent } from 'react'
-import { Head, router } from '@inertiajs/react'
-import { type PageProps } from '@/types'
+import React, { type ChangeEvent, type FormEvent, useState } from 'react'
+import { Head, router, useForm } from '@inertiajs/react'
+import { type Board, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
-import { type Boards, boardService } from '@/Services/BoardService'
 import CreateBoardModal from '@/Components/CreateBoardModal'
-import BoardCardSkeleton from '@/Components/BoardCardSkeleton'
 import { closeModal, showModal } from '@/Utils/dom'
 import UpdateBoardModal from '@/Components/UpdateBoardModal'
 
-interface CreateBoardForm {
+type Props = PageProps<{
+  boards: Board[]
+}>
+
+interface UpdateBoardForm {
   name: string
 }
 
-interface UpdateBoardValue extends CreateBoardForm {
-  id: string
-  original: {
-    name: string
-  }
-}
-
-export default function Home ({ auth }: PageProps): JSX.Element {
+export default function Home ({ auth, boards }: Props): JSX.Element {
   const CREATE_BOARD_MODAL_ID = 'createBoardModal'
   const UPDATE_BOARD_MODAL_ID = 'updateBoardModal'
 
-  const [boards, setBoards] = useState<Boards>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-
-  const initialCreateBoardForm = {
-    name: ''
-  }
-
-  const initialUpdateBoardValue = {
-    ...initialCreateBoardForm,
+  const [updatingBoard, setUpdatingBoard] = useState<Pick<Board, 'id' | 'name'>>({
     id: '',
-    original: {
-      name: ''
-    }
-  }
+    name: ''
+  })
 
-  const [createBoardForm, setCreateBoardForm] = useState<CreateBoardForm>(initialCreateBoardForm)
-  const [updateBoardValue, setUpdateBoardValue] = useState<UpdateBoardValue>(initialUpdateBoardValue)
+  const updateBoardForm = useForm<UpdateBoardForm>({
+    name: ''
+  })
 
-  const resetCreateBoardForm = (): void => {
-    setCreateBoardForm(initialCreateBoardForm)
-  }
-
-  const resetUpdateBoardValue = (): void => {
-    setUpdateBoardValue(initialUpdateBoardValue)
-  }
-
-  const fetchBoards = (callback?: () => void): void => {
-    boardService.getAll()
-      .then((boards) => {
-        setBoards(boards)
-        if (callback !== null) {
-          callback?.()
-        }
-      })
-      .catch((e: Error) => {
-        console.log(e)
-      })
-  }
-
-  useEffect(() => {
-    fetchBoards(() => {
-      setIsLoading(false)
-    })
-  }, [])
-
-  const handleCreateBoardInputNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setCreateBoardForm((value) => ({
-      ...value,
-      name: e.target.value
+  const showRenameBoardModal = (board: Board): void => {
+    updateBoardForm.setData((previousData: UpdateBoardForm) => ({
+      ...previousData,
+      id: board.id,
+      name: board.name
     }))
-  }
 
-  const handleUpdateBoardInputNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setUpdateBoardValue((value) => ({
-      ...value,
-      name: e.target.value
-    }))
-  }
-
-  const handleCreate = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-    closeModal(CREATE_BOARD_MODAL_ID)
-
-    boardService.create(createBoardForm)
-      .then((response) => {
-        const id = response.data.board.id
-        resetCreateBoardForm()
-
-        router.get(`/board/${id}`)
-      })
-      .catch((e: Error) => {
-        console.log(e)
-      })
-  }
-
-  const handleDelete = (id: string): void => {
-    boardService.delete(id)
-      .then(() => {
-        fetchBoards()
-      })
-      .catch((e: Error) => {
-        console.log(e)
-      })
-  }
-
-  const handleUpdate = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-    closeModal(UPDATE_BOARD_MODAL_ID)
-
-    boardService.edit(updateBoardValue.id, { name: updateBoardValue.name })
-      .then((response) => {
-        resetUpdateBoardValue()
-
-        fetchBoards()
-      })
-      .catch((e: Error) => {
-        console.log(e)
-      })
-  }
-
-  const showUpdateModal = (id: string, name: string): void => {
-    setUpdateBoardValue({
-      id,
-      name,
-      original: {
-        name
-      }
+    setUpdatingBoard({
+      id: board.id,
+      name: board.name
     })
 
     showModal(UPDATE_BOARD_MODAL_ID)
   }
 
-  const handleCreateBoardModalClickClose = (): void => {
-    resetCreateBoardForm()
+  const handleUpdateBoardChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
+    updateBoardForm.setData((previousData: UpdateBoardForm) => ({
+      ...previousData,
+      name: e.target.value
+    }))
+  }
+
+  const handleUpdate = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
+    updateBoardForm.patch(`/boards/${updatingBoard.id}`)
+
+    updateBoardForm.reset()
+    closeModal(UPDATE_BOARD_MODAL_ID)
+    router.reload({ only: ['boards'] })
+  }
+
+  const handleDelete = (id: string): void => {
+    router.delete(`/boards/${id}`)
   }
 
   return (
@@ -149,15 +73,7 @@ export default function Home ({ auth }: PageProps): JSX.Element {
           <h2>Recent Boards</h2>
         </header>
         <div className="py-2 flex flex-row gap-4">
-          {isLoading
-            ? (
-              <>
-                <BoardCardSkeleton />
-                <BoardCardSkeleton />
-                <BoardCardSkeleton />
-              </>
-              )
-            : boards.map((board) => (
+          {boards.map((board) => (
               <BoardCard key={board.id}
                 id={board.id}
                 aliasId={board.aliasId}
@@ -165,11 +81,16 @@ export default function Home ({ auth }: PageProps): JSX.Element {
                 owner={board.user.name}
                 thumbnailUrl={board.thumbnailUrl}
                 openedAt={board.openedAt}
-                links={board.links}
-                onClickRenameHandler={showUpdateModal}
+                onClickRenameHandler={(id) => {
+                  const board = boards.find((board) => board.id === id)
+
+                  if (board !== undefined) {
+                    showRenameBoardModal(board)
+                  }
+                }}
                 onClickDeleteHandler={handleDelete}
               />
-            ))
+          ))
           }
         </div>
       </section>
@@ -179,24 +100,16 @@ export default function Home ({ auth }: PageProps): JSX.Element {
           <button
             className="btn btn-neutral btn-sm"
             onClick={() => { showModal(CREATE_BOARD_MODAL_ID) }}
-            disabled={isLoading}
           >Create New</button>
         </header>
         <div className="py-2 space-y-4">
           <div className="flex justify-end">
-            <CreateBoardModal
-              id={CREATE_BOARD_MODAL_ID}
-              inputName={createBoardForm.name}
-              onClickCloseHandler={handleCreateBoardModalClickClose}
-              onChangeNameHandler={handleCreateBoardInputNameChange}
-              onSubmitHandler={handleCreate}
-            />
+            <CreateBoardModal id={CREATE_BOARD_MODAL_ID} />
           </div>
           <div>
             <BoardTable
               boards={boards}
-              isLoading={isLoading}
-              onClickRenameHandler={showUpdateModal}
+              onClickRenameHandler={showRenameBoardModal}
               onClickDeleteHandler={handleDelete}
             />
           </div>
@@ -204,10 +117,10 @@ export default function Home ({ auth }: PageProps): JSX.Element {
       </section>
       <UpdateBoardModal
         id={UPDATE_BOARD_MODAL_ID}
-        original={updateBoardValue.original}
-        inputName={updateBoardValue.name}
-        onChangeNameHandler={handleUpdateBoardInputNameChange}
+        nameData={updateBoardForm.data.name}
+        onChangeNameHandler={handleUpdateBoardChangeName}
         onSubmitHandler={handleUpdate}
+        submitDisabler={updateBoardForm.data.name === '' || updateBoardForm.data.name === updatingBoard.name || updateBoardForm.processing}
       />
     </MainLayout>
   )

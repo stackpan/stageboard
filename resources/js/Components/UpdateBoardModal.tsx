@@ -2,15 +2,13 @@ import React, { type FormEvent, type ChangeEvent } from 'react'
 
 interface Props {
   id: string
-  inputName: string
-  original: {
-    name: string
-  }
+  nameData: string
   onChangeNameHandler: (e: ChangeEvent<HTMLInputElement>) => void
   onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void
+  submitDisabler: boolean
 }
 
-export default function UpdateBoardModal ({ id, inputName, original, onChangeNameHandler, onSubmitHandler }: Props): JSX.Element {
+export default function UpdateBoardModal ({ id, nameData, onChangeNameHandler, onSubmitHandler, submitDisabler }: Props): JSX.Element {
   return (
     <dialog id={id} className="modal">
       <section className="modal-box">
@@ -26,12 +24,14 @@ export default function UpdateBoardModal ({ id, inputName, original, onChangeNam
               type="text"
               placeholder="Type the board name"
               className="input input-sm input-bordered w-full"
-              value={inputName}
+              value={nameData}
               onChange={onChangeNameHandler}
+              maxLength={32}
+              required
               />
           </div>
           <div className="flex justify-end">
-            <button className="btn btn-neutral btn-sm" disabled={inputName === '' || inputName === original.name}>Save</button>
+            <button type="submit" className="btn btn-neutral btn-sm" disabled={submitDisabler}>Save</button>
           </div>
         </form>
       </section>

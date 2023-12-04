@@ -22,7 +22,7 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getAllByUserId($userId);
     }
 
-    public function create(string $userId, BoardDto $data): string
+    public function create(string $userId, BoardDto $data): Board
     {
         return $this->boardRepository->create($userId, $data);
     }

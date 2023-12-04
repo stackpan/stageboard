@@ -10,7 +10,7 @@ interface BoardRepository
 {
     public function getAllByUserId(string $userId): Collection;
 
-    public function create(string $userId, BoardDto $data): string;
+    public function create(string $userId, BoardDto $data): Board;
 
     public function get(string $id, ?array $columns): ?Board;
 

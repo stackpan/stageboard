@@ -9,11 +9,13 @@ export interface User {
 
 export interface Board {
   id: string
+  aliasId: string
   name: string
   thumbnailUrl: string
   openedAt: string
   createdAt: string
   updatedAt: string
+  user: Pick<User, 'id' | 'name'>
 }
 
 export interface Column {

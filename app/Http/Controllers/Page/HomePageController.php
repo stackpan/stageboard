@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Page;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BoardCollection;
 use App\Http\Resources\BoardResource;
+use App\Models\Board;
 use App\Services\BoardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,7 +30,7 @@ class HomePageController extends Controller
         $boards = $this->boardService->getAllByUserId($user->id);
 
         return Inertia::render('Home', [
-            'data' => new BoardCollection($boards)
+            'boards' => BoardResource::collection($boards)
         ]);
     }
 }

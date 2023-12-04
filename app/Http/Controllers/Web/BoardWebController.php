@@ -27,11 +27,9 @@ class BoardWebController extends Controller
             name: $validated['name'],
         );
 
-        $boardId = $this->boardService->create($user->id, $data);
+        $board = $this->boardService->create($user->id, $data);
 
-        $boardAliasId = $this->boardService->get($boardId, ['id', 'alias_id']);
-
-        return to_route(route('page.board.show', $boardAliasId));
+        return to_route('page.board.show', $board->alias_id);
     }
 
     public function update(BoardRequest $request, string $id): RedirectResponse

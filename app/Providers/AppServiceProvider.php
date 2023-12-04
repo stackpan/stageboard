@@ -15,6 +15,7 @@ use App\Services\Impl\BoardServiceImpl;
 use App\Services\Impl\CardServiceImpl;
 use App\Services\Impl\ColumnServiceImpl;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         Model::preventLazyLoading(!$this->app->isProduction());
-        
+
         if ($this->app->isLocal()) $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 
         $this->app->singleton(BoardRepository::class, BoardRepositoryImpl::class);
@@ -42,6 +43,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }

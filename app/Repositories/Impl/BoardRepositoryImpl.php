@@ -19,7 +19,7 @@ class BoardRepositoryImpl implements BoardRepository
             ->get();
     }
 
-    public function create(string $userId, BoardDto $data): string
+    public function create(string $userId, BoardDto $data): Board
     {
         $aliasId = $this->generateAliasId();
 
@@ -29,7 +29,7 @@ class BoardRepositoryImpl implements BoardRepository
         $board->name = $data->name;
         $board->save();
 
-        return $board->id;
+        return $board;
     }
 
     public function get(string $id, ?array $columns): ?Board

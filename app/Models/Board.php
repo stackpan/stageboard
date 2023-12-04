@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $opened_at
  * @property-read int|null $opened_at_count
  * @method static \Database\Factories\BoardFactory factory($count = null, $state = [])
+ * @property string $alias_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Board whereAliasId($value)
  * @mixin \Eloquent
  */
 class Board extends Model
