@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Dto\CardDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\CreateCardRequest;
-use App\Http\Requests\Api\MoveCardRequest;
-use App\Http\Requests\Api\UpdateCardRequest;
+use App\Http\Requests\CreateCardRequest;
+use App\Http\Requests\MoveCardRequest;
+use App\Http\Requests\UpdateCardRequest;
 use App\Http\Resources\CardResource;
 use App\Services\CardService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
-class CardController extends Controller
+class CardApiController extends Controller
 {
     public function __construct(
         private readonly CardService $cardService,
@@ -91,7 +90,7 @@ class CardController extends Controller
                 'message' => 'Card was successfully deleted.',
             ]);
     }
-    
+
     public function move(MoveCardRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();

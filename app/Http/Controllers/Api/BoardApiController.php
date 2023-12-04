@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Dto\BoardDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\BoardRequest;
+use App\Http\Requests\BoardRequest;
 use App\Http\Resources\BoardResource;
 use App\Services\BoardService;
 use Illuminate\Http\JsonResponse;
 
-class BoardController extends Controller
+class BoardApiController extends Controller
 {
     public function __construct(
         private readonly BoardService $boardService,
@@ -67,7 +67,7 @@ class BoardController extends Controller
     public function update(BoardRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();
-        
+
         $data = new BoardDto(
             name: $validated['name'],
         );

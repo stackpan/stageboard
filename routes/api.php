@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\BoardController;
-use App\Http\Controllers\Api\ColumnController;
-use App\Http\Controllers\Api\CardController;
+use App\Http\Controllers\Api\BoardApiController;
+use App\Http\Controllers\Api\ColumnApiController;
+use App\Http\Controllers\Api\CardApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth')->name('api.')->group(function () {
-    Route::apiResource('boards', BoardController::class);
-    Route::apiResource('boards.columns', ColumnController::class)->only(['index', 'store']);
-    Route::apiResource('columns', ColumnController::class)->except(['index', 'store']);
-    Route::patch('/columns/{column}/swap', [ColumnController::class, 'swap'])->name('columns.swap');
-    Route::apiResource('columns.cards', CardController::class)->only(['index', 'store']);
-    Route::apiResource('cards', CardController::class)->except(['index', 'store']);
-    Route::patch('/cards/{card}/move', [CardController::class, 'move'])->name('cards.move');
+    Route::apiResource('boards', BoardApiController::class);
+    Route::apiResource('boards.columns', ColumnApiController::class)->only(['index', 'store']);
+    Route::apiResource('columns', ColumnApiController::class)->except(['index', 'store']);
+    Route::patch('/columns/{column}/swap', [ColumnApiController::class, 'swap'])->name('columns.swap');
+    Route::apiResource('columns.cards', CardApiController::class)->only(['index', 'store']);
+    Route::apiResource('cards', CardApiController::class)->except(['index', 'store']);
+    Route::patch('/cards/{card}/move', [CardApiController::class, 'move'])->name('cards.move');
 });

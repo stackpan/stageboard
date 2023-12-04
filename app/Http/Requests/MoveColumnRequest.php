@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests;
 
-use App\Enums\Color;
+use App\Rules\InColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class CreateCardRequest extends FormRequest
+class MoveColumnRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +22,10 @@ class CreateCardRequest extends FormRequest
      */
     public function rules(): array
     {
+        $boardId = $this->route('board');
+
         return [
-            'body' => ['required', 'string', 'max:255'],
-            'color' => ['nullable', Rule::enum(Color::class)],
+            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($boardId)],
         ];
     }
 }

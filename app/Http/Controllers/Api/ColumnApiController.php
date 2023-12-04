@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Dto\ColumnDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\CreateColumnRequest;
-use App\Http\Requests\Api\MoveColumnRequest;
-use App\Http\Requests\Api\UpdateColumnRequest;
+use App\Http\Requests\CreateColumnRequest;
+use App\Http\Requests\MoveColumnRequest;
+use App\Http\Requests\UpdateColumnRequest;
 use App\Http\Resources\ColumnResource;
 use App\Services\ColumnService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
-class ColumnController extends Controller
+class ColumnApiController extends Controller
 {
     public function __construct(
         private readonly ColumnService $columnService,
@@ -30,7 +29,7 @@ class ColumnController extends Controller
             'data' => ColumnResource::collection($columns),
         ]);
     }
-    
+
     public function store(CreateColumnRequest $request, string $boardId): JsonResponse
     {
         $validated = $request->validated();
@@ -91,7 +90,7 @@ class ColumnController extends Controller
                 'message' => 'Column was successfully deleted.',
             ]);
     }
-    
+
     public function swap(MoveColumnRequest $request, string $id): JsonResponse
     {
         $validated = $request->validated();

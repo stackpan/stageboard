@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests;
 
 use App\Enums\Color;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateCardRequest extends FormRequest
+class CreateCardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class UpdateCardRequest extends FormRequest
     {
         return [
             'body' => ['required', 'string', 'max:255'],
-            'color' => ['required', Rule::enum(Color::class)],
+            'color' => ['nullable', Rule::enum(Color::class)],
         ];
     }
 }

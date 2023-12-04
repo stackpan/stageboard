@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Web\ProfileController;
-use App\Http\Controllers\Web\HomeController;
-use App\Http\Controllers\Web\BoardController;
+use App\Http\Controllers\Page\ShowBoardPageController;
+use App\Http\Controllers\Page\HomePageController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Web\BoardWebController;
+use App\Http\Controllers\Web\CardWebController;
+use App\Http\Controllers\Web\ColumnWebController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,8 +39,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/home', HomeController::class)->name('web.home');
-    Route::get('/board/{aliasId}', [BoardController::class, 'show'])->name('web.boards.show');
+    Route::name('page.')->group(function () {
+        Route::get('/home', HomePageController::class)->name('page.home');
+        Route::get('/board/{board}', ShowBoardPageController::class)->name('board.show');
+    });
+
+    Route::name('web.')->group(function () {
+        Route::apiResource('boards', BoardWebController::class)->only(['store', 'update', 'destroy']);
+        Route::apiResource('boards.columns', ColumnWebController::class)->only(['store']);
+        Route::apiResource('columns', ColumnWebController::class)->only(['update', 'destroy']);
+        Route::patch('/columns/{column}/swap', [ColumnWebController::class, 'swap'])->name('columns.swap');
+        Route::apiResource('columns.cards', CardWebController::class)->only(['store']);
+        Route::apiResource('cards', CardWebController::class)->only(['update', 'destroy']);
+        Route::patch('/cards/{card}/move', [CardWebController::class, 'move'])->name('cards.move');
+    });
 });
 
 require __DIR__.'/auth.php';

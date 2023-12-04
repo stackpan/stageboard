@@ -17,38 +17,38 @@ class ColumnResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'created_at' => $this->whenHas('created_at'),
-            'updated_at' => $this->whenHas('updated_at'),
+            'createdAt' => $this->whenHas('created_at'),
+            'updatedAt' => $this->whenHas('updated_at'),
             'order' => $this->order,
             'color' => $this->whenHas('color'),
             'cards' => CardResource::collection($this->whenLoaded('cards')),
-            '_links' => [
-                'self' => [
-                    'href' => route('api.columns.show', $this->id),
-                    'rel' => 'self',
-                    'method' => 'GET',
-                ],
-                'update' => [
-                    'href' => route('api.columns.update', $this->id),
-                    'rel' => 'self',
-                    'method' => 'PATCH',
-                ],
-                'delete' => [
-                    'href' => route('api.columns.destroy', $this->id),
-                    'rel' => 'self',
-                    'method' => 'DELETE',
-                ],
-                'swap' => [
-                    'href' => route('api.columns.swap', $this->id),
-                    'rel' => 'self',
-                    'method' => 'PATCH',
-                ],
-                'cards' => [
-                    'href' => route('api.columns.cards.index', $this->id),
-                    'rel' => 'cards',
-                    'method' => 'GET',
-                ],
-            ],
+//            '_links' => [
+//                'self' => [
+//                    'href' => route('api.columns.show', $this->id),
+//                    'rel' => 'self',
+//                    'method' => 'GET',
+//                ],
+//                'update' => [
+//                    'href' => route('api.columns.update', $this->id),
+//                    'rel' => 'self',
+//                    'method' => 'PATCH',
+//                ],
+//                'delete' => [
+//                    'href' => route('api.columns.destroy', $this->id),
+//                    'rel' => 'self',
+//                    'method' => 'DELETE',
+//                ],
+//                'swap' => [
+//                    'href' => route('api.columns.swap', $this->id),
+//                    'rel' => 'self',
+//                    'method' => 'PATCH',
+//                ],
+//                'cards' => [
+//                    'href' => route('api.columns.cards.index', $this->id),
+//                    'rel' => 'cards',
+//                    'method' => 'GET',
+//                ],
+//            ],
         ];
     }
 }

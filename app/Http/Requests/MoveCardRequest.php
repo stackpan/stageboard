@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests;
 
-use App\Rules\InColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
 
-class MoveColumnRequest extends FormRequest
+class MoveCardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +21,8 @@ class MoveColumnRequest extends FormRequest
      */
     public function rules(): array
     {
-        $boardId = $this->route('board');
-        
         return [
-            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($boardId)],
+            'column_id' => ['required', 'ulid'],
         ];
     }
 }
