@@ -29,7 +29,7 @@ class BoardWebController extends Controller
 
         $board = $this->boardService->create($user->id, $data);
 
-        return to_route('page.board.show', $board->alias_id);
+        return to_route('web.page.board.show', $board->alias_id);
     }
 
     public function update(BoardRequest $request, string $id): RedirectResponse

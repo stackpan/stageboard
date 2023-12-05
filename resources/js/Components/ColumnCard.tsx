@@ -1,7 +1,7 @@
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import TaskCard from './TaskCard'
-import { type Card, type Links } from '@/types'
+import { type Card } from '@/types'
 import { type Color, ColumnPosition } from '@/Enums'
 import { showModal } from '@/Utils/dom'
 
@@ -10,10 +10,10 @@ interface Props {
   name: string
   position: ColumnPosition
   color: Color
-  cards: Array<Card & Links>
+  cards: Card[]
 }
 
-export default function ColumnCard ({ id, name, position, cards, links, color }: Props & Links): JSX.Element {
+export default function ColumnCard ({ id, name, position, cards, color }: Props): React.JSX {
   const stripColorVariants = {
     stone: 'bg-stone-400',
     red: 'bg-red-400',
@@ -61,7 +61,6 @@ export default function ColumnCard ({ id, name, position, cards, links, color }:
               key={card.id}
               id={card.id}
               body={card.body}
-              links={card.links}
               color={card.color}
               columnPosition={position}
             />

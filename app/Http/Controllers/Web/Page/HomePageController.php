@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Page;
+namespace App\Http\Controllers\Web\Page;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BoardCollection;
 use App\Http\Resources\BoardResource;
-use App\Models\Board;
 use App\Services\BoardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

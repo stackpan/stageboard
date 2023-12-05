@@ -7,6 +7,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class BoardResource extends JsonResource
 {
+    public function __construct(
+        $resource,
+        private readonly ?bool $withRelations = true,
+    )
+    {
+        parent::__construct($resource);
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,7 +22,7 @@ class BoardResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $result = [
             'id' => $this->id,
             'aliasId' => $this->alias_id,
             'name' => $this->name,
@@ -26,7 +34,6 @@ class BoardResource extends JsonResource
                 'name' => $this->user->name,
             ],
             'openedAt' => $this->whenHas('opened_at'),
-            'columns' => ColumnResource::collection($this->whenLoaded('columns')),
 //            '_links' => [
 //                'self' => [
 //                    'href' => route('api.boards.show', $this->id),
@@ -50,5 +57,11 @@ class BoardResource extends JsonResource
 //                ],
 //            ],
         ];
+
+        if ($this->withRelations) {
+            $result['columns'] = ColumnResource::collection($this->whenLoaded('columns'));
+        }
+
+        return $result;
     }
 }

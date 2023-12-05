@@ -1,5 +1,4 @@
 import { type Color, ColumnPosition } from '@/Enums'
-import { type Links } from '@/types'
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
@@ -10,7 +9,7 @@ interface Props {
   columnPosition: ColumnPosition
 }
 
-export default function TaskCard ({ id, body, color, columnPosition, links }: Props & Links): JSX.Element {
+export default function TaskCard ({ id, body, color, columnPosition }: Props): JSX.Element {
   const backgroundColorVariants = {
     stone: 'bg-stone-100',
     red: 'bg-red-100',

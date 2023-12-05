@@ -1,13 +1,47 @@
-import React, { type FormEvent, type ChangeEvent } from 'react'
+import React, { type ChangeEvent, type FormEvent } from 'react'
+import { router, useForm } from '@inertiajs/react'
 
 interface Props {
   id: string
-  inputNameValue: string
-  onChangeNameHandler: (e: ChangeEvent<HTMLInputElement>) => void
-  onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void
+  boardId: string
+  lastIndex: number
 }
 
-export default function ColumnModal ({ id, inputNameValue, onChangeNameHandler, onSubmitHandler }: Props): JSX.Element {
+interface Form {
+  name: string
+  order: number
+}
+
+export default function ColumnModal ({ id, boardId, lastIndex }: Props): JSX.Element {
+  const {
+    data,
+    setData,
+    post,
+    processing,
+    reset
+  } = useForm<Form>({
+    name: '',
+    order: lastIndex
+  })
+
+  const handleChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
+    setData((previousData: Form) => ({
+      ...previousData,
+      name: e.target.value
+    }))
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
+    post(route('web.boards.columns.store', boardId), {
+      onFinish: () => {
+        reset()
+        router.reload({ only: ['columns'] })
+      }
+    })
+  }
+
   return (
     <dialog id={id} className="modal">
       <section className="modal-box">
@@ -17,18 +51,18 @@ export default function ColumnModal ({ id, inputNameValue, onChangeNameHandler, 
         <header>
           <h3 className="font-bold text-lg">Create New Column</h3>
         </header>
-        <form className="flex flex-col gap-4 mt-4" onSubmit={onSubmitHandler}>
+        <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
               placeholder="Type the Column name"
               className="input input-sm input-bordered w-full"
-              value={inputNameValue}
-              onChange={onChangeNameHandler}
+              value={data.name}
+              onChange={handleChangeName}
               />
           </div>
           <div className="flex justify-end">
-            <button className="btn btn-neutral btn-sm" type="submit" disabled={inputNameValue === ''}>Create</button>
+            <button className="btn btn-neutral btn-sm" type="submit" disabled={data.name === '' || processing}>Create</button>
           </div>
         </form>
       </section>

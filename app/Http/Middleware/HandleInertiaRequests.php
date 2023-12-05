@@ -33,7 +33,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user()->only('id', 'name', 'email', 'email_verified_at'),
+                'user' => $request->user(),
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->filter('api.*', false)->toArray(),
