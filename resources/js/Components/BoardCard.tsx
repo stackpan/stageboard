@@ -2,7 +2,6 @@ import React from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { formatFromNow } from '@/Utils/datetime'
 import { router } from '@inertiajs/react'
-import { type Board } from '@/types'
 
 interface Props {
   id: string
@@ -18,7 +17,7 @@ interface Props {
 export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, openedAt, onClickRenameHandler, onClickDeleteHandler }: Props): JSX.Element {
   return (
     <div className="card card-compact w-64 bg-base-100 shadow-md">
-      <figure onClick={() => { router.get(`/board/${aliasId}`) }} className="cursor-pointer h-32">
+      <figure onClick={() => { router.get(route('web.page.board.show', aliasId)) }} className="cursor-pointer h-32">
         {thumbnailUrl !== null
           ? <img src={thumbnailUrl} alt={`${name} thumbnail`} />
           : <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />
@@ -32,7 +31,7 @@ export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, ope
               <EllipsisVerticalIcon className="h-6 w-6" />
             </div>
             <ul className="p-0 shadow menu menu-sm dropdown-content z-10 bg-base-100 rounded-box w-36">
-              <li><a target="_blank" href={route('page.board.show', aliasId)} rel="noreferrer">Open in New Tab</a></li>
+              <li><a target="_blank" href={route('web.page.board.show', aliasId)} rel="noreferrer">Open in New Tab</a></li>
               <li><button onClick={() => { onClickRenameHandler(id) }}>Rename</button></li>
               <li><button onClick={() => { onClickDeleteHandler(id) }} className="text-error">Delete</button></li>
             </ul>

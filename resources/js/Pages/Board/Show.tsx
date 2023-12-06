@@ -12,7 +12,7 @@ type Props = PageProps<{
   columns: Array<Column & { cards: Card[] }>
 }>
 
-export default function BoardPage ({ auth, board, columns }: Props): JSX.Element {
+export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const CREATE_COLUMN_MODAL_ID = 'createColumnModal'
 
   const getColumnPosition = (order: number): ColumnPosition => {
@@ -23,9 +23,10 @@ export default function BoardPage ({ auth, board, columns }: Props): JSX.Element
 
   return (
     <MainLayout user={auth.user}>
-      <Head title={board?.name ?? name} />
+      <Head title={board.name} />
       <section className="flex-1 flex flex-col">
         <header className="px-6 pt-8 pb-2 flex justify-between">
+          <h1 className="font-bold text-2xl">{board.name}</h1>
           <button
             className="btn btn-neutral btn-sm"
             onClick={() => { showModal(CREATE_COLUMN_MODAL_ID) }}

@@ -35,7 +35,7 @@ export default function BoardTable ({ boards, onClickRenameHandler, onClickDelet
                       <EllipsisVerticalIcon className="h-6 w-6" />
                     </div>
                     <ul className="p-0 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36">
-                      <li><a target="_blank" href={route('page.board.show', board.aliasId)} rel="noreferrer">Open in New Tab</a></li>
+                      <li><a target="_blank" href={route('web.page.board.show', board.aliasId)} rel="noreferrer">Open in New Tab</a></li>
                       <li><button onClick={() => { onClickRenameHandler(board) }}>Rename</button></li>
                       <li><button onClick={() => { onClickDeleteHandler(board.id) }} className="text-error">Delete</button></li>
                     </ul>

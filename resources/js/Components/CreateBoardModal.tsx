@@ -25,7 +25,7 @@ export default function CreateBoardModal ({ id }: Props): JSX.Element {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    post('/boards')
+    post(route('web.boards.store'))
   }
 
   return (

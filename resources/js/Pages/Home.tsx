@@ -29,7 +29,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
     name: ''
   })
 
-  const showRenameBoardModal = (board: Board): void => {
+  const showUpdateBoardModal = (board: Board): void => {
     updateBoardForm.setData((previousData: UpdateBoardForm) => ({
       ...previousData,
       id: board.id,
@@ -54,7 +54,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
   const handleUpdate = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    updateBoardForm.patch(`/boards/${updatingBoard.id}`)
+    updateBoardForm.patch(route('web.boards.update', updatingBoard.id))
 
     updateBoardForm.reset()
     closeModal(UPDATE_BOARD_MODAL_ID)
@@ -62,7 +62,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
   }
 
   const handleDelete = (id: string): void => {
-    router.delete(`/boards/${id}`)
+    router.delete(route('web.boards.destroy', id))
   }
 
   return (
@@ -85,7 +85,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
                   const board = boards.find((board) => board.id === id)
 
                   if (board !== undefined) {
-                    showRenameBoardModal(board)
+                    showUpdateBoardModal(board)
                   }
                 }}
                 onClickDeleteHandler={handleDelete}
@@ -109,7 +109,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
           <div>
             <BoardTable
               boards={boards}
-              onClickRenameHandler={showRenameBoardModal}
+              onClickRenameHandler={showUpdateBoardModal}
               onClickDeleteHandler={handleDelete}
             />
           </div>

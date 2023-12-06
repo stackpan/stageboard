@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/cards/{card}/move', [CardWebController::class, 'move'])->name('cards.move');
 
         Route::name('page.')->group(function () {
-            Route::get('/home', HomePageController::class)->name('page.home');
+            Route::get('/home', HomePageController::class)->name('home');
             Route::get('/board/{board}', ShowBoardPageController::class)->name('board.show');
         });
     });

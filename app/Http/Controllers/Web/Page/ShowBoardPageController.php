@@ -23,7 +23,7 @@ class ShowBoardPageController extends Controller
     {
         $board = $this->boardService->getByAliasId($aliasId);
 
-        return Inertia::render('BoardPage', [
+        return Inertia::render('Board/Show', [
             'board' => new BoardResource($board, false),
             'columns' => ColumnResource::collection($board->columns)
         ]);
