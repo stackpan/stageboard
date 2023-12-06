@@ -16,3 +16,8 @@ export enum Color {
   Fuchsia = 'fuchsia',
   Rose = 'rose',
 }
+
+export enum SwapDirection {
+  Left = -1,
+  Right = 1
+}

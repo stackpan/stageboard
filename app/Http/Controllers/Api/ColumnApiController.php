@@ -91,11 +91,11 @@ class ColumnApiController extends Controller
             ]);
     }
 
-    public function swap(MoveColumnRequest $request, string $id): JsonResponse
+    public function swap(MoveColumnRequest $request, string $boardId, string $columnId): JsonResponse
     {
         $validated = $request->validated();
 
-        $this->columnService->move($id, $validated['order']);
+        $this->columnService->swap($columnId, $validated['order']);
 
         return response()
             ->json([

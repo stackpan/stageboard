@@ -44,7 +44,7 @@ class ColumnServiceImpl implements ColumnService
         $this->columnRepository->delete($id);
     }
 
-    public function move(string $id, int $destinationOrder): void
+    public function swap(string $id, int $destinationOrder): void
     {
         $column = $this->columnRepository->get($id);
         $targetIndex = $column->order;
@@ -68,6 +68,6 @@ class ColumnServiceImpl implements ColumnService
             );
         }
 
-        $this->columnRepository->move($id, $destinationOrder);
+        $this->columnRepository->swap($id, $destinationOrder);
     }
 }

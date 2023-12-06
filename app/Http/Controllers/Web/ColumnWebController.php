@@ -60,7 +60,7 @@ class ColumnWebController extends Controller
     {
         $validated = $request->validated();
 
-        $this->columnService->move($id, $validated['order']);
+        $this->columnService->swap($id, $validated['order']);
 
         return back();
     }

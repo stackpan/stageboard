@@ -22,10 +22,10 @@ class MoveColumnRequest extends FormRequest
      */
     public function rules(): array
     {
-        $boardId = $this->route('board');
+        $columnId = $this->route('column');
 
         return [
-            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($boardId)],
+            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($columnId)],
         ];
     }
 }

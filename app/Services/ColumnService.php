@@ -18,5 +18,5 @@ interface ColumnService
 
     public function delete(string $id): void;
 
-    public function move(string $id, int $destinationOrder): void;
+    public function swap(string $id, int $destinationOrder): void;
 }

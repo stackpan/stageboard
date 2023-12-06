@@ -24,6 +24,6 @@ interface ColumnRepository
 
     public function unshift(string $boardId, int $fromOrder, ?int $toOrder = null): void;
 
-    public function move(string $id, int $toOrder): void;
+    public function swap(string $id, int $toOrder): void;
 
 }

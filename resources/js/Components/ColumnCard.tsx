@@ -2,18 +2,21 @@ import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import TaskCard from './TaskCard'
 import { type Card } from '@/types'
-import { type Color, ColumnPosition } from '@/Enums'
+import { type Color, ColumnPosition, SwapDirection } from '@/Enums'
 import { showModal } from '@/Utils/dom'
 
 interface Props {
   id: string
   name: string
+  order: number
   position: ColumnPosition
   color: Color
   cards: Card[]
+  onClickDeleteHandler: (id: string) => void
+  onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
 }
 
-export default function ColumnCard ({ id, name, position, cards, color }: Props): React.JSX {
+export default function ColumnCard ({ id, name, order, position, cards, color, onClickDeleteHandler, onClickSwapHandler }: Props): JSX.Element {
   const stripColorVariants = {
     stone: 'bg-stone-400',
     red: 'bg-red-400',
@@ -44,13 +47,13 @@ export default function ColumnCard ({ id, name, position, cards, color }: Props)
               <ul tabIndex={0} className="p-0 shadow menu menu-sm dropdown-content z-30 bg-base-100 rounded-box w-36 border">
                 <li><a>Rename</a></li>
                 {position !== ColumnPosition.Last
-                  ? <li><a>Move to Right</a></li>
-                  : <li className="disabled"><a>Move to Right</a></li>}
+                  ? <li><button onClick={() => { onClickSwapHandler(id, order, SwapDirection.Right) }}>Swap to Right</button></li>
+                  : <li className="disabled"><button>Swap to Right</button></li>}
                 {position !== ColumnPosition.First
-                  ? <li><a>Move to Left</a></li>
-                  : <li className="disabled"><a>Move to Left</a></li>
+                  ? <li><button onClick={() => { onClickSwapHandler(id, order, SwapDirection.Left) }}>Swap to Left</button></li>
+                  : <li className="disabled"><button>Swap to Left</button></li>
                 }
-                <li><a className="text-error">Delete</a></li>
+                <li><button className="text-error" onClick={() => { onClickDeleteHandler(id) }}>Delete</button></li>
               </ul>
             </div>
           </div>

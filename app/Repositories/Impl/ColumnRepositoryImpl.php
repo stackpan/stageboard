@@ -84,7 +84,7 @@ class ColumnRepositoryImpl implements ColumnRepository
         $query->decrement('order');
     }
 
-    public function move(string $id, int $toOrder): void
+    public function swap(string $id, int $toOrder): void
     {
         Column::findOrFail($id)
             ->update([

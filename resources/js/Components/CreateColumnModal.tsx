@@ -1,5 +1,6 @@
 import React, { type ChangeEvent, type FormEvent } from 'react'
 import { router, useForm } from '@inertiajs/react'
+import {closeModal} from "@/Utils/dom";
 
 interface Props {
   id: string
@@ -12,7 +13,7 @@ interface Form {
   order: number
 }
 
-export default function ColumnModal ({ id, boardId, lastIndex }: Props): JSX.Element {
+export default function CreateColumnModal ({ id, boardId, lastIndex }: Props): JSX.Element {
   const {
     data,
     setData,
@@ -38,15 +39,21 @@ export default function ColumnModal ({ id, boardId, lastIndex }: Props): JSX.Ele
       onFinish: () => {
         reset()
         router.reload({ only: ['columns'] })
+        closeModal(id)
       }
     })
+  }
+
+  const handleClose = (): void => {
+    closeModal(id)
+    reset()
   }
 
   return (
     <dialog id={id} className="modal">
       <section className="modal-box">
         <form method="dialog">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={handleClose}>✕</button>
         </form>
         <header>
           <h3 className="font-bold text-lg">Create New Column</h3>
