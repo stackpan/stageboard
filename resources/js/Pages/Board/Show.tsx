@@ -8,6 +8,7 @@ import { Head, router, useForm } from '@inertiajs/react'
 import React, { type ChangeEvent, useState } from 'react'
 
 import UpdateColumnModal from '@/Components/Modals/UpdateColumnModal'
+import CreateCardModal from '@/Components/Modals/CreateCardModal'
 
 type Props = PageProps<{
   board: Board
@@ -19,16 +20,19 @@ interface UpdateColumnForm {
   color: Color
 }
 
-export default function Show ({ auth, board, columns }: Props): JSX.Element {
-  const CREATE_COLUMN_MODAL_ID = 'createColumnModal'
-  const UPDATE_COLUMN_MODAL_ID = 'updateColumnModal'
+export type SelectingColumn = Pick<Column, 'id' | 'name' | 'color'>
 
-  const initialUpdatingColumnValue = {
+const CREATE_COLUMN_MODAL_ID = 'createColumnModal'
+const UPDATE_COLUMN_MODAL_ID = 'updateColumnModal'
+const CREATE_CARD_MODAL_ID = 'createCardModal'
+
+export default function Show ({ auth, board, columns }: Props): JSX.Element {
+  const initialSelectingColumnValue = {
     id: '',
     name: '',
     color: Color.Stone
   }
-  const [updatingColumn, setUpdatingColumn] = useState<Pick<Column, 'id' | 'name' | 'color'>>(initialUpdatingColumnValue)
+  const [selectingColumn, setSelectingColumn] = useState<SelectingColumn>(initialSelectingColumnValue)
 
   const updateColumnForm = useForm<UpdateColumnForm>({
     name: '',
@@ -41,12 +45,12 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     return ColumnPosition.Middle
   }
 
-  const handleEditColumn = (column: Pick<Column, 'id' | 'name' | 'color'>): void => {
+  const handleEditColumn = (column: SelectingColumn): void => {
     updateColumnForm.setData({
       name: column.name,
       color: column.color
     })
-    setUpdatingColumn(column)
+    setSelectingColumn(column)
 
     showModal(UPDATE_COLUMN_MODAL_ID)
   }
@@ -59,21 +63,21 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   }
 
   const handleUpdateColumn = (): void => {
-    updateColumnForm.patch(route('web.columns.update', updatingColumn.id), {
+    updateColumnForm.patch(route('web.columns.update', selectingColumn.id), {
       onFinish: () => {
         router.reload({ only: ['columns'] })
 
         closeModal(UPDATE_COLUMN_MODAL_ID)
         updateColumnForm.reset()
-        setUpdatingColumn(initialUpdatingColumnValue)
+        setSelectingColumn(initialSelectingColumnValue)
       }
     })
   }
 
-  const handleCloseUpdateColumnModal = (): void => {
+  const closeUpdateColumnModal = (): void => {
     closeModal(UPDATE_COLUMN_MODAL_ID)
     updateColumnForm.reset()
-    setUpdatingColumn(initialUpdatingColumnValue)
+    setSelectingColumn(initialSelectingColumnValue)
   }
 
   const handleDeleteColumn = (id: string): void => {
@@ -94,6 +98,16 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
         router.reload({ only: ['columns'] })
       }
     })
+  }
+
+  const handleOpenCreateCardModal = (column: SelectingColumn): void => {
+    setSelectingColumn(column)
+    showModal(CREATE_CARD_MODAL_ID)
+  }
+
+  const handleCloseCreateCardModal = (): void => {
+    setSelectingColumn(initialSelectingColumnValue)
+    closeModal(CREATE_CARD_MODAL_ID)
   }
 
   return (
@@ -121,6 +135,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
                 onClickEditHandler={handleEditColumn}
                 onClickSwapHandler={handleSwapColumn}
                 onClickDeleteHandler={handleDeleteColumn}
+                onClickCreateCardHandler={handleOpenCreateCardModal}
               />
             ))}
         </div>
@@ -133,10 +148,15 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       <UpdateColumnModal
         id={UPDATE_COLUMN_MODAL_ID}
         nameData={updateColumnForm.data.name}
-        onClickCloseHandler={handleCloseUpdateColumnModal}
+        onClickCloseHandler={closeUpdateColumnModal}
         onChangeNameHandler={handleUpdateColumnChangeName}
         onSubmitHandler={handleUpdateColumn}
-        submitDisabler={updateColumnForm.data.name === '' || updateColumnForm.data.name === updatingColumn.name || updateColumnForm.processing}
+        submitDisabler={updateColumnForm.data.name === '' || updateColumnForm.data.name === selectingColumn.name || updateColumnForm.processing}
+      />
+      <CreateCardModal
+        id={CREATE_CARD_MODAL_ID}
+        columnId={selectingColumn.id}
+        onClickCloseHandler={handleCloseCreateCardModal}
       />
     </MainLayout>
   )

@@ -9,20 +9,20 @@ interface Props {
   columnPosition: ColumnPosition
 }
 
-export default function TaskCard ({ id, body, color, columnPosition }: Props): JSX.Element {
-  const backgroundColorVariants = {
-    stone: 'bg-stone-100',
-    red: 'bg-red-100',
-    amber: 'bg-amber-100',
-    lime: 'bg-lime-100',
-    emerald: 'bg-emerald-100',
-    cyan: 'bg-cyan-100',
-    blue: 'bg-blue-100',
-    violet: 'bg-violet-100',
-    fuchsia: 'bg-fuchsia-100',
-    rose: 'bg-rose-100'
-  }
+const backgroundColorVariants = {
+  stone: 'bg-stone-100',
+  red: 'bg-red-100',
+  amber: 'bg-amber-100',
+  lime: 'bg-lime-100',
+  emerald: 'bg-emerald-100',
+  cyan: 'bg-cyan-100',
+  blue: 'bg-blue-100',
+  violet: 'bg-violet-100',
+  fuchsia: 'bg-fuchsia-100',
+  rose: 'bg-rose-100'
+}
 
+export default function TaskCard ({ id, body, color, columnPosition }: Props): JSX.Element {
   return (
     <div className={'card card-compact shadow-md border border-neutral ' + backgroundColorVariants[color]}>
       <div className="card-body !p-2">

@@ -1,9 +1,9 @@
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import TaskCard from './TaskCard'
-import { type Card, type Column } from '@/types'
+import { type Card } from '@/types'
 import { type Color, ColumnPosition, SwapDirection } from '@/Enums'
-import { showModal } from '@/Utils/dom'
+import { type SelectingColumn } from '@/Pages/Board/Show'
 
 interface Props {
   id: string
@@ -12,9 +12,23 @@ interface Props {
   position: ColumnPosition
   color: Color
   cards: Card[]
-  onClickEditHandler: (column: Pick<Column, 'id' | 'name' | 'color'>) => void
+  onClickEditHandler: (column: SelectingColumn) => void
   onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
   onClickDeleteHandler: (id: string) => void
+  onClickCreateCardHandler: (column: SelectingColumn) => void
+}
+
+const stripColorVariants = {
+  stone: 'bg-stone-400',
+  red: 'bg-red-400',
+  amber: 'bg-amber-400',
+  lime: 'bg-lime-400',
+  emerald: 'bg-emerald-400',
+  cyan: 'bg-cyan-400',
+  blue: 'bg-blue-400',
+  violet: 'bg-violet-400',
+  fuchsia: 'bg-fuchsia-400',
+  rose: 'bg-rose-400'
 }
 
 export default function ColumnCard ({
@@ -26,21 +40,9 @@ export default function ColumnCard ({
   color,
   onClickEditHandler,
   onClickDeleteHandler,
-  onClickSwapHandler
+  onClickSwapHandler,
+  onClickCreateCardHandler
 }: Props): JSX.Element {
-  const stripColorVariants = {
-    stone: 'bg-stone-400',
-    red: 'bg-red-400',
-    amber: 'bg-amber-400',
-    lime: 'bg-lime-400',
-    emerald: 'bg-emerald-400',
-    cyan: 'bg-cyan-400',
-    blue: 'bg-blue-400',
-    violet: 'bg-violet-400',
-    fuchsia: 'bg-fuchsia-400',
-    rose: 'bg-rose-400'
-  }
-
   return (
     <div className="card card-compact w-72 bg-base-100 shadow-md border border-neutral rounded space-y-4">
       <div className={'h-2 ' + stripColorVariants[color]}></div>
@@ -48,7 +50,7 @@ export default function ColumnCard ({
         <div className="flex justify-between items-start">
           <h2 className="card-title">{name}</h2>
           <div className="space-x-2">
-            <div className="btn btn-ghost btn-square btn-xs" onClick={() => { showModal('createColumnModal') }}>
+            <div className="btn btn-ghost btn-square btn-xs" onClick={() => { onClickCreateCardHandler({ id, name, color }) }}>
               <PlusIcon className="h-6 w-6" />
             </div>
             <div className={'dropdown' + (position === ColumnPosition.Last ? ' dropdown-end' : '')}>
