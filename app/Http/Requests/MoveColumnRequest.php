@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Column;
 use App\Rules\InColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,9 +24,10 @@ class MoveColumnRequest extends FormRequest
     public function rules(): array
     {
         $columnId = $this->route('column');
+        $board = Column::findOrFail($columnId)->board;
 
         return [
-            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($columnId)],
+            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($board)],
         ];
     }
 }

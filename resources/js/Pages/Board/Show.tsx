@@ -1,24 +1,79 @@
 import ColumnCard from '@/Components/ColumnCard'
-import CreateColumnModal from '@/Components/CreateColumnModal'
-import { ColumnPosition, type SwapDirection } from '@/Enums'
+import CreateColumnModal from '@/Components/Modals/CreateColumnModal'
+import { Color, ColumnPosition, type SwapDirection } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
-import { showModal } from '@/Utils/dom'
-import { type Column, type PageProps, type Card, type Board } from '@/types'
-import { Head, router } from '@inertiajs/react'
-import React, { useEffect } from 'react'
+import { closeModal, showModal } from '@/Utils/dom'
+import { type Board, type Card, type Column, type PageProps } from '@/types'
+import { Head, router, useForm } from '@inertiajs/react'
+import React, { type ChangeEvent, useState } from 'react'
+
+import UpdateColumnModal from '@/Components/Modals/UpdateColumnModal'
 
 type Props = PageProps<{
   board: Board
   columns: Array<Column & { cards: Card[] }>
 }>
 
+interface UpdateColumnForm {
+  name: string
+  color: Color
+}
+
 export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const CREATE_COLUMN_MODAL_ID = 'createColumnModal'
+  const UPDATE_COLUMN_MODAL_ID = 'updateColumnModal'
+
+  const initialUpdatingColumnValue = {
+    id: '',
+    name: '',
+    color: Color.Stone
+  }
+  const [updatingColumn, setUpdatingColumn] = useState<Pick<Column, 'id' | 'name' | 'color'>>(initialUpdatingColumnValue)
+
+  const updateColumnForm = useForm<UpdateColumnForm>({
+    name: '',
+    color: Color.Stone
+  })
 
   const getColumnPosition = (order: number): ColumnPosition => {
     if (order === 0) return ColumnPosition.First
     if (order === columns.length - 1) return ColumnPosition.Last
     return ColumnPosition.Middle
+  }
+
+  const handleEditColumn = (column: Pick<Column, 'id' | 'name' | 'color'>): void => {
+    updateColumnForm.setData({
+      name: column.name,
+      color: column.color
+    })
+    setUpdatingColumn(column)
+
+    showModal(UPDATE_COLUMN_MODAL_ID)
+  }
+
+  const handleUpdateColumnChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
+    updateColumnForm.setData((previousData) => ({
+      ...previousData,
+      name: e.target.value
+    }))
+  }
+
+  const handleUpdateColumn = (): void => {
+    updateColumnForm.patch(route('web.columns.update', updatingColumn.id), {
+      onFinish: () => {
+        router.reload({ only: ['columns'] })
+
+        closeModal(UPDATE_COLUMN_MODAL_ID)
+        updateColumnForm.reset()
+        setUpdatingColumn(initialUpdatingColumnValue)
+      }
+    })
+  }
+
+  const handleCloseUpdateColumnModal = (): void => {
+    closeModal(UPDATE_COLUMN_MODAL_ID)
+    updateColumnForm.reset()
+    setUpdatingColumn(initialUpdatingColumnValue)
   }
 
   const handleDeleteColumn = (id: string): void => {
@@ -63,8 +118,9 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
                 position={getColumnPosition(column.order)}
                 cards={column.cards}
                 color={column.color}
-                onClickDeleteHandler={handleDeleteColumn}
+                onClickEditHandler={handleEditColumn}
                 onClickSwapHandler={handleSwapColumn}
+                onClickDeleteHandler={handleDeleteColumn}
               />
             ))}
         </div>
@@ -73,6 +129,14 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
         id={CREATE_COLUMN_MODAL_ID}
         boardId={board.id}
         lastIndex={columns.length}
+      />
+      <UpdateColumnModal
+        id={UPDATE_COLUMN_MODAL_ID}
+        nameData={updateColumnForm.data.name}
+        onClickCloseHandler={handleCloseUpdateColumnModal}
+        onChangeNameHandler={handleUpdateColumnChangeName}
+        onSubmitHandler={handleUpdateColumn}
+        submitDisabler={updateColumnForm.data.name === '' || updateColumnForm.data.name === updatingColumn.name || updateColumnForm.processing}
       />
     </MainLayout>
   )

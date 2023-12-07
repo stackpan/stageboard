@@ -4,9 +4,9 @@ import { type Board, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
-import CreateBoardModal from '@/Components/CreateBoardModal'
+import CreateBoardModal from '@/Components/Modals/CreateBoardModal'
 import { closeModal, showModal } from '@/Utils/dom'
-import UpdateBoardModal from '@/Components/UpdateBoardModal'
+import UpdateBoardModal from '@/Components/Modals/UpdateBoardModal'
 
 type Props = PageProps<{
   boards: Board[]

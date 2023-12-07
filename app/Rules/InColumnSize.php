@@ -10,7 +10,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class InColumnSize implements ValidationRule
 {
     public function __construct(
-        private readonly string $columnId,
+        private readonly Board $board
     )
     {
         //
@@ -23,8 +23,7 @@ class InColumnSize implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $board = Column::findOrFail($this->columnId)->board()->first();
-        $columnsCount = $board->columns()->count();
+        $columnsCount = $this->board->columns()->count();
 
         if ($value > $columnsCount) {
             $fail('The :attribute is out of available columns.');

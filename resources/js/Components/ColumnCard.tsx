@@ -1,7 +1,7 @@
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import TaskCard from './TaskCard'
-import { type Card } from '@/types'
+import { type Card, type Column } from '@/types'
 import { type Color, ColumnPosition, SwapDirection } from '@/Enums'
 import { showModal } from '@/Utils/dom'
 
@@ -12,11 +12,22 @@ interface Props {
   position: ColumnPosition
   color: Color
   cards: Card[]
-  onClickDeleteHandler: (id: string) => void
+  onClickEditHandler: (column: Pick<Column, 'id' | 'name' | 'color'>) => void
   onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
+  onClickDeleteHandler: (id: string) => void
 }
 
-export default function ColumnCard ({ id, name, order, position, cards, color, onClickDeleteHandler, onClickSwapHandler }: Props): JSX.Element {
+export default function ColumnCard ({
+  id,
+  name,
+  order,
+  position,
+  cards,
+  color,
+  onClickEditHandler,
+  onClickDeleteHandler,
+  onClickSwapHandler
+}: Props): JSX.Element {
   const stripColorVariants = {
     stone: 'bg-stone-400',
     red: 'bg-red-400',
@@ -45,7 +56,7 @@ export default function ColumnCard ({ id, name, order, position, cards, color, o
                 <EllipsisVerticalIcon className="h-6 w-6" />
               </div>
               <ul tabIndex={0} className="p-0 shadow menu menu-sm dropdown-content z-30 bg-base-100 rounded-box w-36 border">
-                <li><a>Rename</a></li>
+                <li><button onClick={() => { onClickEditHandler({ id, name, color }) }}>Edit</button></li>
                 {position !== ColumnPosition.Last
                   ? <li><button onClick={() => { onClickSwapHandler(id, order, SwapDirection.Right) }}>Swap to Right</button></li>
                   : <li className="disabled"><button>Swap to Right</button></li>}

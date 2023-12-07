@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\Color;
+use App\Models\Board;
 use App\Rules\InColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,10 +26,11 @@ class CreateColumnRequest extends FormRequest
     public function rules(): array
     {
         $boardId = $this->route('board');
+        $board = Board::findOrFail($boardId);
 
         return [
             'name' => ['required', 'string', 'max:24'],
-            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($boardId)],
+            'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($board)],
             'color' => ['nullable', Rule::enum(Color::class)],
         ];
     }

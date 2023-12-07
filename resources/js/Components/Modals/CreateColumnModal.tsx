@@ -1,6 +1,6 @@
 import React, { type ChangeEvent, type FormEvent } from 'react'
 import { router, useForm } from '@inertiajs/react'
-import {closeModal} from "@/Utils/dom";
+import { closeModal } from '@/Utils/dom'
 
 interface Props {
   id: string
