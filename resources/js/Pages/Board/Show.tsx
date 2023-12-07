@@ -88,6 +88,14 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     })
   }
 
+  const handleDeleteCard = (id: string): void => {
+    router.delete(route('web.cards.destroy', id), {
+      onFinish: () => {
+        router.reload({ only: ['columns'] })
+      }
+    })
+  }
+
   const handleSwapColumn = (id: string, currentOrder: number, direction: SwapDirection): void => {
     const data = {
       order: currentOrder + direction
@@ -136,6 +144,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
                 onClickSwapHandler={handleSwapColumn}
                 onClickDeleteHandler={handleDeleteColumn}
                 onClickCreateCardHandler={handleOpenCreateCardModal}
+                onClickDeleteCardHandler={handleDeleteCard}
               />
             ))}
         </div>

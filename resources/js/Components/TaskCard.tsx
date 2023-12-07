@@ -7,6 +7,7 @@ interface Props {
   body: string
   color: Color
   columnPosition: ColumnPosition
+  onClickDeleteHandler: (id: string) => void
 }
 
 const backgroundColorVariants = {
@@ -22,7 +23,7 @@ const backgroundColorVariants = {
   rose: 'bg-rose-100'
 }
 
-export default function TaskCard ({ id, body, color, columnPosition }: Props): JSX.Element {
+export default function TaskCard ({ id, body, color, columnPosition, onClickDeleteHandler }: Props): JSX.Element {
   return (
     <div className={'card card-compact shadow-md border border-neutral ' + backgroundColorVariants[color]}>
       <div className="card-body !p-2">
@@ -67,7 +68,7 @@ export default function TaskCard ({ id, body, color, columnPosition }: Props): J
                 ? <li><a>Move to Left</a></li>
                 : <li className="disabled"><a>Move to Left</a></li>
               }
-              <li><a className="text-error">Delete</a></li>
+              <li><button className="text-error" onClick={() => { onClickDeleteHandler(id) }}>Delete</button></li>
             </ul>
           </div>
         </header>

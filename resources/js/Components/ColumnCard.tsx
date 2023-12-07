@@ -16,6 +16,7 @@ interface Props {
   onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
   onClickDeleteHandler: (id: string) => void
   onClickCreateCardHandler: (column: SelectingColumn) => void
+  onClickDeleteCardHandler: (id: string) => void
 }
 
 const stripColorVariants = {
@@ -41,7 +42,8 @@ export default function ColumnCard ({
   onClickEditHandler,
   onClickDeleteHandler,
   onClickSwapHandler,
-  onClickCreateCardHandler
+  onClickCreateCardHandler,
+  onClickDeleteCardHandler
 }: Props): JSX.Element {
   return (
     <div className="card card-compact w-72 bg-base-100 shadow-md border border-neutral rounded space-y-4">
@@ -79,6 +81,7 @@ export default function ColumnCard ({
               body={card.body}
               color={card.color}
               columnPosition={position}
+              onClickDeleteHandler={onClickDeleteCardHandler}
             />
           ))}
         </div>
