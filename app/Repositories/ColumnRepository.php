@@ -14,7 +14,7 @@ interface ColumnRepository
 
     public function create(string $boardId, ColumnDto $data): string;
 
-    public function get(string $id, ?bool $nullable = false): ?Column;
+    public function get(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column;
 
     public function update(string $id, ColumnDto $data): void;
 

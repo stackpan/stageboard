@@ -46,7 +46,7 @@ class ColumnServiceImpl implements ColumnService
 
     public function swap(string $id, int $destinationOrder): void
     {
-        $column = $this->columnRepository->get($id);
+        $column = $this->columnRepository->get(id: $id, withRelation: false);
         $targetIndex = $column->order;
         $deltaStep = $destinationOrder - $targetIndex;
 

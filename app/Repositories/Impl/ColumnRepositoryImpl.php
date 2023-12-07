@@ -37,10 +37,13 @@ class ColumnRepositoryImpl implements ColumnRepository
             ->id;
     }
 
-    public function get(string $id, ?bool $nullable = false): ?Column
+    public function get(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column
     {
-        $query = Column::whereId($id)
-            ->with('cards');
+        $query = Column::whereId($id);
+
+        if ($withRelation) {
+            $query->with('cards');
+        }
 
         return $nullable ? $query->first() : $query->firstOrFail();
     }
@@ -56,8 +59,12 @@ class ColumnRepositoryImpl implements ColumnRepository
 
     public function delete(string $id): void
     {
-        Column::findOrFail($id)
-            ->delete();
+        $column = Column::findOrFail($id);
+        $boardId = $column->board_id;
+        $columnOrder = $column->order;
+
+        $column->delete();
+        $this->unshift($boardId, $columnOrder);
     }
 
     public function shift(string $boardId, int $fromOrder, ?int $toOrder = null): void
