@@ -108,6 +108,24 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     })
   }
 
+  const handleMoveCard = (columnId: string, cardId: string, direction: SwapDirection): void => {
+    const column = columns.find((column) => column.id === columnId)
+    if (column === undefined) return
+
+    const destinationColumn = columns.find((value) => value.order === column.order + direction)
+    if (destinationColumn === undefined) return
+
+    const data = {
+      columnId: destinationColumn.id
+    }
+
+    router.patch(route('web.cards.move', cardId), data, {
+      onFinish: () => {
+        router.reload({ only: ['columns'] })
+      }
+    })
+  }
+
   const handleOpenCreateCardModal = (column: SelectingColumn): void => {
     setSelectingColumn(column)
     showModal(CREATE_CARD_MODAL_ID)
@@ -144,6 +162,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
                 onClickSwapHandler={handleSwapColumn}
                 onClickDeleteHandler={handleDeleteColumn}
                 onClickCreateCardHandler={handleOpenCreateCardModal}
+                onClickMoveCardHandler={handleMoveCard}
                 onClickDeleteCardHandler={handleDeleteCard}
               />
             ))}

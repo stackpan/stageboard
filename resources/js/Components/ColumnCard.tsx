@@ -16,6 +16,7 @@ interface Props {
   onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
   onClickDeleteHandler: (id: string) => void
   onClickCreateCardHandler: (column: SelectingColumn) => void
+  onClickMoveCardHandler: (columnId: string, cardId: string, direction: SwapDirection) => void
   onClickDeleteCardHandler: (id: string) => void
 }
 
@@ -43,6 +44,7 @@ export default function ColumnCard ({
   onClickDeleteHandler,
   onClickSwapHandler,
   onClickCreateCardHandler,
+  onClickMoveCardHandler,
   onClickDeleteCardHandler
 }: Props): JSX.Element {
   return (
@@ -81,6 +83,7 @@ export default function ColumnCard ({
               body={card.body}
               color={card.color}
               columnPosition={position}
+              onClickMoveHandler={(cardId, direction) => { onClickMoveCardHandler(id, cardId, direction) }}
               onClickDeleteHandler={onClickDeleteCardHandler}
             />
           ))}

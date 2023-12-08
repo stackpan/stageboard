@@ -1,5 +1,5 @@
-import { type Color, ColumnPosition } from '@/Enums'
-import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline'
+import {type Color, ColumnPosition, SwapDirection} from '@/Enums'
+import {ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon} from '@heroicons/react/24/outline'
 import React from 'react'
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
   body: string
   color: Color
   columnPosition: ColumnPosition
+  onClickMoveHandler: (id: string, direction: SwapDirection) => void
   onClickDeleteHandler: (id: string) => void
 }
 
@@ -23,7 +24,14 @@ const backgroundColorVariants = {
   rose: 'bg-rose-100'
 }
 
-export default function TaskCard ({ id, body, color, columnPosition, onClickDeleteHandler }: Props): JSX.Element {
+export default function TaskCard ({
+  id,
+  body,
+  color,
+  columnPosition,
+  onClickMoveHandler,
+  onClickDeleteHandler
+}: Props): JSX.Element {
   return (
     <div className={'card card-compact shadow-md border border-neutral ' + backgroundColorVariants[color]}>
       <div className="card-body !p-2">
@@ -31,7 +39,7 @@ export default function TaskCard ({ id, body, color, columnPosition, onClickDele
           <div className="space-x-2">
             {columnPosition !== ColumnPosition.First
               ? (
-                <button type="button" className="btn btn-ghost btn-square btn-xs">
+                <button type="button" className="btn btn-ghost btn-square btn-xs" onClick={() => { onClickMoveHandler(id, SwapDirection.Left) }}>
                   <ChevronLeftIcon className="h-6 w-6" />
                 </button>
                 )
@@ -43,7 +51,7 @@ export default function TaskCard ({ id, body, color, columnPosition, onClickDele
             }
             {columnPosition !== ColumnPosition.Last
               ? (
-                <button type="button" className="btn btn-ghost btn-square btn-xs">
+                <button type="button" className="btn btn-ghost btn-square btn-xs" onClick={() => { onClickMoveHandler(id, SwapDirection.Right) }}>
                   <ChevronRightIcon className="h-6 w-6" />
                 </button>
                 )
@@ -61,11 +69,11 @@ export default function TaskCard ({ id, body, color, columnPosition, onClickDele
             <ul className="p-0 shadow-sm menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36 border">
               <li><a>Edit</a></li>
               {columnPosition !== ColumnPosition.Last
-                ? <li><a>Move to Right</a></li>
+                ? <li><button onClick={() => { onClickMoveHandler(id, SwapDirection.Right) }}>Move to Right</button></li>
                 : <li className="disabled"><a>Move to Right</a></li>
               }
               {columnPosition !== ColumnPosition.First
-                ? <li><a>Move to Left</a></li>
+                ? <li><button onClick={() => { onClickMoveHandler(id, SwapDirection.Left) }}>Move to Left</button></li>
                 : <li className="disabled"><a>Move to Left</a></li>
               }
               <li><button className="text-error" onClick={() => { onClickDeleteHandler(id) }}>Delete</button></li>

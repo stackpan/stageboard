@@ -60,7 +60,7 @@ class CardWebController extends Controller
     {
         $validated = $request->validated();
 
-        $this->cardService->moveToColumn($id, $validated['column_id']);
+        $this->cardService->moveToColumn($id, $validated['columnId']);
 
         return back();
     }

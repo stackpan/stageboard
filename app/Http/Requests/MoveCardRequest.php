@@ -22,7 +22,7 @@ class MoveCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'column_id' => ['required', 'ulid'],
+            'columnId' => ['required', 'ulid'],
         ];
     }
 }
