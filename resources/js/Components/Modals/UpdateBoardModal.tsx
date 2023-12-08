@@ -21,12 +21,14 @@ export default function UpdateBoardModal ({ id, nameData, onChangeNameHandler, o
         <form className="flex flex-col gap-4 mt-4" onSubmit={onSubmitHandler}>
           <div>
             <input
+              name="name"
               type="text"
               placeholder="Type the board name"
               className="input input-sm input-bordered w-full"
               value={nameData}
               onChange={onChangeNameHandler}
               maxLength={32}
+              autoComplete="off"
               required
               />
           </div>

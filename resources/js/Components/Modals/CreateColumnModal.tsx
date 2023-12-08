@@ -61,11 +61,15 @@ export default function CreateColumnModal ({ id, boardId, lastIndex }: Props): J
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>
             <input
+              name="name"
               type="text"
               placeholder="Type the Column name"
               className="input input-sm input-bordered w-full"
               value={data.name}
+              maxLength={24}
               onChange={handleChangeName}
+              autoComplete="off"
+              required
               />
           </div>
           <div className="flex justify-end">

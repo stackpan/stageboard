@@ -40,12 +40,14 @@ export default function CreateBoardModal ({ id }: Props): JSX.Element {
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>
             <input
+              name="name"
               type="text"
               placeholder="Type the board name"
               className="input input-sm input-bordered w-full"
               value={data.name}
               onChange={handleChangeName}
               maxLength={32}
+              autoComplete="off"
               required
               />
           </div>

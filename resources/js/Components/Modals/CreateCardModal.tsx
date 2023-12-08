@@ -59,11 +59,14 @@ export default function CreateCardModal ({ id, columnId, onClickCloseHandler }: 
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>
             <textarea
+              name="body"
               className="textarea textarea-bordered w-full"
               placeholder="Type something you want to do ..."
               value={data.body}
               onChange={handleChangeBody}
               maxLength={255}
+              autoComplete="off"
+              autoCapitalize="on"
               required
             ></textarea>
           </div>

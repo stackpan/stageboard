@@ -29,12 +29,14 @@ export default function UpdateColumnModal ({
         <form className="flex flex-col gap-4 mt-4" onSubmit={onSubmitHandler}>
           <div>
             <input
+              name="name"
               type="text"
               placeholder="Type the Column name"
               className="input input-sm input-bordered w-full"
               value={nameData}
               onChange={onChangeNameHandler}
               maxLength={24}
+              autoComplete="off"
               required
               />
           </div>
