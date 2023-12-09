@@ -3,7 +3,7 @@ import React from 'react'
 import TaskCard from './TaskCard'
 import { type Card } from '@/types'
 import { type Color, ColumnPosition, SwapDirection } from '@/Enums'
-import { type SelectingColumn } from '@/Pages/Board/Show'
+import {SelectingCard, type SelectingColumn} from '@/Pages/Board/Show'
 
 interface Props {
   id: string
@@ -16,6 +16,7 @@ interface Props {
   onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
   onClickDeleteHandler: (id: string) => void
   onClickCreateCardHandler: (column: SelectingColumn) => void
+  onClickEditCardHandler: (card: SelectingCard) => void
   onClickMoveCardHandler: (columnId: string, cardId: string, direction: SwapDirection) => void
   onClickDeleteCardHandler: (id: string) => void
 }
@@ -44,6 +45,7 @@ export default function ColumnCard ({
   onClickDeleteHandler,
   onClickSwapHandler,
   onClickCreateCardHandler,
+  onClickEditCardHandler,
   onClickMoveCardHandler,
   onClickDeleteCardHandler
 }: Props): JSX.Element {
@@ -83,6 +85,7 @@ export default function ColumnCard ({
               body={card.body}
               color={card.color}
               columnPosition={position}
+              onCLickEditHandler={onClickEditCardHandler}
               onClickMoveHandler={(cardId, direction) => { onClickMoveCardHandler(id, cardId, direction) }}
               onClickDeleteHandler={onClickDeleteCardHandler}
             />

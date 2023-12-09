@@ -6,7 +6,7 @@ import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
 import CreateBoardModal from '@/Components/Modals/CreateBoardModal'
 import { closeModal, showModal } from '@/Utils/dom'
-import UpdateBoardModal from '@/Components/Modals/UpdateBoardModal'
+import EditBoardModal from '@/Components/Modals/EditBoardModal'
 
 type Props = PageProps<{
   boards: Board[]
@@ -115,7 +115,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
           </div>
         </div>
       </section>
-      <UpdateBoardModal
+      <EditBoardModal
         id={UPDATE_BOARD_MODAL_ID}
         nameData={updateBoardForm.data.name}
         onChangeNameHandler={handleUpdateBoardChangeName}

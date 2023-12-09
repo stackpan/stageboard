@@ -2,18 +2,18 @@ import React, { type ChangeEvent, type FormEvent } from 'react'
 
 interface Props {
   id: string
-  nameData: string
+  bodyData: string
   onClickCloseHandler: () => void
-  onChangeNameHandler: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeBodyHandler: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void
   submitDisabler: boolean
 }
 
-export default function UpdateColumnModal ({
+export default function EditCardModal ({
   id,
-  nameData,
+  bodyData,
   onClickCloseHandler,
-  onChangeNameHandler,
+  onChangeBodyHandler,
   onSubmitHandler,
   submitDisabler
 }: Props): JSX.Element {
@@ -24,21 +24,21 @@ export default function UpdateColumnModal ({
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onClickCloseHandler}>✕</button>
         </form>
         <header>
-          <h3 className="font-bold text-lg">Editing Column</h3>
+          <h3 className="font-bold text-lg">Edit Card</h3>
         </header>
         <form className="flex flex-col gap-4 mt-4" onSubmit={onSubmitHandler}>
           <div>
-            <input
-              name="name"
-              type="text"
-              placeholder="Type the Column name"
-              className="input input-sm input-bordered w-full"
-              value={nameData}
-              onChange={onChangeNameHandler}
-              maxLength={24}
+            <textarea
+              name="body"
+              className="textarea textarea-bordered w-full"
+              placeholder="Type something you want to do ..."
+              value={bodyData}
+              onChange={onChangeBodyHandler}
+              maxLength={255}
               autoComplete="off"
+              autoCapitalize="on"
               required
-              />
+            ></textarea>
           </div>
           <div className="flex justify-end">
             <button className="btn btn-neutral btn-sm" type="submit" disabled={submitDisabler}>Save</button>

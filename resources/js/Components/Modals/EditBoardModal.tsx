@@ -8,7 +8,7 @@ interface Props {
   submitDisabler: boolean
 }
 
-export default function UpdateBoardModal ({ id, nameData, onChangeNameHandler, onSubmitHandler, submitDisabler }: Props): JSX.Element {
+export default function EditBoardModal ({ id, nameData, onChangeNameHandler, onSubmitHandler, submitDisabler }: Props): JSX.Element {
   return (
     <dialog id={id} className="modal">
       <section className="modal-box">
