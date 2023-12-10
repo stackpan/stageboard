@@ -4,6 +4,7 @@ import TaskCard from './TaskCard'
 import { type Card } from '@/types'
 import { type ColumnColor, ColumnPosition, SwapDirection } from '@/Enums'
 import { type SelectingCard, type SelectingColumn } from '@/Pages/Board/Show'
+import { convertColumnColor } from '@/Utils/color'
 
 interface Props {
   id: string
@@ -21,17 +22,6 @@ interface Props {
   onClickDeleteCardHandler: (id: string) => void
 }
 
-const stripColorVariants = {
-  '#f87171': 'bg-red-400',
-  '#fbbf24': 'bg-amber-400',
-  '#a3e635': 'bg-lime-400',
-  '#34d399': 'bg-emerald-400',
-  '#22d3ee': 'bg-cyan-400',
-  '#60a5fa': 'bg-blue-400',
-  '#a78bfa': 'bg-violet-400',
-  '#e879f9': 'bg-fuchsia-400'
-}
-
 export default function ColumnCard ({
   id,
   name,
@@ -47,30 +37,52 @@ export default function ColumnCard ({
   onClickMoveCardHandler,
   onClickDeleteCardHandler
 }: Props): JSX.Element {
+  const isFirstColumn = position === ColumnPosition.First
+  const isLastColumn = position === ColumnPosition.Last
+
+  const handleClickCreateCard = (): void => {
+    onClickCreateCardHandler({ id, name, color })
+  }
+  const handleClickEdit = (): void => {
+    onClickEditHandler({ id, name, color })
+  }
+  const handleClickSwapToRight = (): void => {
+    onClickSwapHandler(id, order, SwapDirection.Right)
+  }
+  const handleClickSwapToLeft = (): void => {
+    onClickSwapHandler(id, order, SwapDirection.Left)
+  }
+  const handleClickDelete = (): void => {
+    onClickDeleteHandler(id)
+  }
+
   return (
-    <div className="card card-compact w-72 bg-base-100 shadow-md border border-neutral rounded space-y-4">
-      <div className={'h-2 ' + stripColorVariants[color]}></div>
+    <div className="flex-none card card-compact w-72 bg-base-100 shadow-md border border-neutral rounded space-y-4">
+      <div className={'h-2 ' + convertColumnColor(color)}></div>
       <div className="card-body !mt-0">
         <div className="flex justify-between items-start">
           <h2 className="card-title">{name}</h2>
           <div className="space-x-2">
-            <div className="btn btn-ghost btn-square btn-xs" onClick={() => { onClickCreateCardHandler({ id, name, color }) }}>
+            <div className="btn btn-ghost btn-square btn-xs" onClick={handleClickCreateCard}>
               <PlusIcon className="h-6 w-6" />
             </div>
-            <div className={'dropdown' + (position === ColumnPosition.Last ? ' dropdown-end' : '')}>
+            <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-square btn-xs">
                 <EllipsisVerticalIcon className="h-6 w-6" />
               </div>
               <ul tabIndex={0} className="p-0 shadow menu menu-sm dropdown-content z-30 bg-base-100 rounded-box w-36 border">
-                <li><button onClick={() => { onClickEditHandler({ id, name, color }) }}>Edit</button></li>
-                {position !== ColumnPosition.Last
-                  ? <li><button onClick={() => { onClickSwapHandler(id, order, SwapDirection.Right) }}>Swap to Right</button></li>
-                  : <li className="disabled"><button>Swap to Right</button></li>}
-                {position !== ColumnPosition.First
-                  ? <li><button onClick={() => { onClickSwapHandler(id, order, SwapDirection.Left) }}>Swap to Left</button></li>
-                  : <li className="disabled"><button>Swap to Left</button></li>
-                }
-                <li><button className="text-error" onClick={() => { onClickDeleteHandler(id) }}>Delete</button></li>
+                <li>
+                  <button onClick={handleClickEdit}>Edit</button>
+                </li>
+                <li className={isLastColumn ? 'disabled' : ''}>
+                  <button onClick={handleClickSwapToRight} disabled={isLastColumn}>Swap to Right</button>
+                </li>
+                <li className={isFirstColumn ? 'disabled' : ''}>
+                  <button onClick={handleClickSwapToLeft} disabled={isFirstColumn}>Swap to Left</button>
+                </li>
+                <li>
+                  <button className="text-error" onClick={handleClickDelete}>Delete</button>
+                </li>
               </ul>
             </div>
           </div>
@@ -84,7 +96,9 @@ export default function ColumnCard ({
               color={card.color}
               columnPosition={position}
               onCLickEditHandler={onClickEditCardHandler}
-              onClickMoveHandler={(cardId, direction) => { onClickMoveCardHandler(id, cardId, direction) }}
+              onClickMoveHandler={(cardId, direction) => {
+                onClickMoveCardHandler(id, cardId, direction)
+              }}
               onClickDeleteHandler={onClickDeleteCardHandler}
             />
           ))}

@@ -1,10 +1,14 @@
 import React, { type ChangeEvent, type FormEvent } from 'react'
+import { ColumnColor } from '@/Enums'
+import { convertColumnColor } from '@/Utils/color'
 
 interface Props {
   id: string
   nameData: string
+  selectedColorData: ColumnColor
   onClickCloseHandler: () => void
   onChangeNameHandler: (e: ChangeEvent<HTMLInputElement>) => void
+  onClickColorHandler: (color: ColumnColor) => void
   onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void
   submitDisabler: boolean
 }
@@ -12,7 +16,9 @@ interface Props {
 export default function EditColumnModal ({
   id,
   nameData,
+  selectedColorData,
   onClickCloseHandler,
+  onClickColorHandler,
   onChangeNameHandler,
   onSubmitHandler,
   submitDisabler
@@ -39,6 +45,16 @@ export default function EditColumnModal ({
               autoComplete="off"
               required
               />
+          </div>
+          <div className="flex gap-2">
+            {Object.values(ColumnColor).map((color, index) => (
+              <div key={color}>
+                {color === selectedColorData
+                  ? <div className={'w-6 h-6 rounded-full border-4 border-gray-600 ' + convertColumnColor(color)} />
+                  : <div className={'w-6 h-6 rounded-full border-4 ' + convertColumnColor(color)} onClick={() => { onClickColorHandler(color) }} />
+                }
+              </div>
+            ))}
           </div>
           <div className="flex justify-end">
             <button className="btn btn-neutral btn-sm" type="submit" disabled={submitDisabler}>Save</button>

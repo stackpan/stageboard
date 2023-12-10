@@ -59,7 +59,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     order: columns.length,
     color: getRandomColumnColorValue()
   })
-  const updateColumnForm = useForm<UpdateColumnForm>({
+  const editColumnForm = useForm<UpdateColumnForm>({
     name: '',
     color: ColumnColor.Red
   })
@@ -87,7 +87,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const handleCloseCreateColumnModal = (): void => {
     closeModal(CREATE_COLUMN_MODAL_ID)
 
-    updateColumnForm.reset()
+    editColumnForm.reset()
   }
 
   const handleCreateColumnChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -106,7 +106,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
 
   // Edit Column Modal
   const handleShowEditColumnModal = (column: SelectingColumn): void => {
-    updateColumnForm.setData({
+    editColumnForm.setData({
       name: column.name,
       color: column.color
     })
@@ -117,13 +117,19 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const handleCloseEditColumnModal = (): void => {
     closeModal(EDIT_COLUMN_MODAL_ID)
 
-    updateColumnForm.reset()
+    editColumnForm.reset()
     setSelectingColumn(initialSelectingColumnValue)
   }
   const handleEditColumnModalChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
-    updateColumnForm.setData((previousData) => ({
+    editColumnForm.setData((previousData) => ({
       ...previousData,
       name: e.target.value
+    }))
+  }
+  const handleEditColumnClickColor = (color: ColumnColor): void => {
+    editColumnForm.setData((previousData) => ({
+      ...previousData,
+      color
     }))
   }
 
@@ -140,10 +146,11 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     })
   }
 
-  const handleDeleteColumn = (id: string): void => {
-    router.delete(route('web.columns.destroy', id), {
+  const handleUpdateColumn = (): void => {
+    editColumnForm.patch(route('web.columns.update', selectingColumn.id), {
       onFinish: () => {
         router.reload({ only: ['columns'] })
+        handleCloseEditColumnModal()
       }
     })
   }
@@ -158,11 +165,10 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       }
     })
   }
-  const handleUpdateColumn = (): void => {
-    updateColumnForm.patch(route('web.columns.update', selectingColumn.id), {
+  const handleDeleteColumn = (id: string): void => {
+    router.delete(route('web.columns.destroy', id), {
       onFinish: () => {
         router.reload({ only: ['columns'] })
-        handleCloseEditColumnModal()
       }
     })
   }
@@ -274,8 +280,8 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       </section>
       <CreateColumnModal
         id={CREATE_COLUMN_MODAL_ID}
-        name={createColumnForm.data.name}
-        selectedColor={createColumnForm.data.color}
+        nameData={createColumnForm.data.name}
+        selectedColorData={createColumnForm.data.color}
         onChangeNameHandler={handleCreateColumnChangeName}
         onClickColorHandler={handleCreateColumnClickColor}
         onClickCloseHandler={handleCloseCreateColumnModal}
@@ -284,14 +290,16 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       />
       <EditColumnModal
         id={EDIT_COLUMN_MODAL_ID}
-        nameData={updateColumnForm.data.name}
+        nameData={editColumnForm.data.name}
+        selectedColorData={editColumnForm.data.color}
         onClickCloseHandler={handleCloseEditColumnModal}
         onChangeNameHandler={handleEditColumnModalChangeName}
+        onClickColorHandler={handleEditColumnClickColor}
         onSubmitHandler={handleUpdateColumn}
         submitDisabler={
-          updateColumnForm.data.name === '' ||
-          updateColumnForm.data.name === selectingColumn.name ||
-          updateColumnForm.processing
+          editColumnForm.data.name === '' ||
+          (editColumnForm.data.name === selectingColumn.name && editColumnForm.data.color === selectingColumn.color) ||
+          editColumnForm.processing
         }
       />
       <CreateCardModal
