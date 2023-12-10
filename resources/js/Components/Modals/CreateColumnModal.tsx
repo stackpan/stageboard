@@ -1,6 +1,8 @@
 import React, { type ChangeEvent, type FormEvent } from 'react'
 import { router, useForm } from '@inertiajs/react'
 import { closeModal } from '@/Utils/dom'
+import { ColumnColor } from '@/Enums'
+import { getRandomColumnColorValue } from '@/Utils/random'
 
 interface Props {
   id: string
@@ -11,6 +13,18 @@ interface Props {
 interface Form {
   name: string
   order: number
+  color: ColumnColor
+}
+
+const colorVariants = {
+  '#f87171': 'bg-red-400',
+  '#fbbf24': 'bg-amber-400',
+  '#a3e635': 'bg-lime-400',
+  '#34d399': 'bg-emerald-400',
+  '#22d3ee': 'bg-cyan-400',
+  '#60a5fa': 'bg-blue-400',
+  '#a78bfa': 'bg-violet-400',
+  '#e879f9': 'bg-fuchsia-400'
 }
 
 export default function CreateColumnModal ({ id, boardId, lastIndex }: Props): JSX.Element {
@@ -19,16 +33,26 @@ export default function CreateColumnModal ({ id, boardId, lastIndex }: Props): J
     setData,
     post,
     processing,
-    reset
+    reset,
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    setDefaults
   } = useForm<Form>({
     name: '',
-    order: lastIndex
+    order: lastIndex,
+    color: getRandomColumnColorValue()
   })
 
   const handleChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
-    setData((previousData: Form) => ({
+    setData((previousData) => ({
       ...previousData,
       name: e.target.value
+    }))
+  }
+
+  const handleClickColor = (color: ColumnColor): void => {
+    setData((previousData) => ({
+      ...previousData,
+      color
     }))
   }
 
@@ -39,14 +63,16 @@ export default function CreateColumnModal ({ id, boardId, lastIndex }: Props): J
       onFinish: () => {
         reset()
         router.reload({ only: ['columns'] })
-        closeModal(id)
+        setDefaults('order', lastIndex + 1)
+        handleClose()
       }
     })
   }
 
   const handleClose = (): void => {
-    closeModal(id)
+    setDefaults('color', getRandomColumnColorValue())
     reset()
+    closeModal(id)
   }
 
   return (
@@ -72,8 +98,18 @@ export default function CreateColumnModal ({ id, boardId, lastIndex }: Props): J
               required
               />
           </div>
+          <div className="flex gap-2">
+            {Object.values(ColumnColor).map((color, index) => (
+              <div key={color}>
+                {color === data.color
+                  ? <div className={'w-6 h-6 rounded-full border-4 border-gray-600 ' + colorVariants[color]} />
+                  : <div className={'w-6 h-6 rounded-full border-4 ' + colorVariants[color]} onClick={() => { handleClickColor(color) }} />
+                }
+              </div>
+            ))}
+          </div>
           <div className="flex justify-end">
-            <button className="btn btn-neutral btn-sm" type="submit" disabled={data.name === '' || processing}>Create</button>
+            <button className="btn btn-neutral btn-sm " type="submit" disabled={data.name === '' || processing}>Create</button>
           </div>
         </form>
       </section>
