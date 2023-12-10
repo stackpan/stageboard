@@ -1,5 +1,6 @@
 import React, { type ChangeEvent } from 'react'
-import { type CardColor } from '@/Enums'
+import { CardColor } from '@/Enums'
+import { convertCardColor } from '@/Utils/color'
 
 interface Props {
   id: string
@@ -15,6 +16,7 @@ interface Props {
 export default function CreateCardModal ({
   id,
   bodyData,
+  selectedColorData,
   onClickCloseHandler,
   onChangeBodyHandler,
   onClickColorHandler,
@@ -34,7 +36,7 @@ export default function CreateCardModal ({
           <div>
             <textarea
               name="body"
-              className="textarea textarea-bordered w-full"
+              className={`textarea textarea-bordered w-full ${convertCardColor(selectedColorData)}`}
               placeholder="Type something you want to do ..."
               value={bodyData}
               onChange={onChangeBodyHandler}
@@ -43,6 +45,16 @@ export default function CreateCardModal ({
               autoCapitalize="on"
               required
             ></textarea>
+          </div>
+          <div className="flex gap-2">
+            {Object.values(CardColor).map((color, index) => (
+              <button
+                key={color}
+                className={`w-6 h-6 rounded-full border-4 ${color === selectedColorData ? 'border-gray-600' : ''} ${convertCardColor(color)}`}
+                onClick={() => { onClickColorHandler(color) }}
+                disabled={color === selectedColorData}
+              />
+            ))}
           </div>
           <div className="flex justify-end">
             <button className="btn btn-neutral btn-sm" type="submit" disabled={submitDisabler}>Create</button>

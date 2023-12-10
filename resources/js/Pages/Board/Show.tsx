@@ -72,7 +72,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     body: '',
     color: getRandomCardColor()
   })
-  const updateCardForm = useForm<UpdateCardForm>({
+  const editCardForm = useForm<UpdateCardForm>({
     body: '',
     color: CardColor.Stone
   })
@@ -92,20 +92,17 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
 
     showModal(CREATE_COLUMN_MODAL_ID)
   }
-
   const handleCloseCreateColumnModal = (): void => {
     closeModal(CREATE_COLUMN_MODAL_ID)
 
     editColumnForm.reset()
   }
-
   const handleCreateColumnChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
     createColumnForm.setData((previousData) => ({
       ...previousData,
       name: e.target.value
     }))
   }
-
   const handleCreateColumnClickColor = (color: ColumnColor): void => {
     createColumnForm.setData((previousData) => ({
       ...previousData,
@@ -154,7 +151,6 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       }
     })
   }
-
   const handleUpdateColumn = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
@@ -210,7 +206,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
 
   // Edit Card Modal
   const handleShowEditCardModal = (card: SelectingCard): void => {
-    updateCardForm.setData({
+    editCardForm.setData({
       body: card.body,
       color: card.color
     })
@@ -221,13 +217,19 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const handleCloseEditCardModel = (): void => {
     closeModal(EDIT_CARD_MODAL_ID)
 
-    updateCardForm.reset()
+    editCardForm.reset()
     setSelectingCard(initialSelectingCardValue)
   }
   const handleEditCardModalChangeBody = (e: ChangeEvent<HTMLTextAreaElement>): void => {
-    updateCardForm.setData((previousData) => ({
+    editCardForm.setData((previousData) => ({
       ...previousData,
       body: e.target.value
+    }))
+  }
+  const handleEditCardClickColor = (color: CardColor): void => {
+    editCardForm.setData((previousData) => ({
+      ...previousData,
+      color
     }))
   }
 
@@ -242,8 +244,10 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       }
     })
   }
-  const handleUpdateCard = (): void => {
-    updateCardForm.patch(route('web.cards.update', selectingCard.id), {
+  const handleUpdateCard = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
+    editCardForm.patch(route('web.cards.update', selectingCard.id), {
       onSuccess: () => {
         router.reload({ only: ['columns'] })
       },
@@ -352,14 +356,16 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       />
       <EditCardModal
         id={EDIT_CARD_MODAL_ID}
-        bodyData={updateCardForm.data.body}
+        bodyData={editCardForm.data.body}
+        selectedColorData={editCardForm.data.color}
         onClickCloseHandler={handleCloseEditCardModel}
         onChangeBodyHandler={handleEditCardModalChangeBody}
+        onClickColorHandler={handleEditCardClickColor}
         onSubmitHandler={handleUpdateCard}
         submitDisabler={
-          updateCardForm.data.body === '' ||
-          updateCardForm.data.body === selectingCard.body ||
-          updateCardForm.processing
+          editCardForm.data.body === '' ||
+          (editCardForm.data.body === selectingCard.body && editCardForm.data.color === selectingCard.color) ||
+          editCardForm.processing
         } />
     </MainLayout>
   )

@@ -1,10 +1,14 @@
 import React, { type ChangeEvent, type FormEvent } from 'react'
+import { CardColor } from '@/Enums'
+import { convertCardColor } from '@/Utils/color'
 
 interface Props {
   id: string
   bodyData: string
+  selectedColorData: CardColor
   onClickCloseHandler: () => void
   onChangeBodyHandler: (e: ChangeEvent<HTMLTextAreaElement>) => void
+  onClickColorHandler: (color: CardColor) => void
   onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void
   submitDisabler: boolean
 }
@@ -12,8 +16,10 @@ interface Props {
 export default function EditCardModal ({
   id,
   bodyData,
+  selectedColorData,
   onClickCloseHandler,
   onChangeBodyHandler,
+  onClickColorHandler,
   onSubmitHandler,
   submitDisabler
 }: Props): JSX.Element {
@@ -30,7 +36,7 @@ export default function EditCardModal ({
           <div>
             <textarea
               name="body"
-              className="textarea textarea-bordered w-full"
+              className={`textarea textarea-bordered w-full ${convertCardColor(selectedColorData)}`}
               placeholder="Type something you want to do ..."
               value={bodyData}
               onChange={onChangeBodyHandler}
@@ -39,6 +45,16 @@ export default function EditCardModal ({
               autoCapitalize="on"
               required
             ></textarea>
+          </div>
+          <div className="flex gap-2">
+            {Object.values(CardColor).map((color, index) => (
+              <button
+                key={color}
+                className={`w-6 h-6 rounded-full border-4 ${color === selectedColorData ? 'border-gray-600' : ''} ${convertCardColor(color)}`}
+                onClick={() => { onClickColorHandler(color) }}
+                disabled={color === selectedColorData}
+              />
+            ))}
           </div>
           <div className="flex justify-end">
             <button className="btn btn-neutral btn-sm" type="submit" disabled={submitDisabler}>Save</button>
