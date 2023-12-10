@@ -4,23 +4,28 @@ import MainLayout from '@/Layouts/MainLayout'
 import { closeModal, showModal } from '@/Utils/dom'
 import { type Board, type Card, type Column, type PageProps } from '@/types'
 import { Head, router, useForm } from '@inertiajs/react'
-import React, { type ChangeEvent, useState } from 'react'
+import React, { type ChangeEvent, type FormEvent, useState } from 'react'
 
 import CreateColumnModal from '@/Components/Modals/CreateColumnModal'
 import EditColumnModal from '@/Components/Modals/EditColumnModal'
 import CreateCardModal from '@/Components/Modals/CreateCardModal'
 import EditCardModal from '@/Components/Modals/EditCardModal'
+import { getRandomColumnColorValue } from '@/Utils/random'
 
 type Props = PageProps<{
   board: Board
   columns: Array<Column & { cards: Card[] }>
 }>
 
+interface CreateColumnForm {
+  name: string
+  order: number
+  color: ColumnColor
+}
 interface UpdateColumnForm {
   name: string
   color: ColumnColor
 }
-
 interface UpdateCardForm {
   body: string
   color: CardColor
@@ -49,6 +54,11 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const [selectingColumn, setSelectingColumn] = useState<SelectingColumn>(initialSelectingColumnValue)
   const [selectingCard, setSelectingCard] = useState<SelectingCard>(initialSelectingCardValue)
 
+  const createColumnForm = useForm<CreateColumnForm>({
+    name: '',
+    order: columns.length,
+    color: getRandomColumnColorValue()
+  })
   const updateColumnForm = useForm<UpdateColumnForm>({
     name: '',
     color: ColumnColor.Red
@@ -62,6 +72,36 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     if (order === 0) return ColumnPosition.First
     if (order === columns.length - 1) return ColumnPosition.Last
     return ColumnPosition.Middle
+  }
+
+  // Create Column Modal
+  const handleShowCreateColumnModal = (): void => {
+    createColumnForm.setData((previousData) => ({
+      ...previousData,
+      color: getRandomColumnColorValue()
+    }))
+
+    showModal(CREATE_COLUMN_MODAL_ID)
+  }
+
+  const handleCloseCreateColumnModal = (): void => {
+    closeModal(CREATE_COLUMN_MODAL_ID)
+
+    updateColumnForm.reset()
+  }
+
+  const handleCreateColumnChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
+    createColumnForm.setData((previousData) => ({
+      ...previousData,
+      name: e.target.value
+    }))
+  }
+
+  const handleCreateColumnClickColor = (color: ColumnColor): void => {
+    createColumnForm.setData((previousData) => ({
+      ...previousData,
+      color
+    }))
   }
 
   // Edit Column Modal
@@ -88,6 +128,18 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   }
 
   // Column Operations
+  const handleCreateColumn = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
+    createColumnForm.post(route('web.boards.columns.store', board.id), {
+      onFinish: () => {
+        createColumnForm.reset()
+        router.reload({ only: ['columns'] })
+        handleCloseCreateColumnModal()
+      }
+    })
+  }
+
   const handleDeleteColumn = (id: string): void => {
     router.delete(route('web.columns.destroy', id), {
       onFinish: () => {
@@ -195,7 +247,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
           <h1 className="font-bold text-2xl">{board.name}</h1>
           <button
             className="btn btn-neutral btn-sm"
-            onClick={() => { showModal(CREATE_COLUMN_MODAL_ID) }}
+            onClick={handleShowCreateColumnModal}
           >Add Column</button>
         </header>
         <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-auto">
@@ -222,8 +274,13 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       </section>
       <CreateColumnModal
         id={CREATE_COLUMN_MODAL_ID}
-        boardId={board.id}
-        lastIndex={columns.length}
+        name={createColumnForm.data.name}
+        selectedColor={createColumnForm.data.color}
+        onChangeNameHandler={handleCreateColumnChangeName}
+        onClickColorHandler={handleCreateColumnClickColor}
+        onClickCloseHandler={handleCloseCreateColumnModal}
+        onSubmitHandler={handleCreateColumn}
+        submitDisabler={createColumnForm.data.name === '' || createColumnForm.processing}
       />
       <EditColumnModal
         id={EDIT_COLUMN_MODAL_ID}
