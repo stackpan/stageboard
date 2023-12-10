@@ -1,4 +1,4 @@
-import { type Color, ColumnPosition, SwapDirection } from '@/Enums'
+import { type CardColor, ColumnPosition, SwapDirection } from '@/Enums'
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { type SelectingCard } from '@/Pages/Board/Show'
@@ -6,7 +6,7 @@ import { type SelectingCard } from '@/Pages/Board/Show'
 interface Props {
   id: string
   body: string
-  color: Color
+  color: CardColor
   columnPosition: ColumnPosition
   onCLickEditHandler: (card: SelectingCard) => void
   onClickMoveHandler: (id: string, direction: SwapDirection) => void
@@ -14,16 +14,16 @@ interface Props {
 }
 
 const backgroundColorVariants = {
-  stone: 'bg-stone-100',
-  red: 'bg-red-100',
-  amber: 'bg-amber-100',
-  lime: 'bg-lime-100',
-  emerald: 'bg-emerald-100',
-  cyan: 'bg-cyan-100',
-  blue: 'bg-blue-100',
-  violet: 'bg-violet-100',
-  fuchsia: 'bg-fuchsia-100',
-  rose: 'bg-rose-100'
+  '#f5f5f4': 'bg-stone-100',
+  '#fee2e2': 'bg-red-100',
+  '#fef3c7': 'bg-amber-100',
+  '#ecfccb': 'bg-lime-100',
+  '#d1fae5': 'bg-emerald-100',
+  '#cffafe': 'bg-cyan-100',
+  '#dbeafe': 'bg-blue-100',
+  '#ede9fe': 'bg-violet-100',
+  '#fae8ff': 'bg-fuchsia-100',
+  '#ffe4e6': 'bg-rose-100'
 }
 
 export default function TaskCard ({

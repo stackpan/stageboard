@@ -3,7 +3,7 @@
 namespace App\Repositories\Impl;
 
 use App\Dto\CardDto;
-use App\Enums\Color;
+use App\Enums\CardColor;
 use App\Exceptions\ApplicationError\AlreadyOfColumnMemberException;
 use App\Exceptions\ApplicationError\CrossColumnMemberException;
 use App\Models\Card;
@@ -21,7 +21,7 @@ class CardRepositoryImpl implements CardRepository
 
     public function create(string $columnId, CardDto $data): string
     {
-        $color = $data->color ?? fake()->randomElement(Color::class);
+        $color = $data->color ?? fake()->randomElement(CardColor::class);
 
         return Column::findOrFail($columnId)
             ->cards()

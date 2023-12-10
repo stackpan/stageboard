@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Color;
+use App\Enums\CardColor;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,25 +26,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereUpdatedAt($value)
  * @method static \Database\Factories\CardFactory factory($count = null, $state = [])
- * @property Color $color
  * @method static \Illuminate\Database\Eloquent\Builder|Card whereColor($value)
+ * @property mixed $color
  * @mixin \Eloquent
  */
 class Card extends Model
 {
     use HasFactory, HasUlids;
-    
+
     protected $fillable = [
         'body',
         'color',
     ];
 
     protected $casts = [
-        'color' => Color::class
+        'color' => CardColor::class
     ];
 
     public function column(): BelongsTo
     {
-        return $this->belongsTo(Column::class);    
+        return $this->belongsTo(Column::class);
     }
 }

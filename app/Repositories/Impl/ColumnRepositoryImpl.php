@@ -3,7 +3,7 @@
 namespace App\Repositories\Impl;
 
 use App\Dto\ColumnDto;
-use App\Enums\Color;
+use App\Enums\ColumnColor;
 use App\Models\Board;
 use App\Models\Column;
 use App\Repositories\ColumnRepository;
@@ -25,7 +25,7 @@ class ColumnRepositoryImpl implements ColumnRepository
 
     public function create(string $boardId, ColumnDto $data): string
     {
-        $color = $data->color ?? fake()->randomElement(Color::class);
+        $color = $data->color ?? fake()->randomElement(ColumnColor::class);
 
         return Board::findOrFail($boardId)
             ->columns()

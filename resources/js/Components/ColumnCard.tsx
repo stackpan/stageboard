@@ -2,15 +2,15 @@ import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import TaskCard from './TaskCard'
 import { type Card } from '@/types'
-import { type Color, ColumnPosition, SwapDirection } from '@/Enums'
-import {SelectingCard, type SelectingColumn} from '@/Pages/Board/Show'
+import { type ColumnColor, ColumnPosition, SwapDirection } from '@/Enums'
+import { type SelectingCard, type SelectingColumn } from '@/Pages/Board/Show'
 
 interface Props {
   id: string
   name: string
   order: number
   position: ColumnPosition
-  color: Color
+  color: ColumnColor
   cards: Card[]
   onClickEditHandler: (column: SelectingColumn) => void
   onClickSwapHandler: (id: string, currentOrder: number, direction: SwapDirection) => void
@@ -22,16 +22,14 @@ interface Props {
 }
 
 const stripColorVariants = {
-  stone: 'bg-stone-400',
-  red: 'bg-red-400',
-  amber: 'bg-amber-400',
-  lime: 'bg-lime-400',
-  emerald: 'bg-emerald-400',
-  cyan: 'bg-cyan-400',
-  blue: 'bg-blue-400',
-  violet: 'bg-violet-400',
-  fuchsia: 'bg-fuchsia-400',
-  rose: 'bg-rose-400'
+  '#f87171': 'bg-red-400',
+  '#fbbf24': 'bg-amber-400',
+  '#a3e635': 'bg-lime-400',
+  '#34d399': 'bg-emerald-400',
+  '#22d3ee': 'bg-cyan-400',
+  '#60a5fa': 'bg-blue-400',
+  '#a78bfa': 'bg-violet-400',
+  '#e879f9': 'bg-fuchsia-400'
 }
 
 export default function ColumnCard ({

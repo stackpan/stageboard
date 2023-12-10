@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\Color;
+use App\Enums\ColumnColor;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +26,7 @@ class UpdateColumnRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:24'],
-            'color' => ['required', Rule::enum(Color::class)],
+            'color' => ['required', Rule::enum(ColumnColor::class)],
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Color;
+use App\Enums\ColumnColor;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,8 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $order
  * @method static \Database\Factories\ColumnFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereOrder($value)
- * @property Color $color
  * @method static \Illuminate\Database\Eloquent\Builder|Column whereColor($value)
+ * @property mixed $color
  * @mixin \Eloquent
  */
 class Column extends Model
@@ -48,16 +48,16 @@ class Column extends Model
     ];
 
     protected $casts = [
-        'color' => Color::class
+        'color' => ColumnColor::class
     ];
-    
+
     public function board(): BelongsTo
     {
-        return $this->belongsTo(Board::class);    
+        return $this->belongsTo(Board::class);
     }
-    
+
     public function cards(): HasMany
     {
-        return $this->hasMany(Card::class);    
+        return $this->hasMany(Card::class);
     }
 }

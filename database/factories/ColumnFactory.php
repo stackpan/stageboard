@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\Color;
+use App\Enums\ColumnColor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +19,7 @@ class ColumnFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'color' => fake()->randomElement(Color::class),
+            'color' => fake()->randomElement(ColumnColor::class),
         ];
     }
 }

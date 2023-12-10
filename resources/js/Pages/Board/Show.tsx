@@ -1,5 +1,5 @@
 import ColumnCard from '@/Components/ColumnCard'
-import { Color, ColumnPosition, type SwapDirection } from '@/Enums'
+import { CardColor, ColumnColor, ColumnPosition, type SwapDirection } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
 import { closeModal, showModal } from '@/Utils/dom'
 import { type Board, type Card, type Column, type PageProps } from '@/types'
@@ -18,12 +18,12 @@ type Props = PageProps<{
 
 interface UpdateColumnForm {
   name: string
-  color: Color
+  color: ColumnColor
 }
 
 interface UpdateCardForm {
   body: string
-  color: Color
+  color: CardColor
 }
 
 export type SelectingColumn = Pick<Column, 'id' | 'name' | 'color'>
@@ -37,12 +37,12 @@ const EDIT_CARD_MODAL_ID = 'editCardModal'
 const initialSelectingColumnValue = {
   id: '',
   name: '',
-  color: Color.Stone
+  color: ColumnColor.Red
 }
 const initialSelectingCardValue = {
   id: '',
   body: '',
-  color: Color.Stone
+  color: CardColor.Stone
 }
 
 export default function Show ({ auth, board, columns }: Props): JSX.Element {
@@ -51,11 +51,11 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
 
   const updateColumnForm = useForm<UpdateColumnForm>({
     name: '',
-    color: Color.Stone
+    color: ColumnColor.Red
   })
   const updateCardForm = useForm<UpdateCardForm>({
     body: '',
-    color: Color.Stone
+    color: CardColor.Stone
   })
 
   const getColumnPosition = (order: number): ColumnPosition => {

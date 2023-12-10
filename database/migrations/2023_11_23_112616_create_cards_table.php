@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('body', 255);
-            $table->enum('color', \App\Enums\Color::values());
+            $table->enum('color', \App\Enums\CardColor::values());
             $table->timestamps();
             $table->foreignUlid('column_id')->constrained()->cascadeOnDelete();
         });

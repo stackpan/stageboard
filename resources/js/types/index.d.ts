@@ -1,4 +1,4 @@
-import { type Color } from '@/Enums'
+import { type CardColor, type ColumnColor } from '@/Enums'
 
 export interface User {
   id: string
@@ -22,7 +22,7 @@ export interface Column {
   id: string
   name: string
   order: number
-  color: Color
+  color: ColumnColor
   createdAt: string
   updatedAt: string
 }
@@ -30,7 +30,7 @@ export interface Column {
 export interface Card {
   id: string
   body: string
-  color: Color
+  color: CardColor
   createdAt: string
   updatedAt: string
 }

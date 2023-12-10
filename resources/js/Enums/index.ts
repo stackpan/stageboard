@@ -4,17 +4,28 @@ export enum ColumnPosition {
   Last,
 }
 
-export enum Color {
-  Stone = 'stone',
-  Red = 'red',
-  Amber = 'amber',
-  Lime = 'lime',
-  Emerald = 'emerald',
-  Cyan = 'cyan',
-  Blue = 'blue',
-  Violet = 'violet',
-  Fuchsia = 'fuchsia',
-  Rose = 'rose',
+export enum ColumnColor {
+  Red = '#f87171',
+  Amber = '#fbbf24',
+  Lime = '#a3e635',
+  Emerald = '#34d399',
+  Cyan = '#22d3ee',
+  Blue = '#60a5fa',
+  Violet = '#a78bfa',
+  Fuchsia = '#e879f9',
+}
+
+export enum CardColor {
+  Stone = '#f5f5f4',
+  Red = '#fee2e2',
+  Amber = '#fef3c7',
+  Lime = '#ecfccb',
+  Emerald = '#d1fae5',
+  Cyan = '#cffafe',
+  Blue = '#dbeafe',
+  Violet = '#ede9fe',
+  Fuchsia = '#fae8ff',
+  Rose = '#ffe4e6',
 }
 
 export enum SwapDirection {

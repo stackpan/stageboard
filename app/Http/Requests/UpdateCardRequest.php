@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Color;
+use App\Enums\CardColor;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +25,7 @@ class UpdateCardRequest extends FormRequest
     {
         return [
             'body' => ['required', 'string', 'max:255'],
-            'color' => ['required', Rule::enum(Color::class)],
+            'color' => ['required', Rule::enum(CardColor::class)],
         ];
     }
 }
