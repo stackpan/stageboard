@@ -13,8 +13,8 @@ class BoardRepositoryImpl implements BoardRepository
 {
     public function getAllByUserId(string $userId): Collection
     {
-        return Board::whereUserId($userId)
-            ->with('user:id,name')
+        return Board::whereOwnerId($userId)
+            ->with('owner:id,name')
 //            ->with('opened_at')
             ->get();
     }
@@ -24,7 +24,7 @@ class BoardRepositoryImpl implements BoardRepository
         $aliasId = $this->generateAliasId();
 
         $board = new Board;
-        $board->user_id = $userId;
+        $board->owner_id = $userId;
         $board->alias_id = $aliasId;
         $board->name = $data->name;
         $board->save();
@@ -38,7 +38,7 @@ class BoardRepositoryImpl implements BoardRepository
 
         return Board::select($cols)
             ->whereId($id)
-            ->with('user:id,name')
+            ->with('owner:id,name')
             ->with('columns.cards')
             ->firstOrFail();
     }
@@ -49,7 +49,7 @@ class BoardRepositoryImpl implements BoardRepository
 
         return Board::select($cols)
             ->whereAliasId($aliasId)
-            ->with('user:id,name')
+            ->with('owner:id,name')
             ->with('columns.cards')
             ->firstOrFail();
     }

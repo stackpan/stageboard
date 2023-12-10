@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -82,8 +83,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function boards(): HasMany
+    public function ownedBoards(): HasMany
     {
-        return $this->hasMany(Board::class);
+        return $this->hasMany(Board::class, 'owner_id');
+    }
+
+    public function boards(): BelongsToMany
+    {
+        return $this->belongsToMany(Board::class);
     }
 }

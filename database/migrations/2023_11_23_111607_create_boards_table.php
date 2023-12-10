@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('name', 32);
             $table->string('thumbnail_url')->nullable();
             $table->timestamps();
-            $table->foreignUlid('user_id')->constrained();
+            $table->foreignUlid('owner_id')->constrained(
+                table: 'users', indexName: 'boards_owner_id'
+            );
         });
     }
 

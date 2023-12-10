@@ -45,9 +45,9 @@ class Board extends Model
         'name',
     ];
 
-    public function user(): BelongsTo
+    public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function columns(): HasMany
@@ -55,7 +55,7 @@ class Board extends Model
         return $this->hasMany(Column::class);
     }
 
-    public function opened_at(): BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }

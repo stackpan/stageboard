@@ -30,8 +30,8 @@ class BoardResource extends JsonResource
             'updatedAt' => $this->whenHas('updated_at'),
             'thumbnailUrl' => $this->whenHas('thumbnail_url'),
             'user' => [
-                'id' => $this->user->id,
-                'name' => $this->user->name,
+                'id' => $this->owner->id,
+                'name' => $this->owner->name,
             ],
             'openedAt' => $this->whenHas('opened_at'),
 //            '_links' => [

@@ -17,13 +17,13 @@ class DatabaseSeeder extends Seeder
         //         User::factory(10)->create();
 
          $user = User::factory()
-            ->hasBoards(2)
+            ->hasOwnedBoards(2)
             ->create([
                 'name' => 'Test User',
                 'email' => 'test@example.com',
              ]);
 
-         foreach ($user->boards as $board) {
+         foreach ($user->ownedBoards as $board) {
             $columnNames = ['Open', 'In Progress', 'Done'];
              for ($i = 0; $i < count($columnNames); $i++) {
                  Column::factory()
