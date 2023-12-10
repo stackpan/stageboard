@@ -69,18 +69,16 @@ export default function TaskCard ({
               <li>
                 <button onClick={handleClickEdit}>Edit</button>
               </li>
-              <li>
+              <li className={atLastColumn ? 'disabled' : ''}>
                 <button
-                  className={atFirstColumn ? 'disabled' : ''}
                   onClick={handleClickMoveRight}
-                  disabled={atFirstColumn}
+                  disabled={atLastColumn}
                 >Move to Right</button>
               </li>
-              <li>
+              <li className={atFirstColumn ? 'disabled' : ''}>
                 <button
-                  className={atLastColumn ? 'disabled' : ''}
                   onClick={handleClickMoveLeft}
-                  disabled={atLastColumn}
+                  disabled={atFirstColumn}
                 >Move to Left</button>
               </li>
               <li>
