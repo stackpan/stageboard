@@ -10,7 +10,7 @@ import CreateColumnModal from '@/Components/Modals/CreateColumnModal'
 import EditColumnModal from '@/Components/Modals/EditColumnModal'
 import CreateCardModal from '@/Components/Modals/CreateCardModal'
 import EditCardModal from '@/Components/Modals/EditCardModal'
-import { getRandomColumnColorValue } from '@/Utils/random'
+import { getRandomCardColor, getRandomColumnColor } from '@/Utils/random'
 
 type Props = PageProps<{
   board: Board
@@ -25,6 +25,10 @@ interface CreateColumnForm {
 interface UpdateColumnForm {
   name: string
   color: ColumnColor
+}
+interface CreateCardForm {
+  body: string
+  color: CardColor
 }
 interface UpdateCardForm {
   body: string
@@ -57,11 +61,16 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const createColumnForm = useForm<CreateColumnForm>({
     name: '',
     order: columns.length,
-    color: getRandomColumnColorValue()
+    color: getRandomColumnColor()
   })
   const editColumnForm = useForm<UpdateColumnForm>({
     name: '',
     color: ColumnColor.Red
+  })
+
+  const createCardForm = useForm<CreateCardForm>({
+    body: '',
+    color: getRandomCardColor()
   })
   const updateCardForm = useForm<UpdateCardForm>({
     body: '',
@@ -78,7 +87,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   const handleShowCreateColumnModal = (): void => {
     createColumnForm.setData((previousData) => ({
       ...previousData,
-      color: getRandomColumnColorValue()
+      color: getRandomColumnColor()
     }))
 
     showModal(CREATE_COLUMN_MODAL_ID)
@@ -146,7 +155,9 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     })
   }
 
-  const handleUpdateColumn = (): void => {
+  const handleUpdateColumn = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
     editColumnForm.patch(route('web.columns.update', selectingColumn.id), {
       onFinish: () => {
         router.reload({ only: ['columns'] })
@@ -178,8 +189,22 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     setSelectingColumn(column)
     showModal(CREATE_CARD_MODAL_ID)
   }
+  const handleCreateCardChangeBody = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    createCardForm.setData((previousData) => ({
+      ...previousData,
+      body: e.target.value
+    }))
+  }
+  const handleCreateCardClickColor = (color: CardColor): void => {
+    createCardForm.setData((previousData) => ({
+      ...previousData,
+      color
+    }))
+  }
   const handleCloseCreateCardModal = (): void => {
     setSelectingColumn(initialSelectingColumnValue)
+    createCardForm.reset()
+
     closeModal(CREATE_CARD_MODAL_ID)
   }
 
@@ -207,6 +232,16 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
   }
 
   // Card Operations
+  const handleCreateCard = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
+    createCardForm.post(route('web.columns.cards.store', selectingColumn.id), {
+      onFinish: () => {
+        router.reload({ only: ['columns'] })
+        handleCloseCreateCardModal()
+      }
+    })
+  }
   const handleUpdateCard = (): void => {
     updateCardForm.patch(route('web.cards.update', selectingCard.id), {
       onSuccess: () => {
@@ -304,8 +339,16 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
       />
       <CreateCardModal
         id={CREATE_CARD_MODAL_ID}
-        columnId={selectingColumn.id}
+        bodyData={createCardForm.data.body}
+        selectedColorData={createCardForm.data.color}
+        onChangeBodyHandler={handleCreateCardChangeBody}
+        onClickColorHandler={handleCreateCardClickColor}
+        onSubmitHandler={handleCreateCard}
         onClickCloseHandler={handleCloseCreateCardModal}
+        submitDisabler={
+          createCardForm.data.body === '' ||
+          createCardForm.processing
+        }
       />
       <EditCardModal
         id={EDIT_CARD_MODAL_ID}
