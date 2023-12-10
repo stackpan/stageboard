@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Dto\BoardDto;
 use App\Models\Board;
 use App\Models\UserBoard;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Arr;
 use App\Repositories\BoardRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,7 +17,11 @@ class BoardRepositoryImpl implements BoardRepository
     {
         return Board::whereOwnerId($userId)
             ->with('owner:id,name')
-//            ->with('opened_at')
+            ->with(['users' => fn (BelongsToMany $query) => $query
+                ->select('id')
+                ->whereUserId($userId)
+                ->withPivot('opened_at')
+            ])
             ->get();
     }
 

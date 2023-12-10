@@ -57,6 +57,6 @@ class Board extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->using(UserBoard::class);
+        return $this->belongsToMany(User::class, 'user_board')->using(UserBoard::class);
     }
 }

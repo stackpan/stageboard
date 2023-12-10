@@ -33,7 +33,7 @@ class BoardResource extends JsonResource
                 'id' => $this->owner->id,
                 'name' => $this->owner->name,
             ],
-            'openedAt' => $this->whenHas('opened_at'),
+            'openedAt' => $this->users[0]->pivot->opened_at ?? ''
 //            '_links' => [
 //                'self' => [
 //                    'href' => route('api.boards.show', $this->id),

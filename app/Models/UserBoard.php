@@ -15,4 +15,8 @@ class UserBoard extends Pivot
     protected $fillable = [
         'opened_at',
     ];
+
+    protected $casts = [
+        'opened_at' => 'datetime',
+    ];
 }
