@@ -5,6 +5,7 @@ namespace App\Repositories\Impl;
 use App\Models\User;
 use App\Dto\BoardDto;
 use App\Models\Board;
+use App\Models\UserBoard;
 use Illuminate\Support\Arr;
 use App\Repositories\BoardRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -66,6 +67,29 @@ class BoardRepositoryImpl implements BoardRepository
     {
         Board::findOrFail($id)
             ->delete();
+    }
+
+    public function updateUserOpenedAt(string $id, string $userId): void
+    {
+        $userBoard = UserBoard::whereBoardId($id)
+            ->whereUserId($userId)
+            ->first();
+
+        if ($userBoard === null) {
+            $pivot = new UserBoard;
+            $pivot->board_id = $id;
+            $pivot->user_id = $userId;
+            $pivot->opened_at = now();
+            $pivot->save();
+
+            return;
+        }
+
+        UserBoard::whereBoardId($id)
+            ->whereUserId($userId)
+            ->update([
+                'opened_at' => now(),
+            ]);
     }
 
     private function generateAliasId(): string

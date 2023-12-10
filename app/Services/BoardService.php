@@ -19,4 +19,6 @@ interface BoardService
     public function update(string $id, BoardDto $data): void;
 
     public function delete(string $id): void;
+
+    public function updateUserOpenedAt(string $id, string $userId): void;
 }

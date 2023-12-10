@@ -22,6 +22,7 @@ class ShowBoardPageController extends Controller
     public function __invoke(Request $request, string $aliasId): Response
     {
         $board = $this->boardService->getByAliasId($aliasId);
+        $this->boardService->updateUserOpenedAt($board->id, $request->user()->id);
 
         $columns = $board->columns->sortBy('order');
 
