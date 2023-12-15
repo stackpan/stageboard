@@ -2,7 +2,7 @@ import { type CardColor, ColumnPosition, SwapDirection } from '@/Enums'
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { type SelectingCard } from '@/Pages/Board/Show'
-import { convertCardColor } from '@/Utils/color'
+import { convertToBackgroundColor } from '@/Utils/color'
 
 interface Props {
   id: string
@@ -40,7 +40,7 @@ export default function TaskCard ({
   }
 
   return (
-    <div className={'card card-compact shadow-md border border-neutral ' + convertCardColor(color)}>
+    <div className="card card-compact shadow-md border border-neutral" style={convertToBackgroundColor(color)}>
       <div className="card-body !p-2">
         <header className="flex justify-between">
           <div className="space-x-2">

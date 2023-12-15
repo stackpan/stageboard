@@ -4,7 +4,7 @@ import TaskCard from './TaskCard'
 import { type Card } from '@/types'
 import { type ColumnColor, ColumnPosition, SwapDirection } from '@/Enums'
 import { type SelectingCard, type SelectingColumn } from '@/Pages/Board/Show'
-import { convertColumnColor } from '@/Utils/color'
+import { convertToBackgroundColor } from '@/Utils/color'
 
 interface Props {
   id: string
@@ -58,7 +58,7 @@ export default function ColumnCard ({
 
   return (
     <div className="flex-none card card-compact w-80 bg-base-100 shadow-md border border-neutral rounded space-y-4">
-      <div className={'h-2 ' + convertColumnColor(color)}></div>
+      <div className="h-2" style={convertToBackgroundColor(color)}></div>
       <div className="card-body !mt-0">
         <div className="flex justify-between items-start">
           <h2 className="card-title">{name}</h2>

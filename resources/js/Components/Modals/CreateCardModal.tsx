@@ -1,6 +1,6 @@
 import React, { type ChangeEvent } from 'react'
 import { CardColor } from '@/Enums'
-import { convertCardColor } from '@/Utils/color'
+import { convertToBackgroundColor } from '@/Utils/color'
 
 interface Props {
   id: string
@@ -36,7 +36,8 @@ export default function CreateCardModal ({
           <div>
             <textarea
               name="body"
-              className={`textarea textarea-bordered w-full ${convertCardColor(selectedColorData)}`}
+              className="textarea textarea-bordered w-full"
+              style={convertToBackgroundColor(selectedColorData)}
               placeholder="Type something you want to do ..."
               value={bodyData}
               onChange={onChangeBodyHandler}
@@ -50,7 +51,8 @@ export default function CreateCardModal ({
             {Object.values(CardColor).map((color, index) => (
               <button
                 key={color}
-                className={`w-6 h-6 rounded-full border-4 ${color === selectedColorData ? 'border-gray-600' : ''} ${convertCardColor(color)}`}
+                className={`w-6 h-6 rounded-full border-4 ${color === selectedColorData ? 'border-gray-600' : ''}`}
+                style={convertToBackgroundColor(color)}
                 onClick={() => { onClickColorHandler(color) }}
                 disabled={color === selectedColorData}
               />

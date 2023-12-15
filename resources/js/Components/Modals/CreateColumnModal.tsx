@@ -1,6 +1,6 @@
 import React, { type ChangeEvent, type FormEvent } from 'react'
 import { ColumnColor } from '@/Enums'
-import { convertColumnColor } from '@/Utils/color'
+import { convertToBackgroundColor } from '@/Utils/color'
 
 interface Props {
   id: string
@@ -23,6 +23,10 @@ export default function CreateColumnModal ({
   onSubmitHandler,
   submitDisabler
 }: Props): JSX.Element {
+  const selectColor = (color: ColumnColor): void => {
+    if (color !== selectedColorData) onClickColorHandler(color)
+  }
+
   return (
     <dialog id={id} className="modal">
       <section className="modal-box">
@@ -49,10 +53,11 @@ export default function CreateColumnModal ({
           <div className="flex gap-2">
             {Object.values(ColumnColor).map((color, index) => (
               <div key={color}>
-                {color === selectedColorData
-                  ? <div className={'w-6 h-6 rounded-full border-4 border-gray-600 ' + convertColumnColor(color)} />
-                  : <div className={'w-6 h-6 rounded-full border-4 ' + convertColumnColor(color)} onClick={() => { onClickColorHandler(color) }} />
-                }
+                <div
+                  className={`w-6 h-6 rounded-full border-4 ${color === selectedColorData ? 'border-gray-600' : ''}`}
+                  style={convertToBackgroundColor(color)}
+                  onClick={() => { selectColor(color) }}
+                />
               </div>
             ))}
           </div>
