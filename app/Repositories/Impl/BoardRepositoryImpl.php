@@ -74,7 +74,7 @@ class BoardRepositoryImpl implements BoardRepository
             ->delete();
     }
 
-    public function updateUserOpenedAt(string $id, string $userId): void
+    public function updateUserOpenedTime(string $id, string $userId): void
     {
         $userBoard = UserBoard::whereBoardId($id)
             ->whereUserId($userId)

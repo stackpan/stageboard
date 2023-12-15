@@ -47,8 +47,8 @@ class BoardServiceImpl implements BoardService
         $this->boardRepository->delete($id);
     }
 
-    public function updateUserOpenedAt(string $id, string $userId): void
+    public function updateUserOpenedTime(string $id, string $userId): void
     {
-        $this->boardRepository->updateUserOpenedAt($id, $userId);
+        $this->boardRepository->updateUserOpenedTime($id, $userId);
     }
 }

@@ -20,5 +20,5 @@ interface BoardRepository
 
     public function delete(string $id): void;
 
-    public function updateUserOpenedAt(string $id, string $userId): void;
+    public function updateUserOpenedTime(string $id, string $userId): void;
 }
