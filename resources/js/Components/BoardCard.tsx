@@ -20,8 +20,8 @@ export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, ope
       <figure onClick={() => { router.get(route('web.page.board.show', aliasId)) }} className="cursor-pointer h-32">
         {thumbnailUrl !== null
           ? <img src={thumbnailUrl} alt={`${name} thumbnail`} />
-          : <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />
-          }
+          : <img src='/img/board-thumbnail-fallback.png' alt="Shoes" />
+        }
       </figure>
       <div className="card-body">
         <div className="flex justify-between">

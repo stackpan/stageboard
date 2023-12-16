@@ -65,6 +65,13 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
     router.delete(route('web.boards.destroy', id))
   }
 
+  const handleBoardCardClickRename = (id: string): void => {
+    const board = boards.find((board) => board.id === id)
+
+    if (board === undefined) return
+    showUpdateBoardModal(board)
+  }
+
   return (
     <MainLayout user={auth.user}>
       <Head title="Home" />
@@ -81,13 +88,7 @@ export default function Home ({ auth, boards }: Props): JSX.Element {
                 owner={board.user.name}
                 thumbnailUrl={board.thumbnailUrl}
                 openedAt={board.openedAt}
-                onClickRenameHandler={(id) => {
-                  const board = boards.find((board) => board.id === id)
-
-                  if (board !== undefined) {
-                    showUpdateBoardModal(board)
-                  }
-                }}
+                onClickRenameHandler={handleBoardCardClickRename}
                 onClickDeleteHandler={handleDelete}
               />
           ))
