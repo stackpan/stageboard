@@ -84,7 +84,6 @@ class BoardRepositoryImpl implements BoardRepository
             $pivot = new UserBoard;
             $pivot->board_id = $id;
             $pivot->user_id = $userId;
-            $pivot->opened_at = now();
             $pivot->save();
 
             return;

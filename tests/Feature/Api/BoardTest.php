@@ -17,7 +17,7 @@ class BoardTest extends TestCase
         parent::setUp();
 
         $this->seed();
-        
+
         $this->user = User::whereEmail('test@example.com')->first();
     }
 
@@ -81,7 +81,7 @@ class BoardTest extends TestCase
 
     public function test_get_board_details_success(): void
     {
-        $board = $this->user->boards()->first();
+        $board = $this->user->collaborationBoards()->first();
 
         $response = $this
             ->actingAs($this->user)
@@ -134,7 +134,7 @@ class BoardTest extends TestCase
 
     public function test_rename_board_success(): void
     {
-        $board = $this->user->boards()->first();
+        $board = $this->user->collaborationBoards()->first();
 
         $requestBody = [
             'name' => 'Renamed Board',
@@ -179,7 +179,7 @@ class BoardTest extends TestCase
 
     public function test_delete_board_success(): void
     {
-        $board = $this->user->boards()->first();
+        $board = $this->user->collaborationBoards()->first();
 
         $response = $this
             ->actingAs($this->user)

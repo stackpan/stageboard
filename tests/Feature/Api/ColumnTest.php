@@ -23,7 +23,7 @@ class ColumnTest extends TestCase
         $this->seed();
 
         $this->user = User::whereEmail('test@example.com')->first();
-        $this->board = $this->user->boards()->first();
+        $this->board = $this->user->collaborationBoards()->first();
     }
 
     public function test_get_all_columns_inside_board(): void
@@ -31,7 +31,7 @@ class ColumnTest extends TestCase
         $response = $this
             ->actingAs($this->user)
             ->get(route('api.boards.columns.index', $this->board->id));
-        
+
         $response
             ->assertOk()
             ->assertHeader('Content-Type', 'application/json')
@@ -60,7 +60,7 @@ class ColumnTest extends TestCase
 
     public function test_create_column_success(): void
     {
-        $board = $this->user->boards()
+        $board = $this->user->collaborationBoards()
             ->create([
                 'name' => 'Empty Board',
             ]);

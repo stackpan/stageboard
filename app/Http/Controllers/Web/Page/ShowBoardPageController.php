@@ -23,6 +23,8 @@ class ShowBoardPageController extends Controller
     public function __invoke(Request $request, string $aliasId): Response
     {
         $board = $this->boardService->getByAliasId($aliasId);
+        $this->authorize('view', $board);
+
         $columns = $board->columns->sortBy('order');
 
         BoardOpenedEvent::dispatch($board, $request->user());

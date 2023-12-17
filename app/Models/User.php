@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -24,10 +26,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Board> $boards
- * @property-read int|null $boards_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Board> $collaborationBoards
+ * @property-read int|null $collaboration_boards_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Board> $ownedBoards
+ * @property-read int|null $owned_boards_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
@@ -88,8 +92,13 @@ class User extends Authenticatable
         return $this->hasMany(Board::class, 'owner_id');
     }
 
-    public function boards(): BelongsToMany
+    public function collaborationBoards(): BelongsToMany
     {
-        return $this->belongsToMany(Board::class)->using(UserBoard::class);
+        return $this->belongsToMany(Board::class, 'user_board')->using(UserBoard::class);
+    }
+
+    public function scopeBoards(Builder $query): void
+    {
+        $query->with(['ownedBoards', 'collaborationBoards']);
     }
 }

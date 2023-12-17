@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_board', function (Blueprint $table) {
-            $table->timestamp('opened_at');
+            $table->timestamp('opened_at')->useCurrent()->useCurrentOnUpdate();
             $table->foreignUlid('user_id')->constrained()->cascadeOnDelete();
             $table->foreignUlid('board_id')->constrained()->cascadeOnDelete();
         });
