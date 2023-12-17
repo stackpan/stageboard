@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateColumnRequest;
 use App\Http\Requests\MoveColumnRequest;
 use App\Http\Requests\UpdateColumnRequest;
+use App\Models\Board;
+use App\Models\Column;
 use App\Services\ColumnService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,11 +19,12 @@ class ColumnWebController extends Controller
         private readonly ColumnService $columnService,
     )
     {
-        //
+        $this->authorizeResource(Column::class, 'column');
     }
 
-    public function store(CreateColumnRequest $request, string $boardId): RedirectResponse
+    public function store(CreateColumnRequest $request, Board $board): RedirectResponse
     {
+        $this->authorize('createColumn', $board);
         $validated = $request->validated();
 
         $data = new ColumnDto(
@@ -30,12 +33,12 @@ class ColumnWebController extends Controller
             color: $validated['color'] ?? null,
         );
 
-        $this->columnService->create($boardId, $data);
+        $this->columnService->create($board->id, $data);
 
         return back();
     }
 
-    public function update(UpdateColumnRequest $request, string $id): RedirectResponse
+    public function update(UpdateColumnRequest $request, Column $column): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -44,23 +47,24 @@ class ColumnWebController extends Controller
             color: $validated['color'],
         );
 
-        $this->columnService->update($id, $data);
+        $this->columnService->update($column->id, $data);
 
         return back();
     }
 
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Column $column): RedirectResponse
     {
-        $this->columnService->delete($id);
+        $this->columnService->delete($column->id);
 
         return back();
     }
 
-    public function swap(MoveColumnRequest $request, string $id): RedirectResponse
+    public function swap(MoveColumnRequest $request, Column $column): RedirectResponse
     {
+        $this->authorize('swap', $column);
         $validated = $request->validated();
 
-        $this->columnService->swap($id, $validated['order']);
+        $this->columnService->swap($column->id, $validated['order']);
 
         return back();
     }

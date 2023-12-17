@@ -25,8 +25,7 @@ class CreateColumnRequest extends FormRequest
      */
     public function rules(): array
     {
-        $boardId = $this->route('board');
-        $board = Board::findOrFail($boardId);
+        $board = $this->route('board');
 
         return [
             'name' => ['required', 'string', 'max:24'],

@@ -23,8 +23,7 @@ class MoveColumnRequest extends FormRequest
      */
     public function rules(): array
     {
-        $columnId = $this->route('column');
-        $board = Column::findOrFail($columnId)->board;
+        $board = $this->route('column')->board;
 
         return [
             'order' => ['required', 'integer', 'min:0', 'max:10', new InColumnSize($board)],
