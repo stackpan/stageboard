@@ -13,7 +13,7 @@ class BoardPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,10 +21,7 @@ class BoardPolicy
      */
     public function view(User $user, Board $board): bool
     {
-        $isOwner = $user->id === $board->owner_id;
-        $isCollaborator = $board->users->find($user) !== null;
-
-        return $isOwner || $isCollaborator;
+        return $this->checkOwner($user, $board) || $this->checkCollaborator($user, $board);
     }
 
     /**
@@ -32,7 +29,7 @@ class BoardPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -40,7 +37,7 @@ class BoardPolicy
      */
     public function update(User $user, Board $board): bool
     {
-        //
+        return $this->checkOwner($user, $board);
     }
 
     /**
@@ -48,7 +45,7 @@ class BoardPolicy
      */
     public function delete(User $user, Board $board): bool
     {
-        //
+        return $this->checkOwner($user, $board);
     }
 
     /**
@@ -56,7 +53,7 @@ class BoardPolicy
      */
     public function restore(User $user, Board $board): bool
     {
-        //
+        return $this->checkOwner($user, $board);
     }
 
     /**
@@ -64,6 +61,16 @@ class BoardPolicy
      */
     public function forceDelete(User $user, Board $board): bool
     {
-        //
+        return $this->checkOwner($user, $board);
+    }
+
+    private function checkOwner(User $user, Board $board): bool
+    {
+        return $user->id === $board->owner_id;
+    }
+
+    private function checkCollaborator(User $user, Board $board): bool
+    {
+        return $board->users->find($user) !== null;
     }
 }

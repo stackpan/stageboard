@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Dto\BoardDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BoardRequest;
+use App\Models\Board;
 use App\Services\BoardService;
 use Illuminate\Http\RedirectResponse;
 
@@ -14,7 +15,7 @@ class BoardWebController extends Controller
         private readonly BoardService $boardService,
     )
     {
-        //
+        $this->authorizeResource(Board::class, 'board');
     }
 
     public function store(BoardRequest $request): RedirectResponse
@@ -32,7 +33,7 @@ class BoardWebController extends Controller
         return to_route('web.page.board.show', $board->alias_id);
     }
 
-    public function update(BoardRequest $request, string $id): RedirectResponse
+    public function update(BoardRequest $request, Board $board): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -40,14 +41,14 @@ class BoardWebController extends Controller
             name: $validated['name'],
         );
 
-        $this->boardService->update($id, $data);
+        $this->boardService->update($board->id, $data);
 
         return back();
     }
 
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Board $board): RedirectResponse
     {
-        $this->boardService->delete($id);
+        $this->boardService->delete($board->id);
 
         return back();
     }
