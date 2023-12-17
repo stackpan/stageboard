@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\MoveCardRequest;
 use App\Http\Requests\UpdateCardRequest;
+use App\Models\Card;
+use App\Models\Column;
 use App\Services\CardService;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\RedirectResponse;
@@ -18,11 +20,12 @@ class CardWebController extends Controller
         private readonly CardService $cardService,
     )
     {
-        //
+        $this->authorizeResource(Card::class, 'card');
     }
 
-    public function store(CreateCardRequest $request, string $columnId): RedirectResponse
+    public function store(CreateCardRequest $request, Column $column): RedirectResponse
     {
+        $this->authorize('createCard', $column);
         $validated = $request->validated();
 
         $data = new CardDto(
@@ -30,12 +33,12 @@ class CardWebController extends Controller
             color: $validated['color'] ?? null,
         );
 
-        $this->cardService->create($columnId, $data);
+        $this->cardService->create($column->id, $data);
 
         return back();
     }
 
-    public function update(UpdateCardRequest $request, string $id): RedirectResponse
+    public function update(UpdateCardRequest $request, Card $card): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -44,23 +47,24 @@ class CardWebController extends Controller
             color: $validated['color'],
         );
 
-        $this->cardService->update($id, $data);
+        $this->cardService->update($card->id, $data);
 
         return back();
     }
 
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Card $card): RedirectResponse
     {
-        $this->cardService->delete($id);
+        $this->cardService->delete($card->id);
 
         return back();
     }
 
-    public function move(MoveCardRequest $request, string $id): RedirectResponse
+    public function move(MoveCardRequest $request, Card $card): RedirectResponse
     {
+        $this->authorize('move', $card);
         $validated = $request->validated();
 
-        $this->cardService->moveToColumn($id, $validated['columnId']);
+        $this->cardService->moveToColumn($card->id, $validated['columnId']);
 
         return back();
     }

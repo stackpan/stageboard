@@ -71,6 +71,11 @@ class ColumnPolicy
         return $this->checkOwner($user, $column) || $this->checkCollaborator($user, $column);
     }
 
+    public function createCard(User $user, Column $column): bool
+    {
+        return $this->checkOwner($user, $column) || $this->checkCollaborator($user, $column);
+    }
+
     private function checkOwner(User $user, Column $column): bool
     {
         return $user->id === $column->board->owner_id;
