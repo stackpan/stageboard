@@ -11,24 +11,23 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ColumnRepositoryImpl implements ColumnRepository
 {
-    public function getAllByBoardId(string $boardId): Collection
+    public function getAllByBoard(Board $board): Collection
     {
-        return Column::whereBoardId($boardId)
+        return Column::whereBoardId($board->id)
             ->with('cards')
             ->get();
     }
 
-    public function getCountByBoardId(string $boardId): int
+    public function getCountByBoard(Board $board): int
     {
-        return Column::whereBoardId($boardId)->count();
+        return Column::whereBoardId($board->id)->count();
     }
 
-    public function create(string $boardId, ColumnDto $data): string
+    public function create(Board $board, ColumnDto $data): string
     {
         $color = $data->color ?? fake()->randomElement(ColumnColor::class);
 
-        return Board::findOrFail($boardId)
-            ->columns()
+        return $board->columns()
             ->create([
                 'name' => $data->name,
                 'order' => $data->order,
@@ -37,7 +36,7 @@ class ColumnRepositoryImpl implements ColumnRepository
             ->id;
     }
 
-    public function get(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column
+    public function getById(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column
     {
         $query = Column::whereId($id);
 
@@ -48,18 +47,16 @@ class ColumnRepositoryImpl implements ColumnRepository
         return $nullable ? $query->first() : $query->firstOrFail();
     }
 
-    public function update(string $id, ColumnDto $data): void
+    public function update(Column $column, ColumnDto $data): void
     {
-        $column = Column::findOrFail($id)
-            ->update([
+        $column->update([
                 'name' => $data->name,
                 'color' => $data->color,
             ]);
     }
 
-    public function delete(string $id): void
+    public function delete(Column $column): void
     {
-        $column = Column::findOrFail($id);
         $boardId = $column->board_id;
         $columnOrder = $column->order;
 
@@ -91,10 +88,9 @@ class ColumnRepositoryImpl implements ColumnRepository
         $query->decrement('order');
     }
 
-    public function swap(string $id, int $toOrder): void
+    public function swap(Column $column, int $toOrder): void
     {
-        Column::findOrFail($id)
-            ->update([
+        $column->update([
                 'order' => $toOrder,
             ]);
     }

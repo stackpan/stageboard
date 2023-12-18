@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Web\Page;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BoardCollection;
 use App\Http\Resources\BoardResource;
 use App\Services\BoardService;
 use Illuminate\Http\Request;
@@ -24,9 +23,9 @@ class HomePageController extends Controller
      */
     public function __invoke(Request $request): Response
     {
-        $user = auth()->user();
+        $user = $request->user();
 
-        $boards = $this->boardService->getAllByUserId($user->id);
+        $boards = $this->boardService->getAllByUser($user);
 
         return Inertia::render('Home', [
             'boards' => BoardResource::collection($boards)

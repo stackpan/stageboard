@@ -4,6 +4,7 @@ namespace App\Services\Impl;
 
 use App\Dto\BoardDto;
 use App\Models\Board;
+use App\Models\User;
 use App\Repositories\BoardRepository;
 use App\Services\BoardService;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,19 +18,19 @@ class BoardServiceImpl implements BoardService
         //
     }
 
-    public function getAllByUserId(string $userId): Collection
+    public function getAllByUser(User $user): Collection
     {
-        return $this->boardRepository->getAllByUserId($userId);
+        return $this->boardRepository->getAllByUser($user);
     }
 
-    public function create(string $userId, BoardDto $data): Board
+    public function create(User $user, BoardDto $data): Board
     {
-        return $this->boardRepository->create($userId, $data);
+        return $this->boardRepository->create($user, $data);
     }
 
-    public function get(string $id, ?array $columns = null): ?Board
+    public function getById(string $id, ?array $columns = null): ?Board
     {
-        return $this->boardRepository->get($id, $columns);
+        return $this->boardRepository->getById($id, $columns);
     }
 
     public function getByAliasId(string $aliasId, ?array $columns = null): ?Board
@@ -37,18 +38,18 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getByAliasId($aliasId, $columns);
     }
 
-    public function update(string $id, BoardDto $data): void
+    public function update(Board $board, BoardDto $data): void
     {
-        $this->boardRepository->update($id, $data);
+        $this->boardRepository->update($board, $data);
     }
 
-    public function delete(string $id): void
+    public function delete(Board $board): void
     {
-        $this->boardRepository->delete($id);
+        $this->boardRepository->delete($board);
     }
 
-    public function updateUserOpenedTime(string $id, string $userId): void
+    public function updateUserOpenedTime(Board $board, User $user): void
     {
-        $this->boardRepository->updateUserOpenedTime($id, $userId);
+        $this->boardRepository->updateUserOpenedTime($board, $user);
     }
 }

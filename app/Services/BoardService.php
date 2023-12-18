@@ -4,21 +4,22 @@ namespace App\Services;
 
 use App\Dto\BoardDto;
 use App\Models\Board;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 interface BoardService
 {
-    public function getAllByUserId(string $userId): Collection;
+    public function getAllByUser(User $user): Collection;
 
-    public function create(string $userId, BoardDto $data): Board;
+    public function create(User $user, BoardDto $data): Board;
 
-    public function get(string $id, ?array $columns = null): ?Board;
+    public function getById(string $id, ?array $columns = null): ?Board;
 
     public function getByAliasId(string $aliasId, ?array $columns = null): ?Board;
 
-    public function update(string $id, BoardDto $data): void;
+    public function update(Board $board, BoardDto $data): void;
 
-    public function delete(string $id): void;
+    public function delete(Board $board): void;
 
-    public function updateUserOpenedTime(string $id, string $userId): void;
+    public function updateUserOpenedTime(Board $board, User $user): void;
 }

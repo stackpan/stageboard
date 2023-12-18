@@ -33,7 +33,7 @@ class CardWebController extends Controller
             color: $validated['color'] ?? null,
         );
 
-        $this->cardService->create($column->id, $data);
+        $this->cardService->create($column, $data);
 
         return back();
     }
@@ -47,14 +47,14 @@ class CardWebController extends Controller
             color: $validated['color'],
         );
 
-        $this->cardService->update($card->id, $data);
+        $this->cardService->update($card, $data);
 
         return back();
     }
 
     public function destroy(Card $card): RedirectResponse
     {
-        $this->cardService->delete($card->id);
+        $this->cardService->delete($card);
 
         return back();
     }
@@ -64,7 +64,7 @@ class CardWebController extends Controller
         $this->authorize('move', $card);
         $validated = $request->validated();
 
-        $this->cardService->moveToColumn($card->id, $validated['columnId']);
+        $this->cardService->moveToColumn($card, $validated['columnId']);
 
         return back();
     }

@@ -3,27 +3,27 @@
 namespace App\Repositories;
 
 use App\Dto\ColumnDto;
+use App\Models\Board;
 use App\Models\Column;
 use Illuminate\Database\Eloquent\Collection;
 
 interface ColumnRepository
 {
-    public function getAllByBoardId(string $boardId): Collection;
+    public function getAllByBoard(Board $board): Collection;
 
-    public function getCountByBoardId(string $boardId): int;
+    public function getCountByBoard(Board $board): int;
 
-    public function create(string $boardId, ColumnDto $data): string;
+    public function create(Board $board, ColumnDto $data): string;
 
-    public function get(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column;
+    public function getById(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column;
 
-    public function update(string $id, ColumnDto $data): void;
+    public function update(Column $column, ColumnDto $data): void;
 
-    public function delete(string $id): void;
+    public function delete(Column $column): void;
 
     public function shift(string $boardId, int $fromOrder, ?int $toOrder = null): void;
 
     public function unshift(string $boardId, int $fromOrder, ?int $toOrder = null): void;
 
-    public function swap(string $id, int $toOrder): void;
-
+    public function swap(Column $column, int $toOrder): void;
 }

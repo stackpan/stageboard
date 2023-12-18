@@ -13,24 +13,24 @@ use Illuminate\Database\Eloquent\Collection;
 
 class BoardRepositoryImpl implements BoardRepository
 {
-    public function getAllByUserId(string $userId): Collection
+    public function getAllByUser(User $user): Collection
     {
-        return Board::whereOwnerId($userId)
+        return Board::whereOwnerId($user->id)
             ->with('owner:id,name')
             ->with(['users' => fn (BelongsToMany $query) => $query
                 ->select('id')
-                ->whereUserId($userId)
+                ->whereUserId($user->id)
                 ->withPivot('opened_at')
             ])
             ->get();
     }
 
-    public function create(string $userId, BoardDto $data): Board
+    public function create(User $user, BoardDto $data): Board
     {
         $aliasId = $this->generateAliasId();
 
         $board = new Board;
-        $board->owner_id = $userId;
+        $board->owner_id = $user->id;
         $board->alias_id = $aliasId;
         $board->name = $data->name;
         $board->save();
@@ -38,7 +38,7 @@ class BoardRepositoryImpl implements BoardRepository
         return $board;
     }
 
-    public function get(string $id, ?array $columns): ?Board
+    public function getById(string $id, ?array $columns): ?Board
     {
         $cols = $columns ?? '*';
 
@@ -60,37 +60,35 @@ class BoardRepositoryImpl implements BoardRepository
             ->firstOrFail();
     }
 
-    public function update(string $id, BoardDto $data): void
+    public function update(Board $board, BoardDto $data): void
     {
-        Board::findOrFail($id)
-            ->update([
+        $board->update([
                 'name' => $data->name,
             ]);
     }
 
-    public function delete(string $id): void
+    public function delete(Board $board): void
     {
-        Board::findOrFail($id)
-            ->delete();
+        $board->delete();
     }
 
-    public function updateUserOpenedTime(string $id, string $userId): void
+    public function updateUserOpenedTime(Board $board, User $user): void
     {
-        $userBoard = UserBoard::whereBoardId($id)
-            ->whereUserId($userId)
+        $userBoard = UserBoard::whereBoardId($board->id)
+            ->whereUserId($user->id)
             ->first();
 
         if ($userBoard === null) {
             $pivot = new UserBoard;
-            $pivot->board_id = $id;
-            $pivot->user_id = $userId;
+            $pivot->board_id = $board->id;
+            $pivot->user_id = $user->id;
             $pivot->save();
 
             return;
         }
 
-        UserBoard::whereBoardId($id)
-            ->whereUserId($userId)
+        UserBoard::whereBoardId($board->id)
+            ->whereUserId($user->id)
             ->update([
                 'opened_at' => now(),
             ]);

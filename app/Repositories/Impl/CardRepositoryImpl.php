@@ -13,18 +13,17 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CardRepositoryImpl implements CardRepository
 {
-    public function getAllByColumnId(string $columnId): Collection
+    public function getAllByColumn(Column $column): Collection
     {
-        return Card::whereColumnId($columnId)
+        return Card::whereColumnId($column->id)
             ->get();
     }
 
-    public function create(string $columnId, CardDto $data): string
+    public function create(Column $column, CardDto $data): string
     {
         $color = $data->color ?? fake()->randomElement(CardColor::class);
 
-        return Column::findOrFail($columnId)
-            ->cards()
+        return $column->cards()
             ->create([
                 'body' => $data->body,
                 'color' => $color,
@@ -32,30 +31,30 @@ class CardRepositoryImpl implements CardRepository
             ->id;
     }
 
-    public function get(string $id): ?Card
+    public function getById(string $id): ?Card
     {
         return Card::findOrFail($id);
     }
 
-    public function update(string $id, CardDto $data): void
+    public function update(Card $card, CardDto $data): void
     {
-        Card::findOrFail($id)
-            ->update([
+        $card->update([
                 'body' => $data->body,
                 'color' => $data->color,
             ]);
     }
 
-    public function delete(string $id): void
+    public function delete(Card $card): void
     {
-        Card::findOrFail($id)
-            ->delete();
+        $card->delete();
     }
 
-    public function moveToColumn(string $id, string $columnId): void
+    /**
+     * @throws CrossColumnMemberException
+     * @throws AlreadyOfColumnMemberException
+     */
+    public function moveToColumn(Card $card, string $columnId): void
     {
-        $card = Card::findOrFail($id);
-
         if ($card->column_id === $columnId) {
             throw new AlreadyOfColumnMemberException();
         }
@@ -66,8 +65,7 @@ class CardRepositoryImpl implements CardRepository
             throw new CrossColumnMemberException();
         }
 
-        $card->findOrFail($id)
-            ->column()
+        $card->column()
             ->associate($columnId)
             ->save();
     }

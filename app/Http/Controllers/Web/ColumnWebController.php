@@ -33,7 +33,7 @@ class ColumnWebController extends Controller
             color: $validated['color'] ?? null,
         );
 
-        $this->columnService->create($board->id, $data);
+        $this->columnService->create($board, $data);
 
         return back();
     }
@@ -47,14 +47,14 @@ class ColumnWebController extends Controller
             color: $validated['color'],
         );
 
-        $this->columnService->update($column->id, $data);
+        $this->columnService->update($column, $data);
 
         return back();
     }
 
     public function destroy(Column $column): RedirectResponse
     {
-        $this->columnService->delete($column->id);
+        $this->columnService->delete($column);
 
         return back();
     }
@@ -64,7 +64,7 @@ class ColumnWebController extends Controller
         $this->authorize('swap', $column);
         $validated = $request->validated();
 
-        $this->columnService->swap($column->id, $validated['order']);
+        $this->columnService->swap($column, $validated['order']);
 
         return back();
     }

@@ -20,7 +20,7 @@ class BoardWebController extends Controller
 
     public function store(BoardRequest $request): RedirectResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $validated = $request->validated();
 
@@ -28,7 +28,7 @@ class BoardWebController extends Controller
             name: $validated['name'],
         );
 
-        $board = $this->boardService->create($user->id, $data);
+        $board = $this->boardService->create($user, $data);
 
         return to_route('web.page.board.show', $board->alias_id);
     }
@@ -41,14 +41,14 @@ class BoardWebController extends Controller
             name: $validated['name'],
         );
 
-        $this->boardService->update($board->id, $data);
+        $this->boardService->update($board, $data);
 
         return back();
     }
 
     public function destroy(Board $board): RedirectResponse
     {
-        $this->boardService->delete($board->id);
+        $this->boardService->delete($board);
 
         return back();
     }

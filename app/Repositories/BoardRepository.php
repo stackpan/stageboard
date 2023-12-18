@@ -4,21 +4,22 @@ namespace App\Repositories;
 
 use App\Dto\BoardDto;
 use App\Models\Board;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 interface BoardRepository
 {
-    public function getAllByUserId(string $userId): Collection;
+    public function getAllByUser(User $user): Collection;
 
-    public function create(string $userId, BoardDto $data): Board;
+    public function create(User $user, BoardDto $data): Board;
 
-    public function get(string $id, ?array $columns): ?Board;
+    public function getById(string $id, ?array $columns): ?Board;
 
     public function getByAliasId(string $aliasId, ?array $columns): ?Board;
 
-    public function update(string $id, BoardDto $data): void;
+    public function update(Board $board, BoardDto $data): void;
 
-    public function delete(string $id): void;
+    public function delete(Board $board): void;
 
-    public function updateUserOpenedTime(string $id, string $userId): void;
+    public function updateUserOpenedTime(Board $board, User $user): void;
 }

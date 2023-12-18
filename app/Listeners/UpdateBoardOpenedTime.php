@@ -26,6 +26,6 @@ class UpdateBoardOpenedTime
      */
     public function handle(BoardOpenedEvent $event): void
     {
-        $this->boardService->updateUserOpenedTime($event->board->id, $event->user->id);
+        $this->boardService->updateUserOpenedTime($event->board, $event->user);
     }
 }

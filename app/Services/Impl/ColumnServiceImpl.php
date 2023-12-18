@@ -4,6 +4,7 @@ namespace App\Services\Impl;
 
 use App\Dto\ColumnDto;
 use App\Exceptions\ApplicationError\ZeroDeltaStepException;
+use App\Models\Board;
 use App\Models\Column;
 use App\Repositories\ColumnRepository;
 use App\Services\ColumnService;
@@ -18,35 +19,34 @@ class ColumnServiceImpl implements ColumnService
         //
     }
 
-    public function getAllByBoardId(string $boardId): Collection
+    public function getAllByBoard(Board $board): Collection
     {
-        return $this->columnRepository->getAllByBoardId($boardId);
+        return $this->columnRepository->getAllByBoard($board);
     }
 
-    public function create(string $boardId, ColumnDto $data): string
+    public function create(Board $board, ColumnDto $data): string
     {
-        $this->columnRepository->shift($boardId, $data->order);
-        return $this->columnRepository->create($boardId, $data);
+        $this->columnRepository->shift($board->id, $data->order);
+        return $this->columnRepository->create($board, $data);
     }
 
-    public function get(string $id): ?Column
+    public function getById(string $id): ?Column
     {
-        return $this->columnRepository->get($id);
+        return $this->columnRepository->getById($id);
     }
 
-    public function update(string $id, ColumnDto $data): void
+    public function update(Column $column, ColumnDto $data): void
     {
-        $this->columnRepository->update($id, $data);
+        $this->columnRepository->update($column, $data);
     }
 
-    public function delete(string $id): void
+    public function delete(Column $column): void
     {
-        $this->columnRepository->delete($id);
+        $this->columnRepository->delete($column);
     }
 
-    public function swap(string $id, int $destinationOrder): void
+    public function swap(Column $column, int $destinationOrder): void
     {
-        $column = $this->columnRepository->get(id: $id, withRelation: false);
         $targetIndex = $column->order;
         $deltaStep = $destinationOrder - $targetIndex;
 
@@ -68,6 +68,6 @@ class ColumnServiceImpl implements ColumnService
             );
         }
 
-        $this->columnRepository->swap($id, $destinationOrder);
+        $this->columnRepository->swap($column, $destinationOrder);
     }
 }
