@@ -74,24 +74,15 @@ class BoardRepositoryImpl implements BoardRepository
 
     public function updateUserOpenedTime(Board $board, User $user): void
     {
-        $userBoard = UserBoard::whereBoardId($board->id)
-            ->whereUserId($user->id)
-            ->first();
+        $query = $board->users();
 
-        if ($userBoard === null) {
-            $pivot = new UserBoard;
-            $pivot->board_id = $board->id;
-            $pivot->user_id = $user->id;
-            $pivot->save();
+        if ($query->where('user_id', $user->id)->first() === null) {
+            $query->save($user);
 
             return;
         }
 
-        UserBoard::whereBoardId($board->id)
-            ->whereUserId($user->id)
-            ->update([
-                'opened_at' => now(),
-            ]);
+        $query->updateExistingPivot($user->id, ['opened_at' => now()]);
     }
 
     private function generateAliasId(): string
