@@ -11,6 +11,7 @@ import EditColumnModal from '@/Components/Modals/EditColumnModal'
 import CreateCardModal from '@/Components/Modals/CreateCardModal'
 import EditCardModal from '@/Components/Modals/EditCardModal'
 import { getRandomCardColor, getRandomColumnColor } from '@/Utils/random'
+import CollaboratorsModal from '@/Components/Modals/CollaboratorsModal'
 
 type Props = PageProps<{
   board: Board
@@ -42,6 +43,7 @@ const CREATE_COLUMN_MODAL_ID = 'createColumnModal'
 const EDIT_COLUMN_MODAL_ID = 'editColumnModal'
 const CREATE_CARD_MODAL_ID = 'createCardModal'
 const EDIT_CARD_MODAL_ID = 'editCardModal'
+const COLLABORATORS_MODAL_ID = 'collaboratorsModal'
 
 const initialSelectingColumnValue = {
   id: '',
@@ -284,16 +286,26 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
     })
   }
 
+  const handleShowCollaboratorsModal = (): void => {
+    showModal(COLLABORATORS_MODAL_ID)
+  }
+
   return (
     <MainLayout user={auth.user}>
       <Head title={board.name} />
       <section className="flex-1 flex flex-col">
         <header className="px-6 pt-8 pb-2 flex justify-between">
           <h1 className="font-bold text-2xl">{board.name}</h1>
-          <button
-            className="btn btn-neutral btn-sm"
-            onClick={handleShowCreateColumnModal}
-          >Add Column</button>
+          <div className="space-x-2">
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={handleShowCollaboratorsModal}
+            >Collaborators</button>
+            <button
+              className="btn btn-neutral btn-sm"
+              onClick={handleShowCreateColumnModal}
+            >Add Column</button>
+          </div>
         </header>
         <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-auto">
           {columns
@@ -367,6 +379,7 @@ export default function Show ({ auth, board, columns }: Props): JSX.Element {
           (editCardForm.data.body === selectingCard.body && editCardForm.data.color === selectingCard.color) ||
           editCardForm.processing
         } />
+      <CollaboratorsModal id={COLLABORATORS_MODAL_ID} />
     </MainLayout>
   )
 }

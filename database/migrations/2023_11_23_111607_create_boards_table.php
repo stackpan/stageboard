@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignUlid('owner_id')->constrained(
                 table: 'users', indexName: 'boards_owner_id'
             );
+            $table->fullText('name');
         });
     }
 

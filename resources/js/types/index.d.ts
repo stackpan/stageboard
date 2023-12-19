@@ -3,6 +3,8 @@ import { type CardColor, type ColumnColor } from '@/Enums'
 export interface User {
   id: string
   name: string
+  firstName: string
+  lastName: string
   email: string
   email_verified_at: string
 }
