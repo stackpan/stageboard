@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\BoardCreated;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,10 @@ class Board extends Model
 
     protected $fillable = [
         'name',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => BoardCreated::class,
     ];
 
     public function owner(): BelongsTo

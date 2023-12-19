@@ -96,9 +96,4 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Board::class, 'user_board')->using(UserBoard::class);
     }
-
-    public function scopeBoards(Builder $query): void
-    {
-        $query->with(['ownedBoards', 'boards']);
-    }
 }
