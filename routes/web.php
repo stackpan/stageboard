@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::apiResource('columns.cards', CardWebController::class)->only(['store']);
         Route::apiResource('cards', CardWebController::class)->only(['update', 'destroy']);
         Route::patch('/cards/{card}/move', [CardWebController::class, 'move'])->name('cards.move');
-        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+        Route::get('/users/search', [UserController::class, 'search'])->name('users.search')->middleware(['throttle:search']);
 
         Route::name('page.')->group(function () {
             Route::get('/home', HomePageController::class)->name('home');
