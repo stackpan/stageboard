@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
 
     Route::name('web.')->group(function () {
         Route::apiResource('boards', BoardWebController::class)->only(['store', 'update', 'destroy']);
+        Route::get('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'index'])->name('boards.collaborators.index');
         Route::post('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'add'])->name('boards.collaborators.add');
         Route::delete('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'remove'])->name('boards.collaborators.remove');
         Route::apiResource('boards.columns', ColumnWebController::class)->only(['store']);

@@ -101,4 +101,20 @@ class BoardCollaboratorTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_get_collaborators(): void
+    {
+        $collaborator = User::factory()->create();
+
+        $this->board->users()->attach($collaborator->id);
+
+        $response = $this
+            ->actingAs($this->user)
+            ->get(route('web.boards.collaborators.index', $this->board->id));
+
+        $response
+            ->assertOk()
+            ->assertJsonIsArray('users')
+            ->assertJsonCount(2, 'users');
+    }
 }

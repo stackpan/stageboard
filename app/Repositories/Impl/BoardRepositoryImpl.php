@@ -82,6 +82,11 @@ class BoardRepositoryImpl implements BoardRepository
         return fake()->lexify('??????-????-??');
     }
 
+    public function getCollaborators(Board $board): Collection
+    {
+        return $board->users()->get();
+    }
+
     public function addCollaborator(Board $board, string $userId): void
     {
         $board->users()->attach($userId);

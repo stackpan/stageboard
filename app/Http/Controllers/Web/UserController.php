@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
@@ -17,13 +18,11 @@ class UserController extends Controller
         //
     }
 
-    public function search(Request $request): JsonResponse
+    public function search(Request $request): UserCollection
     {
         $q = $request->query('q');
         $result = is_null($q) ? [] : $this->userService->search($q);
 
-        return response()->json([
-            'users' => UserResource::collection($result),
-        ]);
+        return new UserCollection($result);
     }
 }
