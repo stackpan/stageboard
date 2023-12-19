@@ -69,6 +69,11 @@ class BoardPolicy
         return $this->checkOwner($user, $board) || $this->checkCollaborator($user, $board);
     }
 
+    public function manageCollaborator(User $user, Board $board): bool
+    {
+        return  $this->checkOwner($user, $board);
+    }
+
     private function checkOwner(User $user, Board $board): bool
     {
         return $user->id === $board->owner_id;

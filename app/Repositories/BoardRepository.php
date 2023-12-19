@@ -22,4 +22,8 @@ interface BoardRepository
     public function delete(Board $board): void;
 
     public function updateUserOpenedTime(Board $board, User $user): void;
+
+    public function addCollaborator(Board $board, string $userId): void;
+
+    public function removeCollaborator(Board $board, string $userId): void;
 }

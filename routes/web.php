@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Web\BoardCollaboratorController;
 use App\Http\Controllers\Web\BoardWebController;
 use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\ColumnWebController;
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::name('web.')->group(function () {
         Route::apiResource('boards', BoardWebController::class)->only(['store', 'update', 'destroy']);
+        Route::post('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'add'])->name('boards.collaborators.add');
+        Route::delete('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'remove'])->name('boards.collaborators.remove');
         Route::apiResource('boards.columns', ColumnWebController::class)->only(['store']);
         Route::apiResource('columns', ColumnWebController::class)->only(['update', 'destroy']);
         Route::patch('/columns/{column}/swap', [ColumnWebController::class, 'swap'])->name('columns.swap');

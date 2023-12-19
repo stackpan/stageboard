@@ -10,9 +10,11 @@ use App\Repositories\Impl\CardRepositoryImpl;
 use App\Repositories\Impl\ColumnRepositoryImpl;
 use App\Repositories\Impl\UserRepositoryImpl;
 use App\Repositories\UserRepository;
+use App\Services\BoardCollaborationService;
 use App\Services\BoardService;
 use App\Services\CardService;
 use App\Services\ColumnService;
+use App\Services\Impl\BoardCollaborationServiceImpl;
 use App\Services\Impl\BoardServiceImpl;
 use App\Services\Impl\CardServiceImpl;
 use App\Services\Impl\ColumnServiceImpl;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(UserRepository::class, UserRepositoryImpl::class);
 
         $this->app->singleton(BoardService::class, BoardServiceImpl::class);
+        $this->app->singleton(BoardCollaborationService::class, BoardCollaborationServiceImpl::class);
         $this->app->singleton(ColumnService::class, ColumnServiceImpl::class);
         $this->app->singleton(CardService::class, CardServiceImpl::class);
         $this->app->singleton(UserService::class, UserServiceImpl::class);
