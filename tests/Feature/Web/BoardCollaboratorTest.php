@@ -35,7 +35,7 @@ class BoardCollaboratorTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->post(route('web.boards.collaborators.add', $this->board->id), $requestBody);
+            ->post(route('web.boards.collaborators.store', $this->board->id), $requestBody);
 
         $response->assertRedirect();
 
@@ -57,7 +57,7 @@ class BoardCollaboratorTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->delete(route('web.boards.collaborators.remove', $this->board->id), $requestBody);
+            ->delete(route('web.boards.collaborators.destroy', $this->board->id), $requestBody);
 
         $response->assertRedirect();
 
@@ -79,7 +79,7 @@ class BoardCollaboratorTest extends TestCase
 
         $response = $this
             ->actingAs($collaborators[0])
-            ->post(route('web.boards.collaborators.add', $this->board->id), $requestBody);
+            ->post(route('web.boards.collaborators.store', $this->board->id), $requestBody);
 
         $response->assertForbidden();
     }
@@ -97,7 +97,7 @@ class BoardCollaboratorTest extends TestCase
 
         $response = $this
             ->actingAs($collaborators[0])
-            ->delete(route('web.boards.collaborators.remove', $this->board->id), $requestBody);
+            ->delete(route('web.boards.collaborators.destroy', $this->board->id), $requestBody);
 
         $response->assertForbidden();
     }
@@ -110,7 +110,7 @@ class BoardCollaboratorTest extends TestCase
 
         $response = $this
             ->actingAs($this->user)
-            ->get(route('web.boards.collaborators.index', $this->board->id));
+            ->get(route('web.boards.collaborators.show', $this->board->id));
 
         $response
             ->assertOk()

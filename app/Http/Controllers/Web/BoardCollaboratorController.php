@@ -22,7 +22,7 @@ class BoardCollaboratorController extends Controller
         //
     }
 
-    public function index(Board $board): UserCollection
+    public function show(Board $board): UserCollection
     {
         $this->authorize('view', $board);
         $collaborators = $this->boardCollaborationService->getCollaborators($board);
@@ -30,7 +30,7 @@ class BoardCollaboratorController extends Controller
         return new UserCollection($collaborators);
     }
 
-    public function add(CreateBoardCollaboratorRequest $request, Board $board): RedirectResponse
+    public function store(CreateBoardCollaboratorRequest $request, Board $board): RedirectResponse
     {
         $this->authorize('manageCollaborator', $board);
         $validated = $request->validated();
@@ -40,7 +40,7 @@ class BoardCollaboratorController extends Controller
         return back();
     }
 
-    public function remove(RemoveBoardCollaboratorRequest $request, Board $board): RedirectResponse
+    public function destroy(RemoveBoardCollaboratorRequest $request, Board $board): RedirectResponse
     {
         $this->authorize('manageCollaborator', $board);
         $validated = $request->validated();

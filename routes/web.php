@@ -42,16 +42,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::name('web.')->group(function () {
-        Route::apiResource('boards', BoardWebController::class)->only(['store', 'update', 'destroy']);
-        Route::get('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'index'])->name('boards.collaborators.index');
-        Route::post('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'add'])->name('boards.collaborators.add');
-        Route::delete('/boards/{board}/collaborators', [BoardCollaboratorController::class, 'remove'])->name('boards.collaborators.remove');
-        Route::apiResource('boards.columns', ColumnWebController::class)->only(['store']);
-        Route::apiResource('columns', ColumnWebController::class)->only(['update', 'destroy']);
+        Route::apiResource('boards', BoardWebController::class)->except(['index', 'show']);
+        Route::apiSingleton('boards.collaborators', BoardCollaboratorController::class)->creatable()->except(['update']);
+
+        Route::apiResource('boards.columns', ColumnWebController::class)->shallow()->except(['index', 'show']);
         Route::patch('/columns/{column}/swap', [ColumnWebController::class, 'swap'])->name('columns.swap');
-        Route::apiResource('columns.cards', CardWebController::class)->only(['store']);
-        Route::apiResource('cards', CardWebController::class)->only(['update', 'destroy']);
+
+        Route::apiResource('columns.cards', CardWebController::class)->shallow()->except(['index', 'show']);
         Route::patch('/cards/{card}/move', [CardWebController::class, 'move'])->name('cards.move');
+
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search')->middleware(['throttle:search']);
 
         Route::name('page.')->group(function () {

@@ -24,7 +24,7 @@ export default function CollaboratorsModal ({ id }: Props): JSX.Element {
 
   useEffect(() => {
     if (shouldRenderCollaborators) {
-      axios.get<{ users: User[] }>(route('web.boards.collaborators.index', pageProps.board.id))
+      axios.get<{ users: User[] }>(route('web.boards.collaborators.show', pageProps.board.id))
         .then((response) => {
           setCollaborators(response.data.users)
         })
@@ -54,7 +54,7 @@ export default function CollaboratorsModal ({ id }: Props): JSX.Element {
       userId: user.id
     }
 
-    router.post(route('web.boards.collaborators.add', pageProps.board.id), payload, {
+    router.post(route('web.boards.collaborators.store', pageProps.board.id), payload, {
       onSuccess: () => {
         setShouldRenderCollaborators(true)
         setSearchResults([])
@@ -72,7 +72,7 @@ export default function CollaboratorsModal ({ id }: Props): JSX.Element {
       userId: user.id
     }
 
-    router.visit(route('web.boards.collaborators.remove', pageProps.board.id), {
+    router.visit(route('web.boards.collaborators.destroy', pageProps.board.id), {
       method: 'delete',
       data: payload,
       preserveState: true,
