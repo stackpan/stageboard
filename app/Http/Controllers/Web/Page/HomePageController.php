@@ -27,7 +27,7 @@ class HomePageController extends Controller
 
         $boards = $this->boardService->getAllByUser($user);
 
-        return Inertia::render('Home', [
+        return Inertia::render('Home/Index', [
             'boards' => BoardResource::collection($boards)
         ]);
     }

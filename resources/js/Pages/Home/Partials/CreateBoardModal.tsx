@@ -1,16 +1,16 @@
-import { closeModal } from '@/Utils/dom'
 import { useForm } from '@inertiajs/react'
 import React, { type FormEvent, type ChangeEvent } from 'react'
 
 interface Props {
-  id: string
+  active: boolean
+  onClickCloseHandler: () => void
 }
 
 interface Form {
   name: string
 }
 
-export default function CreateBoardModal ({ id }: Props): JSX.Element {
+export default function CreateBoardModal ({ active, onClickCloseHandler }: Props): JSX.Element {
   const { data, setData, post, processing } = useForm<Form>({
     name: ''
   })
@@ -29,10 +29,10 @@ export default function CreateBoardModal ({ id }: Props): JSX.Element {
   }
 
   return (
-    <dialog id={id} className="modal">
+    <dialog className={'modal' + (active ? ' modal-open' : '')}>
       <section className="modal-box">
         <form method="dialog">
-          <button onClick={() => { closeModal(id) }} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          <button onClick={onClickCloseHandler} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <header>
           <h3 className="font-bold text-lg">Create New Board</h3>
