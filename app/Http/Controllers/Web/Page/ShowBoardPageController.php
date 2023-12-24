@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Web\Page;
 use App\Events\BoardOpenedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BoardResource;
+use App\Http\Resources\ColumnCollection;
 use App\Http\Resources\ColumnResource;
+use App\Http\Resources\UserCollection;
+use App\Services\BoardCollaborationService;
 use App\Services\BoardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,6 +18,7 @@ class ShowBoardPageController extends Controller
 {
     public function __construct(
         private readonly BoardService $boardService,
+        private readonly BoardCollaborationService $boardCollaborationService
     )
     {
         //
@@ -25,13 +29,14 @@ class ShowBoardPageController extends Controller
         $board = $this->boardService->getByAliasId($aliasId);
         $this->authorize('view', $board);
 
-        $columns = $board->columns->sortBy('order');
+        $collaborators = $this->boardCollaborationService->getCollaborators($board);
 
         BoardOpenedEvent::dispatch($board, $request->user());
 
         return Inertia::render('Board/Show', [
             'board' => new BoardResource($board, false),
-            'columns' => ColumnResource::collection($columns)
+            'columns' => new ColumnCollection($board->columns),
+            'collaborators' => new UserCollection($collaborators)
         ]);
     }
 }

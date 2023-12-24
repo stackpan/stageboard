@@ -1,42 +1,56 @@
 import { type CardColor, ColumnPosition, SwapDirection } from '@/Enums'
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import React from 'react'
-import { type SelectingCard } from '@/Pages/Board/Show'
 import { convertToBackgroundColor } from '@/Utils/color'
+import { router, usePage } from '@inertiajs/react'
+import { type BoardShowProps } from '@/Pages/Board/Show'
 
 interface Props {
-  id: string
+  columnId: string
+  taskId: string
   body: string
   color: CardColor
   columnPosition: ColumnPosition
-  onCLickEditHandler: (card: SelectingCard) => void
-  onClickMoveHandler: (id: string, direction: SwapDirection) => void
-  onClickDeleteHandler: (id: string) => void
+  clickEditHandler: (id: string) => void
 }
 
 export default function TaskCard ({
-  id,
+  columnId,
+  taskId,
   body,
   color,
   columnPosition,
-  onCLickEditHandler,
-  onClickMoveHandler,
-  onClickDeleteHandler
+  clickEditHandler
 }: Props): JSX.Element {
+  const { columns } = usePage<BoardShowProps>().props
+
   const atFirstColumn = columnPosition === ColumnPosition.First
   const atLastColumn = columnPosition === ColumnPosition.Last
 
-  const handleClickMoveLeft = (): void => {
-    onClickMoveHandler(id, SwapDirection.Left)
+  const handleMove = (direction: SwapDirection): void => {
+    const column = columns.find((value) => value.id === columnId)
+    if (column === undefined) return
+
+    const destinationColumn = columns.find((value) => value.order === column.order + direction)
+    if (destinationColumn === undefined) return
+
+    const data = {
+      columnId: destinationColumn.id
+    }
+
+    router.patch(route('web.cards.move', taskId), data, {
+      onFinish: () => {
+        router.reload({ only: ['columns'] })
+      }
+    })
   }
-  const handleClickMoveRight = (): void => {
-    onClickMoveHandler(id, SwapDirection.Right)
-  }
-  const handleClickEdit = (): void => {
-    onCLickEditHandler({ id, body, color })
-  }
+
   const handleClickDelete = (): void => {
-    onClickDeleteHandler(id)
+    router.delete(route('web.cards.destroy', taskId), {
+      onFinish: () => {
+        router.reload({ only: ['columns'] })
+      }
+    })
   }
 
   return (
@@ -47,7 +61,7 @@ export default function TaskCard ({
             <button
               type="button"
               className={'btn btn-ghost btn-square btn-xs ' + (atFirstColumn ? '!bg-transparent' : '')}
-              onClick={handleClickMoveLeft}
+              onClick={() => { handleMove(SwapDirection.Left) }}
               disabled={atFirstColumn}
             >
               <ChevronLeftIcon className="h-6 w-6" />
@@ -55,7 +69,7 @@ export default function TaskCard ({
             <button
               type="button"
               className={'btn btn-ghost btn-square btn-xs ' + (atLastColumn ? '!bg-transparent' : '')}
-              onClick={handleClickMoveRight}
+              onClick={() => { handleMove(SwapDirection.Right) }}
               disabled={atLastColumn}
             >
               <ChevronRightIcon className="h-6 w-6" />
@@ -67,17 +81,17 @@ export default function TaskCard ({
             </div>
             <ul className="p-0 shadow-sm menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36 border">
               <li>
-                <button onClick={handleClickEdit}>Edit</button>
+                <button onClick={() => { clickEditHandler(taskId) }}>Edit</button>
               </li>
               <li className={atLastColumn ? 'disabled' : ''}>
                 <button
-                  onClick={handleClickMoveRight}
+                  onClick={() => { handleMove(SwapDirection.Right) }}
                   disabled={atLastColumn}
                 >Move to Right</button>
               </li>
               <li className={atFirstColumn ? 'disabled' : ''}>
                 <button
-                  onClick={handleClickMoveLeft}
+                  onClick={() => { handleMove(SwapDirection.Left) }}
                   disabled={atFirstColumn}
                 >Move to Left</button>
               </li>
