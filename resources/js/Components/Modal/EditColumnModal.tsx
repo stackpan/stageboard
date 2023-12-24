@@ -1,34 +1,29 @@
 import React, { type ChangeEvent, type FormEvent, useEffect } from 'react'
-import { CardColor } from '@/Enums'
+import { ColumnColor } from '@/Enums'
 import { convertToBackgroundColor } from '@/Utils/color'
 import { router, useForm } from '@inertiajs/react'
 import axios from 'axios'
-import { type Card } from '@/types'
+import { type Column } from '@/types'
 
 interface Props {
   active: boolean
   closeHandler: () => void
-  selectingCardId: string
+  columnId: string
 }
 
-export default function EditCardModal ({ active, closeHandler, selectingCardId }: Props): JSX.Element {
+export default function EditColumnModal ({ active, closeHandler, columnId }: Props): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { data, setData, setDefaults, patch, isDirty, processing } = useForm({
-    body: '',
-    color: CardColor.Blue
+  const { data, setData, patch, setDefaults, isDirty, processing } = useForm({
+    name: '',
+    color: ColumnColor.Red
   })
 
   useEffect(() => {
-    if (selectingCardId !== '') {
-      axios.get<Card>(route('web.cards.show', selectingCardId))
+    if (columnId !== '') {
+      axios.get<Column>(route('web.columns.show', columnId))
         .then((response) => {
           if (response.status === 200) {
-            const card = response.data
-
-            const formData = {
-              body: card.body,
-              color: card.color
-            }
+            const formData = response.data
 
             setDefaults(formData)
             setData(formData)
@@ -38,16 +33,16 @@ export default function EditCardModal ({ active, closeHandler, selectingCardId }
           console.log(e)
         })
     }
-  }, [selectingCardId])
+  }, [columnId])
 
-  const handleChangeBody = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+  const handleChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
     setData((previousData) => ({
       ...previousData,
-      body: e.target.value
+      name: e.target.value
     }))
   }
 
-  const selectColor = (color: CardColor): void => {
+  const selectColor = (color: ColumnColor): void => {
     setData((previousData) => ({
       ...previousData,
       color
@@ -57,9 +52,9 @@ export default function EditCardModal ({ active, closeHandler, selectingCardId }
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    patch(route('web.cards.update', selectingCardId), {
+    patch(route('web.columns.update', columnId), {
       onSuccess: () => {
-        router.reload({ only: ['columns'] })
+        router.reload()
       },
       onError: (e) => {
         console.log(e)
@@ -70,7 +65,7 @@ export default function EditCardModal ({ active, closeHandler, selectingCardId }
     })
   }
 
-  const submitDisabler = data.body === '' || !isDirty || processing
+  const submitDisabler = data.name === '' || !isDirty || processing
 
   return (
     <dialog className={'modal' + (active ? ' modal-open' : '')}>
@@ -79,25 +74,24 @@ export default function EditCardModal ({ active, closeHandler, selectingCardId }
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={closeHandler}>✕</button>
         </form>
         <header>
-          <h3 className="font-bold text-lg">Edit Card</h3>
+          <h3 className="font-bold text-lg">Edit Column</h3>
         </header>
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>
-            <textarea
-              name="body"
-              className="textarea textarea-bordered w-full"
-              style={convertToBackgroundColor(data.color)}
-              placeholder="Type something you want to do ..."
-              value={data.body}
-              onChange={handleChangeBody}
-              maxLength={255}
+            <input
+              name="name"
+              type="text"
+              placeholder="Type the Column name"
+              className="input input-sm input-bordered w-full"
+              value={data.name}
+              onChange={handleChangeName}
+              maxLength={24}
               autoComplete="off"
-              autoCapitalize="on"
               required
-            ></textarea>
+              />
           </div>
           <div className="flex gap-2">
-            {Object.values(CardColor).map((color, index) => (
+            {Object.values(ColumnColor).map((color) => (
               <button
                 key={color}
                 className={`w-6 h-6 rounded-full border-4 ${color === data.color ? 'border-gray-600' : ''}`}

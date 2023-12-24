@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from '@heroic
 import React from 'react'
 import { convertToBackgroundColor } from '@/Utils/color'
 import { router, usePage } from '@inertiajs/react'
-import { type BoardShowProps } from '@/Pages/Board/Show'
+import { type BoardShowProps } from '@/Pages/BoardPage'
 
 interface Props {
   columnId: string

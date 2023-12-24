@@ -1,17 +1,17 @@
-import { useForm } from '@inertiajs/react'
+import { router, useForm } from '@inertiajs/react'
 import React, { type FormEvent, type ChangeEvent } from 'react'
 
 interface Props {
   active: boolean
-  onClickCloseHandler: () => void
+  closeHandler: () => void
 }
 
 interface Form {
   name: string
 }
 
-export default function CreateBoardModal ({ active, onClickCloseHandler }: Props): JSX.Element {
-  const { data, setData, post, processing } = useForm<Form>({
+export default function CreateBoardModal ({ active, closeHandler }: Props): JSX.Element {
+  const { data, setData, post, processing, reset } = useForm<Form>({
     name: ''
   })
 
@@ -25,14 +25,25 @@ export default function CreateBoardModal ({ active, onClickCloseHandler }: Props
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    post(route('web.boards.store'))
+    post(route('web.boards.store'), {
+      onSuccess: () => {
+        router.reload()
+      },
+      onError: (e) => {
+        console.log(e)
+      },
+      onFinish: () => {
+        closeHandler()
+        reset()
+      }
+    })
   }
 
   return (
     <dialog className={'modal' + (active ? ' modal-open' : '')}>
       <section className="modal-box">
         <form method="dialog">
-          <button onClick={onClickCloseHandler} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          <button onClick={closeHandler} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <header>
           <h3 className="font-bold text-lg">Create New Board</h3>

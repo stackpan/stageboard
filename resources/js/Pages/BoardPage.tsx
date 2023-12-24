@@ -5,12 +5,13 @@ import { type Board, type Card, type Column, type PageProps, type User } from '@
 import { Head } from '@inertiajs/react'
 import React, { useState } from 'react'
 
-import CreateColumnModal from '@/Pages/Board/Partials/CreateColumnModal'
-import EditColumnModal from '@/Pages/Board/Partials/EditColumnModal'
-import CreateCardModal from '@/Pages/Board/Partials/CreateCardModal'
-import EditCardModal from '@/Pages/Board/Partials/EditCardModal'
-import CollaboratorsModal from '@/Pages/Board/Partials/CollaboratorsModal'
+import CreateColumnModal from '@/Components/Modal/CreateColumnModal'
+import EditColumnModal from '@/Components/Modal/EditColumnModal'
+import CreateCardModal from '@/Components/Modal/CreateCardModal'
+import EditCardModal from '@/Components/Modal/EditCardModal'
+import CollaboratorsModal from '@/Components/Modal/CollaboratorsModal'
 import TaskCard from '@/Components/TaskCard'
+import EditBoardModal from '@/Components/Modal/EditBoardModal'
 
 export type BoardShowProps = PageProps<{
   board: Board
@@ -22,6 +23,7 @@ type ColumnWithCards = Column & { cards: Card[] }
 
 enum ActiveModal {
   None,
+  EditBoard,
   CreateColumn,
   EditColumn,
   CreateCard,
@@ -29,7 +31,7 @@ enum ActiveModal {
   Collaborators
 }
 
-export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Element {
+export default function BoardPage ({ auth, board, columns }: BoardShowProps): JSX.Element {
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
   const [editingColumn, setEditingColumn] = useState('')
   const [editingCard, setEditingCard] = useState('')
@@ -49,6 +51,13 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
         <header className="px-6 pt-8 pb-2 flex justify-between">
           <h1 className="font-bold text-2xl">{board.name}</h1>
           <div className="space-x-2">
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => {
+                setActiveModal(ActiveModal.EditBoard)
+              }}
+            >Edit
+            </button>
             <button
               className="btn btn-outline btn-sm"
               onClick={() => {
@@ -107,6 +116,13 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
             ))
           }
         </div>
+        <EditBoardModal
+          active={activeModal === ActiveModal.EditBoard}
+          closeHandler={() => {
+            setActiveModal(ActiveModal.None)
+          }}
+          boardId={board.id}
+        />
         <CreateColumnModal
           active={activeModal === ActiveModal.CreateColumn}
           closeHandler={() => {
@@ -119,7 +135,7 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
             setActiveModal(ActiveModal.None)
             setEditingColumn('')
           }}
-          selectingColumnId={editingColumn}
+          columnId={editingColumn}
         />
         <CreateCardModal
           active={activeModal === ActiveModal.CreateCard}
@@ -134,7 +150,7 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
             setActiveModal(ActiveModal.None)
             setEditingCard('')
           }}
-          selectingCardId={editingCard}
+          cardId={editingCard}
         />
         <CollaboratorsModal
           closeHandler={() => {

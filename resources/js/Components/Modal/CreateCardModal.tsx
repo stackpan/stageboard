@@ -37,11 +37,15 @@ export default function CreateCardModal ({
     e.preventDefault()
 
     post(route('web.columns.cards.store', selectingColumnId), {
+      onSuccess: () => {
+        router.reload()
+      },
+      onError: (e) => {
+        console.log(e)
+      },
       onFinish: () => {
         closeHandler()
-
         reset()
-        router.reload({ only: ['columns'] })
       }
     })
   }

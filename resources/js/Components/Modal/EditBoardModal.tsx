@@ -1,35 +1,43 @@
 import React, { type FormEvent, type ChangeEvent, useEffect } from 'react'
-import { router, useForm, usePage } from '@inertiajs/react'
-import { type HomePageProps } from '@/Pages/Home/Index'
+import { router, useForm } from '@inertiajs/react'
+import axios from 'axios'
+import { type Board } from '@/types'
 
 interface Props {
   active: boolean
-  close: () => void
-  updatingBoardId: string
+  closeHandler: () => void
+  boardId: string
 }
 
 interface RequestBody {
   name: string
 }
 
-export default function EditBoardModal ({ active, close, updatingBoardId }: Props): JSX.Element {
+export default function EditBoardModal ({ active, closeHandler, boardId }: Props): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { data, setData, setDefaults, patch, reset, isDirty, processing } = useForm<RequestBody>({
     name: ''
   })
 
-  const boards = usePage<HomePageProps>().props.boards
-
   useEffect(() => {
-    const board = boards.find(value => value.id === updatingBoardId)
+    if (active) {
+      axios.get<Board>(route('web.boards.show', boardId))
+        .then((response) => {
+          if (response.status === 200) {
+            const board = response.data
+            const formData = {
+              name: board.name
+            }
 
-    const formData = (board === undefined)
-      ? { name: '' }
-      : { name: board.name }
-
-    setDefaults(formData)
-    setData(formData)
-  }, [updatingBoardId])
+            setDefaults(formData)
+            setData(formData)
+          }
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+  }, [active])
 
   const handleChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
     setData((previousData: RequestBody) => ({
@@ -41,12 +49,17 @@ export default function EditBoardModal ({ active, close, updatingBoardId }: Prop
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    patch(route('web.boards.update', updatingBoardId))
-
-    close()
-    reset()
-
-    router.reload({ only: ['boards'] })
+    patch(route('web.boards.update', boardId), {
+      onSuccess: () => {
+        router.reload()
+      },
+      onError: (e) => {
+        console.log(e)
+      },
+      onFinish: () => {
+        closeHandler()
+      }
+    })
   }
 
   return (
@@ -55,13 +68,13 @@ export default function EditBoardModal ({ active, close, updatingBoardId }: Prop
         <form method="dialog">
           <button
             onClick={() => {
-              close()
+              closeHandler()
               reset()
             }}
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <header>
-          <h3 className="font-bold text-lg">Rename Board</h3>
+          <h3 className="font-bold text-lg">Edit Board</h3>
         </header>
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>

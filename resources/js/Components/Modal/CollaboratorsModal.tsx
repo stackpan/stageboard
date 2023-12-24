@@ -4,7 +4,7 @@ import axios from 'axios'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { router, usePage } from '@inertiajs/react'
 import { MinusCircleIcon } from '@heroicons/react/24/outline'
-import { type BoardShowProps } from '@/Pages/Board/Show'
+import { type BoardShowProps } from '@/Pages/BoardPage'
 
 interface Props {
   active: boolean
@@ -41,6 +41,9 @@ export default function CollaboratorsModal ({ active, closeHandler }: Props): JS
       onSuccess: () => {
         setSearchResults([])
         router.reload({ only: ['collaborators'] })
+      },
+      onError: (e) => {
+        console.log(e)
       },
       onFinish: () => {
         if (searchInputRef.current !== null) {

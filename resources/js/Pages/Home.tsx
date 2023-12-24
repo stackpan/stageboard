@@ -4,8 +4,8 @@ import { type Board, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
-import CreateBoardModal from '@/Pages/Home/Partials/CreateBoardModal'
-import EditBoardModal from '@/Pages/Home/Partials/EditBoardModal'
+import CreateBoardModal from '@/Components/Modal/CreateBoardModal'
+import EditBoardModal from '@/Components/Modal/EditBoardModal'
 import { checkIsLastOfHours, differenceByMillis } from '@/Utils/datetime'
 
 export type HomePageProps = PageProps<{
@@ -18,7 +18,7 @@ enum ActiveModal {
   EditBoard
 }
 
-export default function Index ({ auth, boards }: HomePageProps): JSX.Element {
+export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
   const [updatingBoard, setUpdatingBoard] = useState('')
 
@@ -38,7 +38,7 @@ export default function Index ({ auth, boards }: HomePageProps): JSX.Element {
 
   return (
     <MainLayout user={auth.user}>
-      <Head title="Index"/>
+      <Head title="Home"/>
       {recentBoards.length !== 0 && (
         <section className="my-6">
           <header className="px-6 py-2">
@@ -84,17 +84,17 @@ export default function Index ({ auth, boards }: HomePageProps): JSX.Element {
       </section>
       <CreateBoardModal
         active={activeModal === ActiveModal.CreateBoard}
-        onClickCloseHandler={() => {
+        closeHandler={() => {
           setActiveModal(ActiveModal.None)
         }}
       />
       <EditBoardModal
         active={activeModal === ActiveModal.EditBoard}
-        close={() => {
+        closeHandler={() => {
           setActiveModal(ActiveModal.None)
           setUpdatingBoard('')
         }}
-        updatingBoardId={updatingBoard}
+        boardId={updatingBoard}
       />
     </MainLayout>
   )

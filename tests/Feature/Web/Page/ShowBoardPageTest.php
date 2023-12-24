@@ -35,7 +35,7 @@ class ShowBoardPageTest extends TestCase
         $response
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Board/Show')
+                ->component('BoardPage/BoardPage')
                 ->has('board', fn (AssertableInertia $page) => $page
                     ->has('id')
                     ->has('name')

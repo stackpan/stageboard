@@ -33,7 +33,7 @@ class ShowBoardPageController extends Controller
 
         BoardOpenedEvent::dispatch($board, $request->user());
 
-        return Inertia::render('Board/Show', [
+        return Inertia::render('BoardPage', [
             'board' => new BoardResource($board, false),
             'columns' => new ColumnCollection($board->columns),
             'collaborators' => new UserCollection($collaborators)

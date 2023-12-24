@@ -27,7 +27,7 @@ class BoardAuthorizationTest extends TestCase
         $board = $this->user->ownedBoards->first();
 
         $requestBody = [
-            'name' => 'Renamed Board',
+            'name' => 'Renamed BoardPage',
         ];
 
         $response = $this
@@ -54,7 +54,7 @@ class BoardAuthorizationTest extends TestCase
         $board = $this->user->ownedBoards->first();
 
         $requestBody = [
-            'name' => 'Renamed Board',
+            'name' => 'Renamed BoardPage',
         ];
 
         $response = $this
@@ -83,7 +83,7 @@ class BoardAuthorizationTest extends TestCase
         $board->users()->save($collaborationUser);
 
         $requestBody = [
-            'name' => 'Renamed Board',
+            'name' => 'Renamed BoardPage',
         ];
 
         $response = $this
