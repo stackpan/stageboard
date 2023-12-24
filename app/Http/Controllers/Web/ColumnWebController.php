@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateColumnRequest;
 use App\Http\Requests\MoveColumnRequest;
 use App\Http\Requests\UpdateColumnRequest;
+use App\Http\Resources\ColumnResource;
 use App\Models\Board;
 use App\Models\Column;
 use App\Services\ColumnService;
@@ -20,6 +21,11 @@ class ColumnWebController extends Controller
     )
     {
         $this->authorizeResource(Column::class, 'column');
+    }
+
+    public function show(Column $column): ColumnResource
+    {
+        return new ColumnResource($column);
     }
 
     public function store(CreateColumnRequest $request, Board $board): RedirectResponse

@@ -33,29 +33,7 @@ class BoardResource extends JsonResource
                 'id' => $this->owner->id,
                 'name' => $this->owner->name,
             ],
-            'openedAt' => $this->users[0]->pivot->opened_at ?? ''
-//            '_links' => [
-//                'self' => [
-//                    'href' => route('api.boards.show', $this->id),
-//                    'rel' => 'self',
-//                    'method' => 'GET',
-//                ],
-//                'update' => [
-//                    'href' => route('api.boards.update', $this->id),
-//                    'rel' => 'self',
-//                    'method' => 'PATCH',
-//                ],
-//                'delete' => [
-//                    'href' => route('api.boards.destroy', $this->id),
-//                    'rel' => 'self',
-//                    'method' => 'DELETE',
-//                ],
-//                'columns' => [
-//                    'href' => route('api.boards.columns.index', $this->id),
-//                    'rel' => 'columns',
-//                    'method' => 'GET',
-//                ],
-//            ],
+            'openedAt' => $this->users[0]->pivot->opened_at ?? '',
         ];
 
         if ($this->withRelations) {
