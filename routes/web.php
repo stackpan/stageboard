@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::apiResource('boards', BoardWebController::class)->except(['index']);
         Route::apiSingleton('boards.collaborators', BoardCollaboratorController::class)->creatable()->except(['update']);
 
-        Route::apiResource('boards.columns', ColumnWebController::class)->shallow()->except(['index']);
+        Route::apiResource('boards.columns', ColumnWebController::class)->shallow();
         Route::patch('/columns/{column}/swap', [ColumnWebController::class, 'swap'])->name('columns.swap');
 
         Route::apiResource('columns.cards', CardWebController::class)->shallow()->except(['index']);

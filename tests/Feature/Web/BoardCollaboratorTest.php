@@ -114,7 +114,16 @@ class BoardCollaboratorTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonIsArray('users')
-            ->assertJsonCount(2, 'users');
+            ->assertJsonStructure([
+                '*' => [
+                    'id',
+                    'name',
+                    'firstName',
+                    'lastName',
+                    'email',
+                    'emailVerifiedAt',
+                ]
+            ])
+            ->assertJsonCount(2);
     }
 }

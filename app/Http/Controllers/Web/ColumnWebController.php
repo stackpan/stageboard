@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateColumnRequest;
 use App\Http\Requests\MoveColumnRequest;
 use App\Http\Requests\UpdateColumnRequest;
+use App\Http\Resources\ColumnCollection;
 use App\Http\Resources\ColumnResource;
 use App\Models\Board;
 use App\Models\Column;
@@ -21,6 +22,13 @@ class ColumnWebController extends Controller
     )
     {
         $this->authorizeResource(Column::class, 'column');
+    }
+
+    public function index(Board $board): ColumnCollection
+    {
+        $columns = $this->columnService->getAllByBoard($board);
+
+        return new ColumnCollection($columns);
     }
 
     public function show(Column $column): ColumnResource
