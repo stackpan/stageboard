@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Dto\BoardDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BoardRequest;
+use App\Http\Resources\BoardResource;
 use App\Models\Board;
 use App\Services\BoardService;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,11 @@ class BoardWebController extends Controller
     )
     {
         $this->authorizeResource(Board::class, 'board');
+    }
+
+    public function show(Board $board): BoardResource
+    {
+        return new BoardResource($board);
     }
 
     public function store(BoardRequest $request): RedirectResponse

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\MoveCardRequest;
 use App\Http\Requests\UpdateCardRequest;
+use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Column;
 use App\Services\CardService;
@@ -21,6 +22,11 @@ class CardWebController extends Controller
     )
     {
         $this->authorizeResource(Card::class, 'card');
+    }
+
+    public function show(Card $card): CardResource
+    {
+        return new CardResource($card);
     }
 
     public function store(CreateCardRequest $request, Column $column): RedirectResponse
