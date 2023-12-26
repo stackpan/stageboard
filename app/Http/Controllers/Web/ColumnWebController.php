@@ -45,6 +45,15 @@ class ColumnWebController extends Controller
         return back();
     }
 
+    public function generate(Board $board): RedirectResponse
+    {
+        $this->authorize('createColumn', $board);
+
+        $this->columnService->generate($board);
+
+        return back();
+    }
+
     public function update(UpdateColumnRequest $request, Column $column): RedirectResponse
     {
         $validated = $request->validated();

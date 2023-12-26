@@ -2,7 +2,7 @@ import ColumnCard from '@/Components/ColumnCard'
 import { ColumnPosition } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
 import { type Board, type Card, type Column, type PageProps, type User } from '@/types'
-import { Head } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import React, { useState } from 'react'
 
 import CreateColumnModal from '@/Components/Modal/CreateColumnModal'
@@ -77,8 +77,17 @@ export default function BoardPage ({ auth, board, columns }: BoardShowProps): JS
         <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-auto">
           {columns.length === 0
             ? (
-              <div className="flex-1 self-stretch flex justify-center items-center">
+              <div className="flex-1 self-stretch flex flex-col gap-4 justify-center items-center">
                 <p className="text-sm text-gray-600">Your board is empty</p>
+                <button
+                  className="btn btn-neutral btn-outline btn-sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+
+                    router.post(route('web.boards.columns.generate', board.id))
+                  }}
+                >Generate Starter
+                </button>
               </div>
               )
             : sortedColumns.map((column) => (

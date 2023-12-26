@@ -15,6 +15,8 @@ interface ColumnRepository
 
     public function create(Board $board, ColumnDto $data): string;
 
+    public function generate(Board $board): void;
+
     public function getById(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column;
 
     public function update(Column $column, ColumnDto $data): void;
@@ -26,4 +28,6 @@ interface ColumnRepository
     public function unshift(string $boardId, int $fromOrder, ?int $toOrder = null): void;
 
     public function swap(Column $column, int $toOrder): void;
+
+    public function countByBoard(Board $board): int;
 }

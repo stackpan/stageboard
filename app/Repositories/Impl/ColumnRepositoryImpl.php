@@ -36,6 +36,25 @@ class ColumnRepositoryImpl implements ColumnRepository
             ->id;
     }
 
+    public function generate(Board $board): void
+    {
+        $data = collect([
+            ['name' => 'Open', 'color' => ColumnColor::BLUE],
+            ['name' => 'In Progress', 'color' => ColumnColor::AMBER],
+            ['name' => 'Done', 'color' => ColumnColor::LIME],
+            ['name' => 'Rejected', 'color' => ColumnColor::RED]
+        ]);
+
+        $data->each(fn (array $item, int $key) => Column::factory()
+            ->for($board)
+            ->create([
+                'name' => $item['name'],
+                'color' => $item['color'],
+                'order' => $key
+            ])
+        );
+    }
+
     public function getById(string $id, ?bool $nullable = false, ?bool $withRelation = true): ?Column
     {
         $query = Column::whereId($id);
@@ -93,5 +112,9 @@ class ColumnRepositoryImpl implements ColumnRepository
         $column->update([
                 'order' => $toOrder,
             ]);
+    }
+    public function countByBoard(Board $board): int
+    {
+        return Column::whereBoardId($board->id)->count();
     }
 }

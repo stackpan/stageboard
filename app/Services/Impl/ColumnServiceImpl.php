@@ -3,6 +3,7 @@
 namespace App\Services\Impl;
 
 use App\Dto\ColumnDto;
+use App\Exceptions\ApplicationError\NotEmptyBoardException;
 use App\Exceptions\ApplicationError\ZeroDeltaStepException;
 use App\Models\Board;
 use App\Models\Column;
@@ -30,6 +31,19 @@ class ColumnServiceImpl implements ColumnService
         return $this->columnRepository->create($board, $data);
     }
 
+    /**
+     * @throws NotEmptyBoardException
+     */
+    public function generate(Board $board): void
+    {
+        $count = $this->columnRepository->countByBoard($board);
+        if ($count > 0) {
+            throw new NotEmptyBoardException();
+        }
+
+        $this->columnRepository->generate($board);
+    }
+
     public function getById(string $id): ?Column
     {
         return $this->columnRepository->getById($id);
@@ -44,7 +58,6 @@ class ColumnServiceImpl implements ColumnService
     {
         $this->columnRepository->delete($column);
     }
-
     public function swap(Column $column, int $destinationOrder): void
     {
         $targetIndex = $column->order;

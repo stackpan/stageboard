@@ -7,6 +7,7 @@ import BoardTable from '@/Components/BoardTable'
 import CreateBoardModal from '@/Components/Modal/CreateBoardModal'
 import EditBoardModal from '@/Components/Modal/EditBoardModal'
 import { checkIsLastOfHours, differenceByMillis } from '@/Utils/datetime'
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 
 export type HomePageProps = PageProps<{
   boards: Board[]
@@ -61,27 +62,46 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
           </div>
         </section>
       )}
-      <section className="my-6 px-6">
-        <header className="py-2 flex justify-between items-center">
-          <h2>My Boards</h2>
-          <button
-            className="btn btn-neutral btn-sm"
-            onClick={() => {
-              setActiveModal(ActiveModal.CreateBoard)
-            }}
-          >Create New
-          </button>
-        </header>
-        <div className="py-2 space-y-4">
-          <div>
-            <BoardTable
-              boards={boards}
-              onClickEditHandler={editBoardModal}
-              onClickDeleteHandler={handleDelete}
-            />
-          </div>
-        </div>
-      </section>
+      {boards.length !== 0
+        ? (
+          <section className="my-6 px-6">
+            <header className="py-2 flex justify-between items-center">
+              <h2>My Boards</h2>
+              <button
+                className="btn btn-neutral btn-sm"
+                onClick={() => {
+                  setActiveModal(ActiveModal.CreateBoard)
+                }}
+              >Create New
+              </button>
+            </header>
+            <div className="py-2 space-y-4">
+              <div>
+                <BoardTable
+                  boards={boards}
+                  onClickEditHandler={editBoardModal}
+                  onClickDeleteHandler={handleDelete}
+                />
+              </div>
+            </div>
+          </section>
+          )
+        : (
+          <section className="flex-1 flex flex-col justify-center items-center gap-4">
+            <div className="flex flex-col items-center text-gray-600 text-sm">
+              <QuestionMarkCircleIcon className="w-24"/>
+              <p>You don&apos;t have a board</p>
+            </div>
+            <button
+              className="btn btn-neutral btn-sm"
+              onClick={() => {
+                setActiveModal(ActiveModal.CreateBoard)
+              }}
+            >Create New
+            </button>
+          </section>
+          )
+      }
       <CreateBoardModal
         active={activeModal === ActiveModal.CreateBoard}
         closeHandler={() => {

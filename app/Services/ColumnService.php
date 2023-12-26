@@ -13,6 +13,8 @@ interface ColumnService
 
     public function create(Board $board, ColumnDto $data): string;
 
+    public function generate(Board $board): void;
+
     public function getById(string $id): ?Column;
 
     public function update(Column $column, ColumnDto $data): void;
