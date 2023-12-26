@@ -2,11 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Board;
 use App\Models\Column;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Http\Request;
 
 class ColumnPolicy
 {

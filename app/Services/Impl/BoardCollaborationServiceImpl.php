@@ -6,6 +6,8 @@ use App\Models\Board;
 use App\Repositories\BoardRepository;
 use App\Services\BoardCollaborationService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BoardCollaborationServiceImpl implements BoardCollaborationService
 {
@@ -21,13 +23,19 @@ class BoardCollaborationServiceImpl implements BoardCollaborationService
         return $this->boardRepository->getCollaborators($board);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function add(Board $board, string $userId): void
     {
-        $this->boardRepository->addCollaborator($board, $userId);
+        DB::transaction(fn () => $this->boardRepository->addCollaborator($board, $userId));
     }
 
+    /**
+     * @throws Throwable
+     */
     public function remove(Board $board, string $userId): void
     {
-        $this->boardRepository->removeCollaborator($board, $userId);
+        DB::transaction(fn () => $this->boardRepository->removeCollaborator($board, $userId));
     }
 }
