@@ -1,6 +1,7 @@
 import { type User } from '@/types'
-import { router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import React from 'react'
+import { UserCircleIcon } from '@heroicons/react/24/solid'
 
 interface Props {
   user: User
@@ -15,23 +16,26 @@ export default function Navbar ({ user }: Props): JSX.Element {
           : <a className="btn btn-ghost text-xl">Stageboard</a>
         }
       </div>
+
       <div className="flex-none">
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost avatar">
             <p>{user.name}</p>
             <div className="w-10 rounded-full">
-              <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+              <UserCircleIcon />
             </div>
           </div>
           <ul className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
+              <Link href={route('profile.edit')} as="button">Profile</Link>
             </li>
-            <li><a>Settings</a></li>
-            <li><a>Logout</a></li>
+            <li>
+              <Link href={route('web.page.home')} as="button">Home</Link>
+            </li>
+            <li></li>
+            <li>
+              <Link href={route('logout')} method="post" as="button">Logout</Link>
+            </li>
           </ul>
         </div>
       </div>

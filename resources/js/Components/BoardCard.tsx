@@ -16,7 +16,7 @@ interface Props {
 
 export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, openedAt, onClickEditHandler, onClickDeleteHandler }: Props): JSX.Element {
   return (
-    <div className="card card-compact w-64 bg-base-100 shadow-md flex-none">
+    <div className="card card-compact w-72 bg-base-100 shadow-md flex-none">
       <figure onClick={() => { router.get(route('web.page.board.show', aliasId)) }} className="cursor-pointer h-32">
         {thumbnailUrl !== null
           ? <img src={thumbnailUrl} alt={`${name} thumbnail`} />

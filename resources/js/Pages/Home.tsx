@@ -52,7 +52,7 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
                 id={board.id}
                 aliasId={board.aliasId}
                 name={board.name}
-                owner={board.user.name}
+                owner={board.user.name + (board.user.id === auth.user.id && ' (You)')}
                 thumbnailUrl={board.thumbnailUrl}
                 openedAt={board.openedAt}
                 onClickEditHandler={editBoardModal}
@@ -78,7 +78,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
             <div className="py-2 space-y-4">
               <div>
                 <BoardTable
-                  boards={boards}
                   onClickEditHandler={editBoardModal}
                   onClickDeleteHandler={handleDelete}
                 />
