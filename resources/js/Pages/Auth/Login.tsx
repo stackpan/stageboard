@@ -1,10 +1,5 @@
 import React, { useEffect, type FormEventHandler } from 'react'
-import Checkbox from '@/Components/Checkbox'
 import GuestLayout from '@/Layouts/GuestLayout'
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
 import { Head, Link, useForm } from '@inertiajs/react'
 
 export default function Login ({ status, canResetPassword }: { status?: string, canResetPassword: boolean }): JSX.Element {
@@ -32,70 +27,74 @@ export default function Login ({ status, canResetPassword }: { status?: string, 
 
       {(status != null) && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
-      <form onSubmit={submit}>
-        <div>
-          <InputLabel htmlFor="email" value="Email"/>
-
-          <TextInput
-            id="email"
-            type="email"
+      <form onSubmit={submit} className="flex flex-col gap-2">
+        <label className="form-control w-full">
+          <div className="label">
+            <span className="label-text">Email</span>
+          </div>
+          <input
+            type="text"
             name="email"
             value={data.email}
-            className="mt-1 block w-full"
+            className="input input-bordered w-full"
             autoComplete="username"
-            isFocused={true}
             onChange={(e) => {
               setData('email', e.target.value)
             }}
           />
+          {errors.email !== undefined && (
+            <div className="label">
+              <span className="label-text-alt text-red-500">{errors.email}</span>
+            </div>
+          )}
+        </label>
 
-          <InputError message={errors.email} className="mt-2"/>
-        </div>
-
-        <div className="mt-4">
-          <InputLabel htmlFor="password" value="Password"/>
-
-          <TextInput
-            id="password"
+        <label className="form-control w-full">
+          <div className="label">
+            <span className="label-text">Password</span>
+          </div>
+          <input
             type="password"
             name="password"
             value={data.password}
-            className="mt-1 block w-full"
+            className="input input-bordered w-full"
             autoComplete="current-password"
             onChange={(e) => {
               setData('password', e.target.value)
             }}
           />
+          {errors.password !== undefined && (
+            <div className="label">
+              <span className="label-text-alt text-red-500">{errors.password}</span>
+            </div>
+          )}
+        </label>
 
-          <InputError message={errors.password} className="mt-2"/>
-        </div>
-
-        <div className="block mt-4">
-          <label className="flex items-center">
-            <Checkbox
+        <div className="form-control self-start">
+          <label className="label cursor-pointer space-x-4">
+            <input
+              type="checkbox"
               name="remember"
               checked={data.remember}
+              className="checkbox"
               onChange={(e) => {
                 setData('remember', e.target.checked)
               }}
             />
-            <span className="ms-2 text-sm text-gray-600">Remember me</span>
+            <span className="label-text">Remember me</span>
           </label>
         </div>
 
-        <div className="flex items-center justify-end mt-4">
+        <div className="self-end mt-4">
           {canResetPassword && (
             <Link
               href={route('password.request')}
-              className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="btn btn-active btn-link"
             >
               Forgot your password?
             </Link>
           )}
-
-          <PrimaryButton className="ms-4" disabled={processing}>
-            Log in
-          </PrimaryButton>
+          <button type="submit" className="btn btn-neutral" disabled={processing}>Login</button>
         </div>
       </form>
     </GuestLayout>

@@ -12,7 +12,7 @@ interface Form {
 
 export default function CreateBoardModal ({ active, closeHandler }: Props): JSX.Element {
   const { data, setData, post, processing, reset } = useForm<Form>({
-    name: ''
+    username: ''
   })
 
   const handleChangeName = (e: ChangeEvent<HTMLInputElement>): void => {
