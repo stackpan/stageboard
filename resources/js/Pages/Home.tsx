@@ -52,7 +52,7 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
                 id={board.id}
                 aliasId={board.aliasId}
                 name={board.name}
-                owner={board.user.name + (board.user.id === auth.user.id && ' (You)')}
+                owner={board.user.name + (board.user.id === auth.user.id ? ' (You)' : '')}
                 thumbnailUrl={board.thumbnailUrl}
                 openedAt={board.openedAt}
                 onClickEditHandler={editBoardModal}

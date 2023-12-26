@@ -14,6 +14,7 @@ class BoardRepositoryImpl implements BoardRepository
     public function getAllByUser(User $user): Collection
     {
         return Board::whereOwnerId($user->id)
+            ->orWhereRelation('users', 'user_id', '=',$user->id)
             ->with('owner:id,name')
             ->with(['users' => fn (BelongsToMany $query) => $query
                 ->select('id')

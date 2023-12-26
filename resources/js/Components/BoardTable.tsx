@@ -33,7 +33,7 @@ export default function BoardTable ({ onClickEditHandler, onClickDeleteHandler }
           {boards.map((board) => (
             <tr key={board.id} className="hover:bg-base-200">
               <td className="cursor-pointer" onClick={() => { handleVisit(board) }}>{board.name}</td>
-              <td className="cursor-pointer" onClick={() => { handleVisit(board) }}>{board.user.name + (board.user.id === auth.user.id && ' (You)')}</td>
+              <td className="cursor-pointer" onClick={() => { handleVisit(board) }}>{board.user.name + (board.user.id === auth.user.id ? ' (You)' : '')}</td>
               <td className="cursor-pointer" onClick={() => { handleVisit(board) }}>{formatToDate(board.createdAt)}</td>
               <td className="cursor-pointer" onClick={() => { handleVisit(board) }}>{formatFromNow(board.updatedAt)}</td>
               <td className="float-right">
