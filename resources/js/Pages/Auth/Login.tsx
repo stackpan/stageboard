@@ -22,7 +22,14 @@ export default function Login ({ status, canResetPassword }: { status?: string, 
   }
 
   return (
-    <GuestLayout>
+    <GuestLayout
+      footer={(
+        <>
+          <div className="divider mt-8">or</div>
+          <Link href={route('register')} as="button" className="btn btn-link">Create new Account</Link>
+        </>
+      )}
+    >
       <Head title="Log in"/>
 
       {(status != null) && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}

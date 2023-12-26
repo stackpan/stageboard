@@ -1,8 +1,8 @@
-import React, { type PropsWithChildren } from 'react'
+import React, {type PropsWithChildren, ReactNode} from 'react'
 import ApplicationLogo from '@/Components/ApplicationLogo'
 import { Link } from '@inertiajs/react'
 
-export default function Guest ({ children }: PropsWithChildren): JSX.Element {
+export default function Guest ({ children, footer }: PropsWithChildren<{ footer?: ReactNode }>): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
       <div>
@@ -14,6 +14,12 @@ export default function Guest ({ children }: PropsWithChildren): JSX.Element {
       <div className="card w-96 bg-base-100 shadow-xl p-6">
         {children}
       </div>
+
+      {footer !== undefined && (
+        <footer>
+          {footer}
+        </footer>
+      )}
     </div>
   )
 }
