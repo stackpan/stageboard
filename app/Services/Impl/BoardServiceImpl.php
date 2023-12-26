@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Repositories\BoardRepository;
 use App\Services\BoardService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BoardServiceImpl implements BoardService
 {
@@ -23,9 +25,12 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getAllByUser($user);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function create(User $user, BoardDto $data): Board
     {
-        return $this->boardRepository->create($user, $data);
+        return DB::transaction(fn () => $this->boardRepository->create($user, $data));
     }
 
     public function getById(string $id, ?array $columns = null): ?Board
@@ -38,18 +43,27 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getByAliasId($aliasId, $columns);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function update(Board $board, BoardDto $data): void
     {
-        $this->boardRepository->update($board, $data);
+        DB::transaction(fn () => $this->boardRepository->update($board, $data));
     }
 
+    /**
+     * @throws Throwable
+     */
     public function delete(Board $board): void
     {
-        $this->boardRepository->delete($board);
+        DB::transaction(fn () => $this->boardRepository->delete($board));
     }
 
+    /**
+     * @throws Throwable
+     */
     public function updateUserOpenedTime(Board $board, User $user): void
     {
-        $this->boardRepository->updateUserOpenedTime($board, $user);
+        DB::transaction(fn () => $this->boardRepository->updateUserOpenedTime($board, $user));
     }
 }

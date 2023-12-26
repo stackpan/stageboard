@@ -6,9 +6,10 @@ use App\Dto\CardDto;
 use App\Models\Card;
 use App\Models\Column;
 use App\Repositories\CardRepository;
-use App\Repositories\ColumnRepository;
 use App\Services\CardService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CardServiceImpl implements CardService
 {
@@ -24,9 +25,12 @@ class CardServiceImpl implements CardService
         return $this->cardRepository->getAllByColumn($column);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function create(Column $column, CardDto $data): string
     {
-        return $this->cardRepository->create($column, $data);
+        return DB::transaction(fn () => $this->cardRepository->create($column, $data));
     }
 
     public function getById(string $id): ?Card
@@ -34,18 +38,27 @@ class CardServiceImpl implements CardService
         return $this->cardRepository->getById($id);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function update(Card $card, CardDto $data): void
     {
-        $this->cardRepository->update($card, $data);
+        DB::transaction(fn () => $this->cardRepository->update($card, $data));
     }
 
+    /**
+     * @throws Throwable
+     */
     public function delete(Card $card): void
     {
-        $this->cardRepository->delete($card);
+        DB::transaction(fn () => $this->cardRepository->delete($card));
     }
 
+    /**
+     * @throws Throwable
+     */
     public function moveToColumn(Card $card, string $columnId): void
     {
-        $this->cardRepository->moveToColumn($card, $columnId);
+        DB::transaction(fn () => $this->cardRepository->moveToColumn($card, $columnId));
     }
 }

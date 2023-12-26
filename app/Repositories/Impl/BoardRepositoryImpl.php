@@ -5,9 +5,7 @@ namespace App\Repositories\Impl;
 use App\Models\User;
 use App\Dto\BoardDto;
 use App\Models\Board;
-use App\Models\UserBoard;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Arr;
 use App\Repositories\BoardRepository;
 use Illuminate\Database\Eloquent\Collection;
 
