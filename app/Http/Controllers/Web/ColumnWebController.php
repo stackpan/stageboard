@@ -24,13 +24,6 @@ class ColumnWebController extends Controller
         $this->authorizeResource(Column::class, 'column');
     }
 
-    public function index(Board $board): ColumnCollection
-    {
-        $columns = $this->columnService->getAllByBoard($board);
-
-        return new ColumnCollection($columns);
-    }
-
     public function show(Column $column): ColumnResource
     {
         return new ColumnResource($column);
