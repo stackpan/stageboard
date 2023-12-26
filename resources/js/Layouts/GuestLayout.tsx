@@ -1,4 +1,4 @@
-import React, {type PropsWithChildren, ReactNode} from 'react'
+import React, { type PropsWithChildren, type ReactNode } from 'react'
 import ApplicationLogo from '@/Components/ApplicationLogo'
 import { Link } from '@inertiajs/react'
 

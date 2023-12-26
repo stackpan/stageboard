@@ -1,9 +1,5 @@
 import React, { useEffect, type FormEventHandler } from 'react'
 import GuestLayout from '@/Layouts/GuestLayout'
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
 import { Head, useForm } from '@inertiajs/react'
 
 export default function ResetPassword ({ token, email }: { token: string, email: string }): JSX.Element {
@@ -30,65 +26,80 @@ export default function ResetPassword ({ token, email }: { token: string, email:
     <GuestLayout>
       <Head title="Reset Password"/>
 
-      <form onSubmit={submit} className="flex flex-col space-y-4">
-        <div>
-          <InputLabel htmlFor="email" value="Email"/>
-
-          <TextInput
-            id="email"
-            type="email"
+      <form onSubmit={submit} className="flex flex-col gap-4">
+        <label className="form-control w-full">
+          <div className="label">
+            <span className="label-text">Email</span>
+          </div>
+          <input
+            type="text"
             name="email"
             value={data.email}
-            className="mt-1 block w-full"
+            className="input input-bordered w-full"
             autoComplete="username"
             onChange={(e) => {
               setData('email', e.target.value)
             }}
+            required
+            maxLength={255}
           />
+          {errors.email !== undefined && (
+            <div className="label">
+              <span className="label-text-alt text-red-500">{errors.email}</span>
+            </div>
+          )}
+        </label>
 
-          <InputError message={errors.email} className="mt-2"/>
-        </div>
-
-        <div className="mt-4">
-          <InputLabel htmlFor="password" value="Password"/>
-
-          <TextInput
-            id="password"
+        <label className="form-control w-full">
+          <div className="label">
+            <span className="label-text">Password</span>
+          </div>
+          <input
             type="password"
             name="password"
             value={data.password}
-            className="mt-1 block w-full"
-            autoComplete="new-password"
-            isFocused={true}
+            className="input input-bordered w-full"
+            autoComplete="current-password"
             onChange={(e) => {
               setData('password', e.target.value)
             }}
+            required
+            maxLength={100}
           />
+          {errors.password !== undefined && (
+            <div className="label">
+              <span className="label-text-alt text-red-500">{errors.password}</span>
+            </div>
+          )}
+        </label>
 
-          <InputError message={errors.password} className="mt-2"/>
-        </div>
-
-        <div className="mt-4">
-          <InputLabel htmlFor="password_confirmation" value="Confirm Password"/>
-
-          <TextInput
+        <label className="form-control flex-1">
+          <div className="label">
+            <span className="label-text">Password Confirmation</span>
+          </div>
+          <input
             type="password"
-            name="password_confirmation"
+            name="password"
             value={data.password_confirmation}
-            className="mt-1 block w-full"
-            autoComplete="new-password"
+            className="input input-bordered w-full"
+            autoComplete="off"
             onChange={(e) => {
               setData('password_confirmation', e.target.value)
             }}
+            required
+            maxLength={100}
           />
+          {errors.password_confirmation !== undefined && (
+            <div className="label">
+              <span className="label-text-alt text-red-500">{errors.password_confirmation}</span>
+            </div>
+          )}
+        </label>
 
-          <InputError message={errors.password_confirmation} className="mt-2"/>
-        </div>
-
-        <div className="flex items-center justify-end mt-4">
-          <PrimaryButton className="ms-4" disabled={processing}>
+        <div className="self-end mt-4">
+          <button type="submit" className="btn btn-neutral" disabled={processing}>
             Reset Password
-          </PrimaryButton>
+          </button>
         </div>
       </form>
     </GuestLayout>

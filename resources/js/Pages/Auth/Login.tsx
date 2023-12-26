@@ -48,6 +48,8 @@ export default function Login ({ status, canResetPassword }: { status?: string, 
             onChange={(e) => {
               setData('email', e.target.value)
             }}
+            required
+            maxLength={255}
           />
           {errors.email !== undefined && (
             <div className="label">
@@ -69,6 +71,8 @@ export default function Login ({ status, canResetPassword }: { status?: string, 
             onChange={(e) => {
               setData('password', e.target.value)
             }}
+            required
+            maxLength={100}
           />
           {errors.password !== undefined && (
             <div className="label">
