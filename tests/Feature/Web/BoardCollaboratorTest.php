@@ -51,7 +51,7 @@ class BoardCollaboratorTest extends TestCase
     {
         $collaborator = User::factory()->create();
 
-        $this->board->users()->attach($collaborator->id);
+        $this->board->users()->attach($collaborator->id, ['permission' => BoardPermission::LIMITED_ACCESS]);
 
         $requestBody = [
             'userId' => $collaborator->id,
@@ -111,7 +111,7 @@ class BoardCollaboratorTest extends TestCase
     {
         $collaborator = User::factory()->create();
 
-        $this->board->users()->attach($collaborator->id);
+        $this->board->users()->attach($collaborator->id, ['permission' => BoardPermission::LIMITED_ACCESS]);
 
         $response = $this
             ->actingAs($this->user)
@@ -130,5 +130,53 @@ class BoardCollaboratorTest extends TestCase
                 ]
             ])
             ->assertJsonCount(2);
+    }
+
+    public function test_grant_permission_success(): void
+    {
+        $collaborator = User::factory()->create();
+
+        $this->board->users()->attach($collaborator->id, ['permission' => BoardPermission::LIMITED_ACCESS->name]);
+
+        $requestBody = [
+            'userId' => $collaborator->id,
+            'permission' => BoardPermission::CARD_OPERATOR->name,
+        ];
+
+        $response = $this
+            ->actingAs($this->user)
+            ->patch(route('web.boards.collaborators.update', $this->board->id), $requestBody);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('user_board', [
+            'board_id' => $this->board->id,
+            'user_id' => $collaborator->id,
+            'permission' => BoardPermission::CARD_OPERATOR->name,
+        ]);
+    }
+
+    public function test_grant_permission_to_full_access_must_be_failed(): void
+    {
+        $collaborator = User::factory()->create();
+
+        $this->board->users()->attach($collaborator->id, ['permission' => BoardPermission::LIMITED_ACCESS->name]);
+
+        $requestBody = [
+            'userId' => $collaborator->id,
+            'permission' => BoardPermission::FULL_ACCESS->name,
+        ];
+
+        $response = $this
+            ->actingAs($this->user)
+            ->patch(route('web.boards.collaborators.update', $this->board->id), $requestBody);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('user_board', [
+            'board_id' => $this->board->id,
+            'user_id' => $collaborator->id,
+            'permission' => BoardPermission::LIMITED_ACCESS->name,
+        ]);
     }
 }

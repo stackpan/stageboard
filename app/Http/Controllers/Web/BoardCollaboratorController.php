@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBoardCollaboratorRequest;
+use App\Http\Requests\UpdateBoardCollaboratorRequest;
 use App\Http\Requests\RemoveBoardCollaboratorRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
@@ -12,6 +13,7 @@ use App\Services\BoardCollaborationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use function Symfony\Component\String\b;
 
 class BoardCollaboratorController extends Controller
 {
@@ -36,6 +38,16 @@ class BoardCollaboratorController extends Controller
         $validated = $request->validated();
 
         $this->boardCollaborationService->add($board, $validated['userId']);
+
+        return back();
+    }
+
+    public function update(UpdateBoardCollaboratorRequest $request, Board $board): RedirectResponse
+    {
+        $this->authorize('manageCollaborator', $board);
+        $validated = $request->validated();
+
+        $this->boardCollaborationService->grantPermission($board, $validated['userId'], $validated['permission']);
 
         return back();
     }

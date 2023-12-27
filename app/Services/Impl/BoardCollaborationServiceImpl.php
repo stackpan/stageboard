@@ -2,6 +2,7 @@
 
 namespace App\Services\Impl;
 
+use App\Enums\BoardPermission;
 use App\Models\Board;
 use App\Repositories\BoardRepository;
 use App\Services\BoardCollaborationService;
@@ -37,5 +38,13 @@ class BoardCollaborationServiceImpl implements BoardCollaborationService
     public function remove(Board $board, string $userId): void
     {
         DB::transaction(fn () => $this->boardRepository->removeCollaborator($board, $userId));
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function grantPermission(Board $board, string $userId, string $permission): void
+    {
+        DB::transaction(fn () => $this->boardRepository->grantCollaboratorPermission($board, $userId, $permission));
     }
 }

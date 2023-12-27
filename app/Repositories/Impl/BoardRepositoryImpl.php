@@ -87,15 +87,20 @@ class BoardRepositoryImpl implements BoardRepository
         return $board->users()->get();
     }
 
-    public function addCollaborator(Board $board, string $userId, BoardPermission $permission = BoardPermission::LIMITED_ACCESS): void
+    public function addCollaborator(Board $board, string $userId): void
     {
         $board->users()->attach($userId, [
-            'permission' => $permission
+            'permission' => BoardPermission::LIMITED_ACCESS
         ]);
     }
 
     public function removeCollaborator(Board $board, string $userId): void
     {
         $board->users()->detach($userId);
+    }
+
+    public function grantCollaboratorPermission(Board $board, string $userId, string $permission): void
+    {
+        $board->users()->updateExistingPivot($userId, ['permission' => $permission]);
     }
 }

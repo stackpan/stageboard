@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::name('web.')->group(function () {
         Route::apiResource('boards', BoardWebController::class)->except(['index']);
-        Route::apiSingleton('boards.collaborators', BoardCollaboratorController::class)->creatable()->except(['update']);
+        Route::apiSingleton('boards.collaborators', BoardCollaboratorController::class)->creatable();
 
         Route::apiResource('boards.columns', ColumnWebController::class)->shallow()->except(['index']);
         Route::post('/boards/{board}/columns/generate', [ColumnWebController::class, 'generate'])->name('boards.columns.generate');

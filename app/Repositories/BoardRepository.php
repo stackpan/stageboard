@@ -26,7 +26,9 @@ interface BoardRepository
 
     public function getCollaborators(Board $board): Collection;
 
-    public function addCollaborator(Board $board, string $userId, BoardPermission $permission = BoardPermission::LIMITED_ACCESS): void;
+    public function addCollaborator(Board $board, string $userId): void;
 
     public function removeCollaborator(Board $board, string $userId): void;
+
+    public function grantCollaboratorPermission(Board $board, string $userId, string $permission): void;
 }
