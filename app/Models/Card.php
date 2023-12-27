@@ -43,6 +43,10 @@ class Card extends Model
         'color' => CardColor::class
     ];
 
+    protected $touches = [
+        'column',
+    ];
+
     public function column(): BelongsTo
     {
         return $this->belongsTo(Column::class);

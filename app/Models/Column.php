@@ -49,6 +49,8 @@ class Column extends Model
         'color' => ColumnColor::class
     ];
 
+    protected $touches = ['board'];
+
     public function board(): BelongsTo
     {
         return $this->belongsTo(Board::class);
