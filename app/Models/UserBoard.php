@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BoardPermission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -28,9 +29,11 @@ class UserBoard extends Pivot
 
     protected $fillable = [
         'opened_at',
+        'permission'
     ];
 
     protected $casts = [
         'opened_at' => 'datetime',
+        'permission' => BoardPermission::class,
     ];
 }

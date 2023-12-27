@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Enums\BoardPermission;
 use App\Models\Card;
 use App\Models\User;
+use App\Util\Permissions;
 use Illuminate\Auth\Access\Response;
 use function Symfony\Component\Translation\t;
 
@@ -22,7 +24,7 @@ class CardPolicy
      */
     public function view(User $user, Card $card): bool
     {
-        return $this->checkOwner($user, $card) || $this->checkCollaborator($user, $card);
+        return Permissions::checkCardPermission($user, $card, BoardPermission::READ_ONLY);
     }
 
     /**
@@ -38,7 +40,7 @@ class CardPolicy
      */
     public function update(User $user, Card $card): bool
     {
-        return $this->checkOwner($user, $card) || $this->checkCollaborator($user, $card);
+        return Permissions::checkCardPermission($user, $card, BoardPermission::CARD_OPERATOR);
     }
 
     /**
@@ -46,7 +48,7 @@ class CardPolicy
      */
     public function delete(User $user, Card $card): bool
     {
-        return $this->checkOwner($user, $card) || $this->checkCollaborator($user, $card);
+        return Permissions::checkCardPermission($user, $card, BoardPermission::CARD_OPERATOR);
     }
 
     /**
@@ -54,7 +56,7 @@ class CardPolicy
      */
     public function restore(User $user, Card $card): bool
     {
-        return $this->checkOwner($user, $card);
+        return Permissions::checkCardPermission($user, $card, BoardPermission::FULL_ACCESS);
     }
 
     /**
@@ -62,21 +64,12 @@ class CardPolicy
      */
     public function forceDelete(User $user, Card $card): bool
     {
-        return $this->checkOwner($user, $card);
+        return Permissions::checkCardPermission($user, $card, BoardPermission::FULL_ACCESS);
     }
 
     public function move(User $user, Card $card): bool
     {
-        return $this->checkOwner($user, $card) || $this->checkCollaborator($user, $card);
+        return Permissions::checkCardPermission($user, $card, BoardPermission::LIMITED_CARD_OPERATOR);
     }
 
-    private function checkOwner(User $user, Card $card): bool
-    {
-        return $user->id === $card->column->board->owner_id;
-    }
-
-    private function checkCollaborator(User $user, Card $card): bool
-    {
-        return $card->column->board->users->find($user) !== null;
-    }
 }

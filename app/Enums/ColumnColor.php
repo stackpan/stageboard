@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Traits\HasEnumValues;
+
 enum ColumnColor: string
 {
+    use HasEnumValues;
+
     case RED = '#f87171';
     case AMBER = '#fbbf24';
     case LIME = '#a3e635';
@@ -13,8 +17,4 @@ enum ColumnColor: string
     case VIOLET = '#a78bfa';
     case FUCHSIA = '#e879f9';
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

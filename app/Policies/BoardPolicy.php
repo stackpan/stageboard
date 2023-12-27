@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Enums\BoardPermission;
 use App\Models\Board;
 use App\Models\User;
+use App\Util\Permissions;
 use Illuminate\Auth\Access\Response;
 
 class BoardPolicy
@@ -21,7 +23,7 @@ class BoardPolicy
      */
     public function view(User $user, Board $board): bool
     {
-        return $this->checkOwner($user, $board) || $this->checkCollaborator($user, $board);
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::READ_ONLY);
     }
 
     /**
@@ -37,7 +39,7 @@ class BoardPolicy
      */
     public function update(User $user, Board $board): bool
     {
-        return $this->checkOwner($user, $board);
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::FULL_ACCESS);
     }
 
     /**
@@ -45,7 +47,7 @@ class BoardPolicy
      */
     public function delete(User $user, Board $board): bool
     {
-        return $this->checkOwner($user, $board);
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::FULL_ACCESS);
     }
 
     /**
@@ -53,7 +55,7 @@ class BoardPolicy
      */
     public function restore(User $user, Board $board): bool
     {
-        return $this->checkOwner($user, $board);
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::FULL_ACCESS);
     }
 
     /**
@@ -61,26 +63,16 @@ class BoardPolicy
      */
     public function forceDelete(User $user, Board $board): bool
     {
-        return $this->checkOwner($user, $board);
-    }
-
-    public function createColumn(User $user, Board $board): bool
-    {
-        return $this->checkOwner($user, $board) || $this->checkCollaborator($user, $board);
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::FULL_ACCESS);
     }
 
     public function manageCollaborator(User $user, Board $board): bool
     {
-        return  $this->checkOwner($user, $board);
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::FULL_ACCESS);
     }
 
-    private function checkOwner(User $user, Board $board): bool
+    public function createColumn(User $user, Board $board): bool
     {
-        return $user->id === $board->owner_id;
-    }
-
-    private function checkCollaborator(User $user, Board $board): bool
-    {
-        return $board->users->find($user) !== null;
+        return Permissions::checkBoardPermission($user, $board, BoardPermission::LIMITED_ACCESS);
     }
 }

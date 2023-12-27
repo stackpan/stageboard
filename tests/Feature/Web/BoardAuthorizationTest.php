@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Web;
 
+use App\Enums\BoardPermission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -80,7 +81,7 @@ class BoardAuthorizationTest extends TestCase
     {
         $board = $this->user->ownedBoards->first();
         $collaborationUser = User::factory()->create();
-        $board->users()->save($collaborationUser);
+        $board->users()->attach($collaborationUser, ['permission' => BoardPermission::LIMITED_ACCESS]);
 
         $requestBody = [
             'name' => 'Renamed BoardPage',
@@ -97,7 +98,7 @@ class BoardAuthorizationTest extends TestCase
     {
         $board = $this->user->ownedBoards->first();
         $collaborationUser = User::factory()->create();
-        $board->users()->save($collaborationUser);
+        $board->users()->attach($collaborationUser, ['permission' => BoardPermission::LIMITED_ACCESS]);
 
         $response = $this
             ->actingAs($collaborationUser)

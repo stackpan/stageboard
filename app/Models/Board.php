@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BoardPermission;
 use App\Events\BoardCreated;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,5 +64,15 @@ class Board extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_board')->using(UserBoard::class)->withPivot('opened_at');
+    }
+
+    public function getUserPermission(User $user): BoardPermission | null
+    {
+        $result = $this->users()
+            ->withPivot('permission')
+            ->whereUserId($user->id)
+            ->first();
+
+        return optional($result, fn ($board) => $board->pivot->permission);
     }
 }

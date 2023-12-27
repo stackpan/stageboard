@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Dto\BoardDto;
+use App\Enums\BoardPermission;
 use App\Models\Board;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,7 +26,7 @@ interface BoardRepository
 
     public function getCollaborators(Board $board): Collection;
 
-    public function addCollaborator(Board $board, string $userId): void;
+    public function addCollaborator(Board $board, string $userId, BoardPermission $permission = BoardPermission::LIMITED_ACCESS): void;
 
     public function removeCollaborator(Board $board, string $userId): void;
 }

@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Traits\HasEnumValues;
+
 enum CardColor: string
 {
+    use HasEnumValues;
+
     case STONE = '#f5f5f4';
     case RED = '#fee2e2';
     case AMBER = '#fef3c7';
@@ -15,8 +19,4 @@ enum CardColor: string
     case FUCHSIA = '#fae8ff';
     case ROSE = '#ffe4e6';
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\BoardPermission;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('user_board', function (Blueprint $table) {
             $table->timestamp('opened_at')->useCurrent()->useCurrentOnUpdate();
+            $table->enum('permission', BoardPermission::nameCases())->default(BoardPermission::FULL_ACCESS->name);
             $table->foreignUlid('user_id')->constrained()->cascadeOnDelete();
             $table->foreignUlid('board_id')->constrained()->cascadeOnDelete();
         });

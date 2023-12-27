@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Web;
 
+use App\Enums\BoardPermission;
 use App\Models\Board;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,6 +43,7 @@ class BoardCollaboratorTest extends TestCase
         $this->assertDatabaseHas('user_board', [
             'board_id' => $this->board->id,
             'user_id' => $collaborator->id,
+            'permission' => BoardPermission::LIMITED_ACCESS->name,
         ]);
     }
 
@@ -71,7 +73,9 @@ class BoardCollaboratorTest extends TestCase
     {
         $collaborators = User::factory()->count(2)->create();
 
-        $this->board->users()->attach($collaborators[0]->id);
+        $this->board->users()->attach($collaborators[0]->id, [
+            'permission' => BoardPermission::LIMITED_ACCESS
+        ]);
 
         $requestBody = [
             'userId' => $collaborators[1]->id,
@@ -88,8 +92,9 @@ class BoardCollaboratorTest extends TestCase
     {
         $collaborators = User::factory()->count(2)->create();
 
-        $this->board->users()->attach($collaborators[0]->id);
-        $this->board->users()->attach($collaborators[1]->id);
+        foreach ($collaborators as $collaborator) {
+            $this->board->users()->attach($collaborator->id, ['permission' => BoardPermission::LIMITED_ACCESS]);
+        }
 
         $requestBody = [
             'userId' => $collaborators[1]->id,

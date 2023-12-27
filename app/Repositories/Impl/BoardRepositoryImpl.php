@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Impl;
 
+use App\Enums\BoardPermission;
 use App\Models\User;
 use App\Dto\BoardDto;
 use App\Models\Board;
@@ -86,9 +87,11 @@ class BoardRepositoryImpl implements BoardRepository
         return $board->users()->get();
     }
 
-    public function addCollaborator(Board $board, string $userId): void
+    public function addCollaborator(Board $board, string $userId, BoardPermission $permission = BoardPermission::LIMITED_ACCESS): void
     {
-        $board->users()->attach($userId);
+        $board->users()->attach($userId, [
+            'permission' => $permission
+        ]);
     }
 
     public function removeCollaborator(Board $board, string $userId): void
