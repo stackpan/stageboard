@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'lastName' => $this->last_name,
             'email' => $this->email,
             'emailVerifiedAt' => $this->email_verified_at,
+            'permission' => $this->whenPivotLoaded('user_board', fn () => $this->pivot->permission)
         ];
     }
 }

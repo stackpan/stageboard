@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * App\Models\BoardPage
+ * App\Models\Show
  *
  * @property string $id
  * @property string $alias_id

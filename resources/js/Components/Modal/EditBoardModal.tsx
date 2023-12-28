@@ -16,7 +16,7 @@ interface RequestBody {
 export default function EditBoardModal ({ active, closeHandler, boardId }: Props): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { data, setData, setDefaults, patch, reset, isDirty, processing } = useForm<RequestBody>({
-    username: ''
+    name: ''
   })
 
   useEffect(() => {

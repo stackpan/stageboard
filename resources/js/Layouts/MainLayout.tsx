@@ -13,8 +13,8 @@ export default function MainLayout ({ user, headerTitle, children }: PropsWithCh
       <Navbar user={user} />
 
       {headerTitle !== undefined && (
-        <header className="px-6 py-4">
-          <h1 className="text-2xl font-bold">{headerTitle}</h1>
+        <header className="px-6 pt-8 pb-2">
+          <h1 className="text-2xl font-bold capitalize">{headerTitle}</h1>
         </header>
       )}
 

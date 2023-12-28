@@ -6,7 +6,7 @@ use App\Http\Controllers\Web\BoardWebController;
 use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\ColumnWebController;
 use App\Http\Controllers\Web\Page\HomePageController;
-use App\Http\Controllers\Web\Page\ShowBoardPageController;
+use App\Http\Controllers\Web\Page\BoardPageController;
 use App\Http\Controllers\Web\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +47,8 @@ Route::middleware('auth')->group(function () {
 
         Route::name('page.')->group(function () {
             Route::get('/home', HomePageController::class)->name('home');
-            Route::get('/board/{board}', ShowBoardPageController::class)->name('board.show');
+            Route::get('/board/{boardAlias}', [BoardPageController::class, 'show'])->name('board.show');
+            Route::get('/board/{boardAlias}/settings', [BoardPageController::class, 'edit'])->name('board.edit');
         });
     });
 });

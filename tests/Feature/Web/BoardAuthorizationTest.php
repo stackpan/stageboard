@@ -28,7 +28,7 @@ class BoardAuthorizationTest extends TestCase
         $board = $this->user->ownedBoards->first();
 
         $requestBody = [
-            'name' => 'Renamed BoardPage',
+            'name' => 'Renamed Show',
         ];
 
         $response = $this
@@ -55,7 +55,7 @@ class BoardAuthorizationTest extends TestCase
         $board = $this->user->ownedBoards->first();
 
         $requestBody = [
-            'name' => 'Renamed BoardPage',
+            'name' => 'Renamed Show',
         ];
 
         $response = $this
@@ -84,7 +84,7 @@ class BoardAuthorizationTest extends TestCase
         $board->users()->attach($collaborationUser, ['permission' => BoardPermission::LIMITED_ACCESS]);
 
         $requestBody = [
-            'name' => 'Renamed BoardPage',
+            'name' => 'Renamed Show',
         ];
 
         $response = $this
@@ -112,7 +112,7 @@ class BoardAuthorizationTest extends TestCase
         $board = $this->user->ownedBoards->first();
 
         $requestBody = [
-            'name' => 'Renamed BoardPage',
+            'name' => 'Renamed Show',
         ];
 
         $this->actingAs($this->user)

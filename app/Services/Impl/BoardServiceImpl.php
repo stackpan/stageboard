@@ -38,9 +38,9 @@ class BoardServiceImpl implements BoardService
         return $this->boardRepository->getById($id, $columns);
     }
 
-    public function getByAliasId(string $aliasId, ?array $columns = null): ?Board
+    public function getByAliasId(string $aliasId, ?array $columns = null, bool $withRelation = true): ?Board
     {
-        return $this->boardRepository->getByAliasId($aliasId, $columns);
+        return $this->boardRepository->getByAliasId($aliasId, $columns, $withRelation);
     }
 
     /**

@@ -15,7 +15,7 @@ interface BoardService
 
     public function getById(string $id, ?array $columns = null): ?Board;
 
-    public function getByAliasId(string $aliasId, ?array $columns = null): ?Board;
+    public function getByAliasId(string $aliasId, ?array $columns = null, bool $withRelation = true): ?Board;
 
     public function update(Board $board, BoardDto $data): void;
 

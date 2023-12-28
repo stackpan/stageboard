@@ -2,7 +2,7 @@ import React, { type ChangeEvent, type FormEvent, useEffect } from 'react'
 import { ColumnColor } from '@/Enums'
 import { convertToBackgroundColor } from '@/Utils/color'
 import { router, useForm, usePage } from '@inertiajs/react'
-import { type BoardShowProps } from '@/Pages/BoardPage'
+import { type BoardShowProps } from '@/Pages/Board/Show'
 import { getRandomColumnColor } from '@/Utils/random'
 
 interface Props {

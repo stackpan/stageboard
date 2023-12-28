@@ -49,15 +49,19 @@ class BoardRepositoryImpl implements BoardRepository
             ->firstOrFail();
     }
 
-    public function getByAliasId(string $aliasId, ?array $columns): ?Board
+    public function getByAliasId(string $aliasId, ?array $columns, bool $withRelation = true): ?Board
     {
         $cols = !is_null($columns) ? [...$columns, 'alias_id'] : '*';
 
-        return Board::select($cols)
+        $query = Board::select($cols)
             ->whereAliasId($aliasId)
-            ->with('owner:id,name')
-            ->with('columns.cards')
-            ->firstOrFail();
+            ->with('owner:id,name');
+
+        if ($withRelation === true) {
+            $query->with('columns.cards');
+        }
+
+        return $query->firstOrFail();
     }
 
     public function update(Board $board, BoardDto $data): void
@@ -84,7 +88,7 @@ class BoardRepositoryImpl implements BoardRepository
 
     public function getCollaborators(Board $board): Collection
     {
-        return $board->users()->get();
+        return $board->users()->withPivot(['permission'])->get();
     }
 
     public function addCollaborator(Board $board, string $userId): void

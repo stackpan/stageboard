@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ShowBoardPageController extends Controller
+class BoardPageController extends Controller
 {
     public function __construct(
         private readonly BoardService $boardService,
@@ -24,19 +24,29 @@ class ShowBoardPageController extends Controller
         //
     }
 
-    public function __invoke(Request $request, string $aliasId): Response
+    public function show(Request $request, string $aliasId): Response
     {
         $board = $this->boardService->getByAliasId($aliasId);
         $this->authorize('view', $board);
 
-        $collaborators = $this->boardCollaborationService->getCollaborators($board);
-
         BoardOpenedEvent::dispatch($board, $request->user());
 
-        return Inertia::render('BoardPage', [
+        return Inertia::render('Board/Show', [
             'board' => new BoardResource($board, false),
-            'columns' => new ColumnCollection($board->columns),
-            'collaborators' => new UserCollection($collaborators)
+            'columns' => new ColumnCollection($board->columns)
+        ]);
+    }
+
+    public function edit(string $aliasId): Response
+    {
+        $board = $this->boardService->getByAliasId($aliasId);
+        $this->authorize('update', $board);
+
+        $collaborators = $this->boardCollaborationService->getCollaborators($board);
+
+        return Inertia::render('Board/Edit', [
+            'board' => new BoardResource($board),
+            'collaborators' => new UserCollection($collaborators),
         ]);
     }
 }

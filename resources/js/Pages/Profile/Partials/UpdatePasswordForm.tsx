@@ -1,5 +1,4 @@
 import React, { useRef, type FormEventHandler } from 'react'
-import PrimaryButton from '@/Components/PrimaryButton'
 import { useForm } from '@inertiajs/react'
 import { Transition } from '@headlessui/react'
 

@@ -2,21 +2,19 @@ import ColumnCard from '@/Components/ColumnCard'
 import { ColumnPosition } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
 import { type Board, type Card, type Column, type PageProps, type User } from '@/types'
-import { Head, router } from '@inertiajs/react'
-import React, { useState } from 'react'
+import { Head, Link, router } from '@inertiajs/react'
+import React, { type JSX, useState } from 'react'
 
 import CreateColumnModal from '@/Components/Modal/CreateColumnModal'
 import EditColumnModal from '@/Components/Modal/EditColumnModal'
 import CreateCardModal from '@/Components/Modal/CreateCardModal'
 import EditCardModal from '@/Components/Modal/EditCardModal'
-import CollaboratorsModal from '@/Components/Modal/CollaboratorsModal'
 import TaskCard from '@/Components/TaskCard'
 import EditBoardModal from '@/Components/Modal/EditBoardModal'
 
 export type BoardShowProps = PageProps<{
   board: Board
   columns: ColumnWithCards[]
-  collaborators: User[]
 }>
 
 type ColumnWithCards = Column & { cards: Card[] }
@@ -28,10 +26,9 @@ enum ActiveModal {
   EditColumn,
   CreateCard,
   EditCard,
-  Collaborators
 }
 
-export default function BoardPage ({ auth, board, columns }: BoardShowProps): JSX.Element {
+export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Element {
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
   const [editingColumn, setEditingColumn] = useState('')
   const [editingCard, setEditingCard] = useState('')
@@ -51,20 +48,11 @@ export default function BoardPage ({ auth, board, columns }: BoardShowProps): JS
         <header className="px-6 pt-8 pb-2 flex justify-between">
           <h1 className="font-bold text-2xl">{board.name}</h1>
           <div className="space-x-2">
-            <button
+            <Link
+              href={route('web.page.board.edit', board.aliasId)}
               className="btn btn-outline btn-sm"
-              onClick={() => {
-                setActiveModal(ActiveModal.EditBoard)
-              }}
-            >Edit
-            </button>
-            <button
-              className="btn btn-outline btn-sm"
-              onClick={() => {
-                setActiveModal(ActiveModal.Collaborators)
-              }}
-            >Collaborators
-            </button>
+              as="button"
+            >Settings</Link>
             <button
               className="btn btn-neutral btn-sm"
               onClick={() => {
@@ -160,12 +148,6 @@ export default function BoardPage ({ auth, board, columns }: BoardShowProps): JS
             setEditingCard('')
           }}
           cardId={editingCard}
-        />
-        <CollaboratorsModal
-          closeHandler={() => {
-            setActiveModal(ActiveModal.None)
-          }}
-          active={activeModal === ActiveModal.Collaborators}
         />
       </section>
     </MainLayout>

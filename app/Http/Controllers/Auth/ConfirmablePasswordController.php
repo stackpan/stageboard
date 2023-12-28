@@ -14,7 +14,7 @@ use Inertia\Response;
 class ConfirmablePasswordController extends Controller
 {
     /**
-     * BoardPage the confirm password view.
+     * Show the confirm password view.
      */
     public function show(): Response
     {
