@@ -1,17 +1,29 @@
-import React, { type JSX, useState } from 'react'
+import React, {type JSX, ReactNode, useState} from 'react'
 import { type Board, type Collaborator, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import { Head, Link } from '@inertiajs/react'
-import GeneralSettingsForm from '@/Pages/Board/Partials/GeneralSettingsForm'
-import CollaborationSettings from '@/Pages/Board/Partials/CollaborationSettings'
+import GeneralBoardSettingsForm from '@/Pages/Board/Partials/GeneralBoardSettingsForm'
+import CollaborationBoardSettings from '@/Pages/Board/Partials/CollaborationBoardSettings'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import DeleteBoardSettings from "@/Pages/Board/Partials/DeleteBoardSettings";
 
-export type EditBoardProps = PageProps<{
+export type BoardSettingsProps = PageProps<{
   board: Board
   collaborators: Collaborator[]
 }>
 
-export default function Edit ({ auth, board }: EditBoardProps): JSX.Element {
+const Content = ({ activeSection }: { activeSection: number }): ReactNode => {
+  switch (activeSection) {
+    case 0:
+      return <GeneralBoardSettingsForm className="max-w-2xl"/>
+    case 1:
+      return <CollaborationBoardSettings className="max-w-2xl"/>
+    case 2:
+      return <DeleteBoardSettings className="max-w-2xl" />
+  }
+}
+
+export default function Settings ({ auth, board }: BoardSettingsProps): JSX.Element {
   const [activeSection, setActiveSection] = useState(0)
 
   return (
@@ -60,12 +72,7 @@ export default function Edit ({ auth, board }: EditBoardProps): JSX.Element {
           </ul>
         </div>
         <div className="flex-1 p-4">
-          {activeSection === 0 && (
-            <GeneralSettingsForm className="max-w-2xl"/>
-          )}
-          {activeSection === 1 && (
-            <CollaborationSettings className="max-w-2xl"/>
-          )}
+          <Content activeSection={activeSection} />
         </div>
       </div>
     </MainLayout>

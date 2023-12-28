@@ -1,14 +1,14 @@
 import React, { type FormEventHandler, type JSX } from 'react'
 import BoardSettingSectionLayout from '@/Layouts/BoardSettingSectionLayout'
 import { useForm, usePage } from '@inertiajs/react'
-import { type EditBoardProps } from '@/Pages/Board/Edit'
+import { type BoardSettingsProps } from '@/Pages/Board/Settings'
 
 interface Props {
   className?: string
 }
 
-export default function GeneralSettingsForm ({ className = '' }: Props): JSX.Element {
-  const { board } = usePage<EditBoardProps>().props
+export default function GeneralBoardSettingsForm ({ className = '' }: Props): JSX.Element {
+  const { board } = usePage<BoardSettingsProps>().props
 
   const { data, setData, patch, errors } = useForm({
     name: board.name

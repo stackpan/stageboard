@@ -9,7 +9,7 @@ export default function BoardSettingSectionLayout ({ name, className = '', child
   return (
     <section className={className}>
       <header>
-        <h2 className="text-2xl">{name}</h2>
+        <h2 className="text-xl">{name}</h2>
         <div className="divider"></div>
       </header>
       <div>{children}</div>

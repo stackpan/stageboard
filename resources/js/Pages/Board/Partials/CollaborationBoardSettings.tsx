@@ -1,20 +1,21 @@
 import React, { type ChangeEvent, type JSX, useRef, useState } from 'react'
 import BoardSettingSectionLayout from '@/Layouts/BoardSettingSectionLayout'
 import { Link, router, usePage } from '@inertiajs/react'
-import { type EditBoardProps } from '@/Pages/Board/Edit'
+import { type BoardSettingsProps } from '@/Pages/Board/Settings'
 import { MinusCircleIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
-import type { User } from '@/types'
+import type {Board, Collaborator, PermissionLevelData, User} from '@/types'
 import axios from 'axios'
 import { PermissionLevel } from '@/Enums'
 import { mapPermissionLevel } from '@/Utils'
+import {permissionLevelData} from "@/Components/Data";
 
 interface Props {
   className?: string
 }
 
-export default function CollaborationSettings ({ className = '' }: Props): JSX.Element {
-  const { board, collaborators, auth } = usePage<EditBoardProps>().props
+export default function CollaborationBoardSettings ({ className = '' }: Props): JSX.Element {
+  const { board, collaborators, auth } = usePage<BoardSettingsProps>().props
 
   const [searchResults, setSearchResults] = useState<User[]>([])
 
@@ -112,41 +113,9 @@ export default function CollaborationSettings ({ className = '' }: Props): JSX.E
                       <div tabIndex={0} role="button"
                            className="btn btn-xs">{mapPermissionLevel(user.permission).label}</div>
                       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-96">
-                        {Object.values(PermissionLevel).map((permission) => {
-                          const permissionLevelData = mapPermissionLevel(permission)
-
-                          const disabled = permission === PermissionLevel.FullAccess
-                          const selected = user.permission === permission
-
-                          return (
-                            <li key={permissionLevelData.label}
-                                className={(selected ? 'bg-base-200' : '') + (disabled ? ' disabled' : '')}>
-                              {!(disabled || selected)
-                                ? (
-                                  <Link
-                                    href={route('web.boards.collaborators.update', board.id)}
-                                    method="patch"
-                                    as="button"
-                                    data={{
-                                      userId: user.id,
-                                      permission
-                                    }}
-                                    className="flex flex-col items-start"
-                                  >
-                                    <p className="font-bold">{permissionLevelData.label}</p>
-                                    <p className="text-gray-500 text-xs">{permissionLevelData.description}</p>
-                                  </Link>
-                                  )
-                                : (
-                                  <div className="flex flex-col items-start">
-                                    <p className="font-bold">{permissionLevelData.label}</p>
-                                    <p className="text-gray-500 text-xs">{permissionLevelData.description}</p>
-                                  </div>
-                                 )
-                              }
-                            </li>
-                          )
-                        })}
+                        {permissionLevelData.map((permission) => (
+                          <PermissionDropdownItem permission={permission} user={user} board={board} />
+                        ))}
                       </ul>
                     </>
                     )
@@ -173,5 +142,43 @@ export default function CollaborationSettings ({ className = '' }: Props): JSX.E
         ))}
       </ul>
     </BoardSettingSectionLayout>
+  )
+}
+
+const PermissionDropdownItem = ({ permission, user, board }: {
+  permission: PermissionLevelData,
+  user: Collaborator,
+  board: Board
+}) => {
+  const disabled = permission.enumeration === PermissionLevel.FullAccess
+  const selected = user.permission === permission.enumeration
+
+  return (
+    <li key={permission.level}
+        className={(selected ? 'bg-base-200' : '') + (disabled ? ' disabled' : '')}>
+      {!(disabled || selected)
+        ? (
+          <Link
+            href={route('web.boards.collaborators.update', board.id)}
+            method="patch"
+            as="button"
+            data={{
+              userId: user.id,
+              permission: permission.enumeration
+            }}
+            className="flex flex-col items-start"
+          >
+            <p className="font-bold">{permission.label}</p>
+            <p className="text-gray-500 text-xs">{permission.description}</p>
+          </Link>
+        )
+        : (
+          <div className="flex flex-col items-start">
+            <p className="font-bold">{permission.label}</p>
+            <p className="text-gray-500 text-xs">{permission.description}</p>
+          </div>
+        )
+      }
+    </li>
   )
 }

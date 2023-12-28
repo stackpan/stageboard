@@ -48,7 +48,7 @@ export default function DeleteUserForm ({ className = '' }: { className?: string
         </p>
       </header>
 
-      <button className="btn btn-error btn-sm" onClick={confirmUserDeletion}>Delete Account</button>
+      <button className="btn btn-error btn-outline btn-sm" onClick={confirmUserDeletion}>Delete Account</button>
 
       <dialog className={'modal !mt-0' + (confirmingUserDeletion && ' modal-open')}>
         <div className="modal-box">

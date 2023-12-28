@@ -44,7 +44,7 @@ class BoardPageController extends Controller
 
         $collaborators = $this->boardCollaborationService->getCollaborators($board);
 
-        return Inertia::render('Board/Edit', [
+        return Inertia::render('Board/Settings', [
             'board' => new BoardResource($board),
             'collaborators' => new UserCollection($collaborators),
         ]);
