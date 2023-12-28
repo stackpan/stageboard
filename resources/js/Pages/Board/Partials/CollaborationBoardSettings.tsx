@@ -4,11 +4,10 @@ import { Link, router, usePage } from '@inertiajs/react'
 import { type BoardSettingsProps } from '@/Pages/Board/Settings'
 import { MinusCircleIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
-import type {Board, Collaborator, PermissionLevelData, User} from '@/types'
+import type {Board, Collaborator, User} from '@/types'
 import axios from 'axios'
-import { PermissionLevel } from '@/Enums'
-import { mapPermissionLevel } from '@/Utils'
-import {permissionLevelData} from "@/Components/Data";
+import { Permission } from '@/Enums'
+import { mapPermission } from '@/Utils'
 
 interface Props {
   className?: string
@@ -107,19 +106,19 @@ export default function CollaborationBoardSettings ({ className = '' }: Props): 
             </div>
             <div className="flex gap-4">
               <div className="dropdown dropdown-end">
-                {user.permission !== PermissionLevel.FullAccess
+                {user.permission !== Permission.FullAccess
                   ? (
                     <>
                       <div tabIndex={0} role="button"
-                           className="btn btn-xs">{mapPermissionLevel(user.permission).label}</div>
+                           className="btn btn-xs">{mapPermission(user.permission).label}</div>
                       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-96">
-                        {permissionLevelData.map((permission) => (
-                          <PermissionDropdownItem permission={permission} user={user} board={board} />
+                        {Object.values(Permission).map((permission) => (
+                          <PermissionDropdownItem key={permission} permission={permission} user={user} board={board} />
                         ))}
                       </ul>
                     </>
                     )
-                  : <div className="btn btn-xs cursor-default">{mapPermissionLevel(user.permission).label}</div>
+                  : <div className="btn btn-xs cursor-default">{mapPermission(user.permission).label}</div>
                 }
               </div>
               {(auth.user.id === board.user.id && user.id !== board.user.id) && (
@@ -146,16 +145,17 @@ export default function CollaborationBoardSettings ({ className = '' }: Props): 
 }
 
 const PermissionDropdownItem = ({ permission, user, board }: {
-  permission: PermissionLevelData,
+  permission: Permission,
   user: Collaborator,
   board: Board
 }) => {
-  const disabled = permission.enumeration === PermissionLevel.FullAccess
-  const selected = user.permission === permission.enumeration
+  const permissionData = mapPermission(permission)
+
+  const disabled = permissionData.enumeration === Permission.FullAccess
+  const selected = user.permission === permissionData.enumeration
 
   return (
-    <li key={permission.level}
-        className={(selected ? 'bg-base-200' : '') + (disabled ? ' disabled' : '')}>
+    <li className={(selected ? 'bg-base-200' : '') + (disabled ? ' disabled' : '')}>
       {!(disabled || selected)
         ? (
           <Link
@@ -164,18 +164,18 @@ const PermissionDropdownItem = ({ permission, user, board }: {
             as="button"
             data={{
               userId: user.id,
-              permission: permission.enumeration
+              permission: permissionData.enumeration
             }}
             className="flex flex-col items-start"
           >
-            <p className="font-bold">{permission.label}</p>
-            <p className="text-gray-500 text-xs">{permission.description}</p>
+            <p className="font-bold">{permissionData.label}</p>
+            <p className="text-gray-500 text-xs">{permissionData.description}</p>
           </Link>
         )
         : (
           <div className="flex flex-col items-start">
-            <p className="font-bold">{permission.label}</p>
-            <p className="text-gray-500 text-xs">{permission.description}</p>
+            <p className="font-bold">{permissionData.label}</p>
+            <p className="text-gray-500 text-xs">{permissionData.description}</p>
           </div>
         )
       }

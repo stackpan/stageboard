@@ -1,4 +1,4 @@
-import { type CardColor, type ColumnColor, type PermissionLevel } from '@/Enums'
+import { type CardColor, type ColumnColor, type Permission } from '@/Enums'
 
 export interface User {
   id: string
@@ -10,7 +10,7 @@ export interface User {
 }
 
 type Collaborator = User & {
-  permission: PermissionLevel
+  permission: Permission
 }
 
 export interface Board {
@@ -48,7 +48,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 }
 
 export interface PermissionLevelData {
-  enumeration: PermissionLevel
+  enumeration: Permission
   label: string
   description: string
   level: number

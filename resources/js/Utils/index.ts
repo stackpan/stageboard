@@ -1,8 +1,11 @@
-import { type PermissionLevel } from '@/Enums'
-import { permissionLevelData } from '@/Components/Data'
+import { type Permission } from '@/Enums'
 import { type PermissionLevelData } from '@/types'
+import { permissionData } from "@/Components/Data";
 
-export const mapPermissionLevel = (enumeration: PermissionLevel): PermissionLevelData => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return permissionLevelData.find(value => value.enumeration === enumeration)!
+export const mapPermission = (enumeration: Permission): PermissionLevelData => {
+  return permissionData[enumeration]
+}
+
+export const getPermissionLevel = (enumeration: Permission): number => {
+  return mapPermission(enumeration).level
 }

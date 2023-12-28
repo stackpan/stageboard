@@ -1,9 +1,9 @@
 import ColumnCard from '@/Components/ColumnCard'
-import { ColumnPosition } from '@/Enums'
+import {ColumnPosition, Permission} from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
-import { type Board, type Card, type Column, type PageProps, type User } from '@/types'
-import { Head, Link, router } from '@inertiajs/react'
-import React, { type JSX, useState } from 'react'
+import {type Board, type Card, type Column, type PageProps} from '@/types'
+import {Head, Link, router} from '@inertiajs/react'
+import React, {type JSX, useState} from 'react'
 
 import CreateColumnModal from '@/Components/Modal/CreateColumnModal'
 import EditColumnModal from '@/Components/Modal/EditColumnModal'
@@ -11,10 +11,12 @@ import CreateCardModal from '@/Components/Modal/CreateCardModal'
 import EditCardModal from '@/Components/Modal/EditCardModal'
 import TaskCard from '@/Components/TaskCard'
 import EditBoardModal from '@/Components/Modal/EditBoardModal'
+import {getPermissionLevel} from "@/Utils";
 
 export type BoardShowProps = PageProps<{
   board: Board
   columns: ColumnWithCards[]
+  permission: Permission
 }>
 
 type ColumnWithCards = Column & { cards: Card[] }
@@ -28,12 +30,14 @@ enum ActiveModal {
   EditCard,
 }
 
-export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Element {
+export default function Show ({ auth, board, columns, permission }: BoardShowProps): JSX.Element {
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
   const [editingColumn, setEditingColumn] = useState('')
   const [editingCard, setEditingCard] = useState('')
 
   const sortedColumns = columns.toSorted((a, b) => a.order - b.order)
+
+  const permissionLevel = getPermissionLevel(permission)
 
   const getColumnPosition = (order: number): ColumnPosition => {
     if (order === 0) return ColumnPosition.First
@@ -48,18 +52,22 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
         <header className="px-6 pt-8 pb-2 flex justify-between">
           <h1 className="font-bold text-2xl">{board.name}</h1>
           <div className="space-x-2">
-            <Link
-              href={route('web.page.board.edit', board.aliasId)}
-              className="btn btn-outline btn-sm"
-              as="button"
-            >Settings</Link>
-            <button
-              className="btn btn-neutral btn-sm"
-              onClick={() => {
-                setActiveModal(ActiveModal.CreateColumn)
-              }}
-            >Add Column
-            </button>
+            {permissionLevel <= getPermissionLevel(Permission.FullAccess) && (
+              <Link
+                href={route('web.page.board.edit', board.aliasId)}
+                className="btn btn-outline btn-sm"
+                as="button"
+              >Settings</Link>
+            )}
+            {permissionLevel <= getPermissionLevel(Permission.LimitedAccess) && (
+              <button
+                className="btn btn-neutral btn-sm"
+                onClick={() => {
+                  setActiveModal(ActiveModal.CreateColumn)
+                }}
+              >Add Column
+              </button>
+            )}
           </div>
         </header>
         <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-auto">
@@ -87,6 +95,7 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
                 position={getColumnPosition(column.order)}
                 cards={column.cards}
                 color={column.color}
+                permissionLevel={permissionLevel}
                 clickEditHandler={(id) => {
                   setEditingColumn(id)
                   setActiveModal(ActiveModal.EditColumn)
@@ -103,6 +112,7 @@ export default function Show ({ auth, board, columns }: BoardShowProps): JSX.Ele
                   color={card.color}
                   columnId={column.id}
                   columnPosition={getColumnPosition(column.order)}
+                  permissionLevel={permissionLevel}
                   clickEditHandler={(id) => {
                     setEditingCard(id)
                     setActiveModal(ActiveModal.EditCard)

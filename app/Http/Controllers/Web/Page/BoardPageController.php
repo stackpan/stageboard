@@ -33,7 +33,8 @@ class BoardPageController extends Controller
 
         return Inertia::render('Board/Show', [
             'board' => new BoardResource($board, false),
-            'columns' => new ColumnCollection($board->columns)
+            'columns' => new ColumnCollection($board->columns),
+            'permission' => $board->getUserPermission($request->user())
         ]);
     }
 

@@ -33,7 +33,7 @@ export enum SwapDirection {
   Right = 1
 }
 
-export enum PermissionLevel {
+export enum Permission {
   FullAccess = 'FULL_ACCESS',
   LimitedAccess = 'LIMITED_ACCESS',
   CardOperator = 'CARD_OPERATOR',
