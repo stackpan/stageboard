@@ -11,6 +11,7 @@ import CreateCardModal from '@/Components/Modal/CreateCardModal'
 import EditCardModal from '@/Components/Modal/EditCardModal'
 import TaskCard from '@/Components/TaskCard'
 import { getPermissionLevel } from '@/Utils'
+import ActiveUser from '@/Components/ActiveUser'
 
 export type BoardShowProps = PageProps<{
   board: Board
@@ -49,23 +50,26 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
       <section className="flex-1 flex flex-col">
         <header className="px-6 pt-8 pb-2 flex justify-between">
           <h1 className="font-bold text-2xl">{board.name}</h1>
-          <div className="space-x-2">
-            {permissionLevel <= getPermissionLevel(Permission.FullAccess) && (
-              <Link
-                href={route('web.page.board.edit', board.aliasId)}
-                className="btn btn-outline btn-sm"
-                as="button"
-              >Settings</Link>
-            )}
-            {permissionLevel <= getPermissionLevel(Permission.LimitedAccess) && (
-              <button
-                className="btn btn-neutral btn-sm"
-                onClick={() => {
-                  setActiveModal(ActiveModal.CreateColumn)
-                }}
-              >Add Column
-              </button>
-            )}
+          <div className="flex gap-4 items-center">
+            <ActiveUser />
+            <div className="space-x-2">
+              {permissionLevel <= getPermissionLevel(Permission.FullAccess) && (
+                <Link
+                  href={route('web.page.board.edit', board.aliasId)}
+                  className="btn btn-outline btn-sm"
+                  as="button"
+                >Settings</Link>
+              )}
+              {permissionLevel <= getPermissionLevel(Permission.LimitedAccess) && (
+                <button
+                  className="btn btn-neutral btn-sm"
+                  onClick={() => {
+                    setActiveModal(ActiveModal.CreateColumn)
+                  }}
+                >Add Column
+                </button>
+              )}
+            </div>
           </div>
         </header>
         <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-x-auto overflow-y-hidden">

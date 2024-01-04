@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\UserResource;
 use App\Models\Board;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
@@ -36,7 +37,7 @@ class BoardOpenedEvent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new Channel('board.' . $this->board->id),
         ];
     }
 }
