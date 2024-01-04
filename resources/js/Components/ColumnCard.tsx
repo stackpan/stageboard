@@ -1,10 +1,10 @@
-import {EllipsisVerticalIcon, PlusIcon} from '@heroicons/react/24/outline'
-import React, {type PropsWithChildren} from 'react'
-import {type Card} from '@/types'
-import {type ColumnColor, ColumnPosition, Permission, SwapDirection} from '@/Enums'
-import {convertToBackgroundColor} from '@/Utils/color'
-import {router} from '@inertiajs/react'
-import {getPermissionLevel} from "@/Utils";
+import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
+import React, { type PropsWithChildren } from 'react'
+import { type Card } from '@/types'
+import { type ColumnColor, ColumnPosition, Permission, SwapDirection } from '@/Enums'
+import { convertToBackgroundColor } from '@/Utils/color'
+import { router } from '@inertiajs/react'
+import { getPermissionLevel } from '@/Utils'
 
 interface Props {
   columnId: string
