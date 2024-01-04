@@ -1,5 +1,5 @@
 import { EllipsisVerticalIcon, PlusIcon } from '@heroicons/react/24/outline'
-import React, { type PropsWithChildren } from 'react'
+import React, { type PropsWithChildren, type JSX } from 'react'
 import { type Card } from '@/types'
 import { type ColumnColor, ColumnPosition, Permission, SwapDirection } from '@/Enums'
 import { convertToBackgroundColor } from '@/Utils/color'

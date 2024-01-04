@@ -1,9 +1,8 @@
-import React, { type ChangeEvent, type FormEvent, useEffect } from 'react'
+import React, { type ChangeEvent, type FormEvent, type JSX } from 'react'
 import { ColumnColor } from '@/Enums'
 import { convertToBackgroundColor } from '@/Utils/color'
 import { router, useForm, usePage } from '@inertiajs/react'
 import { type BoardShowProps } from '@/Pages/Board/Show'
-import { getRandomColumnColor } from '@/Utils/random'
 
 interface Props {
   active: boolean
@@ -21,15 +20,6 @@ export default function CreateColumnModal ({
     order: columns.length,
     color: ColumnColor.Red
   })
-
-  useEffect(() => {
-    if (active) {
-      setData((previousData) => ({
-        ...previousData,
-        color: getRandomColumnColor()
-      }))
-    }
-  }, [active])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()

@@ -10,7 +10,6 @@ import EditColumnModal from '@/Components/Modal/EditColumnModal'
 import CreateCardModal from '@/Components/Modal/CreateCardModal'
 import EditCardModal from '@/Components/Modal/EditCardModal'
 import TaskCard from '@/Components/TaskCard'
-import EditBoardModal from '@/Components/Modal/EditBoardModal'
 import { getPermissionLevel } from '@/Utils'
 
 export type BoardShowProps = PageProps<{
@@ -23,7 +22,6 @@ type ColumnWithCards = Column & { cards: Card[] }
 
 enum ActiveModal {
   None,
-  EditBoard,
   CreateColumn,
   EditColumn,
   CreateCard,
@@ -123,13 +121,6 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
             ))
           }
         </div>
-        <EditBoardModal
-          active={activeModal === ActiveModal.EditBoard}
-          closeHandler={() => {
-            setActiveModal(ActiveModal.None)
-          }}
-          boardId={board.id}
-        />
         <CreateColumnModal
           active={activeModal === ActiveModal.CreateColumn}
           closeHandler={() => {

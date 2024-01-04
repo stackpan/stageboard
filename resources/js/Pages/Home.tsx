@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, type JSX } from 'react'
 import { Head, router } from '@inertiajs/react'
 import { type Board, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
 import BoardTable from '@/Components/BoardTable'
 import CreateBoardModal from '@/Components/Modal/CreateBoardModal'
-import EditBoardModal from '@/Components/Modal/EditBoardModal'
 import { checkIsLastOfHours, differenceByMillis } from '@/Utils/datetime'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 
@@ -15,13 +14,11 @@ export type HomePageProps = PageProps<{
 
 enum ActiveModal {
   None,
-  CreateBoard,
-  EditBoard
+  CreateBoard
 }
 
 export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
-  const [updatingBoard, setUpdatingBoard] = useState('')
 
   const recentBoards = boards
     .filter(value => checkIsLastOfHours(value.openedAt, 24))
@@ -32,11 +29,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
     router.delete(route('web.boards.destroy', id))
   }
 
-  const editBoardModal = (id: string): void => {
-    setActiveModal(ActiveModal.EditBoard)
-    setUpdatingBoard(id)
-  }
-
   return (
     <MainLayout user={auth.user}>
       <Head title="Home"/>
@@ -45,7 +37,7 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
           <header className="px-6 py-2">
             <h2>Recent Boards</h2>
           </header>
-          <div className="px-6 py-9 flex flex-row gap-4 overflow-x-auto">
+          <div className="px-6 pt-4 pb-10 flex flex-row gap-4 overflow-x-auto">
             {recentBoards.map((board) => (
               <BoardCard
                 key={board.id}
@@ -55,7 +47,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
                 owner={board.user.name + (board.user.id === auth.user.id ? ' (You)' : '')}
                 thumbnailUrl={board.thumbnailUrl}
                 openedAt={board.openedAt}
-                onClickEditHandler={editBoardModal}
                 onClickDeleteHandler={handleDelete}
               />
             ))}
@@ -78,7 +69,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
             <div className="py-2 space-y-4">
               <div>
                 <BoardTable
-                  onClickEditHandler={editBoardModal}
                   onClickDeleteHandler={handleDelete}
                 />
               </div>
@@ -106,14 +96,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
         closeHandler={() => {
           setActiveModal(ActiveModal.None)
         }}
-      />
-      <EditBoardModal
-        active={activeModal === ActiveModal.EditBoard}
-        closeHandler={() => {
-          setActiveModal(ActiveModal.None)
-          setUpdatingBoard('')
-        }}
-        boardId={updatingBoard}
       />
     </MainLayout>
   )

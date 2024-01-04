@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, type FormEvent } from 'react'
+import React, { type ChangeEvent, type FormEvent, type JSX } from 'react'
 import { CardColor } from '@/Enums'
 import { convertToBackgroundColor } from '@/Utils/color'
 import { router, useForm } from '@inertiajs/react'
@@ -16,7 +16,7 @@ export default function CreateCardModal ({
 }: Props): JSX.Element {
   const { data, setData, post, processing, reset } = useForm({
     body: '',
-    color: CardColor.Blue
+    color: CardColor.Stone
   })
 
   const handleChangeBody = (e: ChangeEvent<HTMLTextAreaElement>): void => {
@@ -77,7 +77,7 @@ export default function CreateCardModal ({
             ></textarea>
           </div>
           <div className="flex gap-2">
-            {Object.values(CardColor).map((color, index) => (
+            {Object.values(CardColor).map((color) => (
               <button
                 key={color}
                 className={`w-6 h-6 rounded-full border-4 ${color === data.color ? 'border-gray-600' : ''}`}

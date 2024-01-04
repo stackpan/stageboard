@@ -1,11 +1,11 @@
-import React, {type JSX, ReactNode, useState} from 'react'
+import React, { type JSX, type ReactNode, useState } from 'react'
 import { type Board, type Collaborator, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
-import { Head, Link } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import GeneralBoardSettingsForm from '@/Pages/Board/Partials/GeneralBoardSettingsForm'
 import CollaborationBoardSettings from '@/Pages/Board/Partials/CollaborationBoardSettings'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import DeleteBoardSettings from "@/Pages/Board/Partials/DeleteBoardSettings";
+import DeleteBoardSettings from '@/Pages/Board/Partials/DeleteBoardSettings'
 
 export type BoardSettingsProps = PageProps<{
   board: Board
@@ -33,14 +33,13 @@ export default function Settings ({ auth, board }: BoardSettingsProps): JSX.Elem
       <div className="flex">
         <div>
           <div className="mx-3 my-4">
-            <Link
-              href={route('web.page.board.show', board.aliasId)}
-              as="button"
+            <button
+              onClick={() => { window.history.back() }}
               className="btn btn-ghost btn-sm text-gray-600"
             >
               <ArrowLeftIcon className="w-4" />
               <span>Back</span>
-            </Link>
+            </button>
           </div>
           <ul className="menu w-96 rounded-box">
             <li>

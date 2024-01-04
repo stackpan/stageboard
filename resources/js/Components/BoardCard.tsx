@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { type JSX } from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { formatFromNow } from '@/Utils/datetime'
-import { router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 
 interface Props {
   id: string
@@ -10,11 +10,10 @@ interface Props {
   thumbnailUrl: string
   owner: string
   openedAt: string
-  onClickEditHandler: (id: string) => void
   onClickDeleteHandler: (id: string) => void
 }
 
-export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, openedAt, onClickEditHandler, onClickDeleteHandler }: Props): JSX.Element {
+export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, openedAt, onClickDeleteHandler }: Props): JSX.Element {
   return (
     <div className="card card-compact w-72 bg-base-100 shadow-md flex-none">
       <figure onClick={() => { router.get(route('web.page.board.show', aliasId)) }} className="cursor-pointer h-32">
@@ -32,7 +31,7 @@ export default function BoardCard ({ id, aliasId, name, thumbnailUrl, owner, ope
             </div>
             <ul className="p-0 shadow menu menu-sm dropdown-content z-10 bg-base-100 rounded-box w-36">
               <li><a target="_blank" href={route('web.page.board.show', aliasId)} rel="noreferrer">Open in New Tab</a></li>
-              <li><button onClick={() => { onClickEditHandler(id) }}>Edit</button></li>
+              <li><Link as="button" href={route('web.page.board.edit', aliasId)}>Edit</Link></li>
               <li><button onClick={() => { onClickDeleteHandler(id) }} className="text-error">Delete</button></li>
             </ul>
           </div>

@@ -1,16 +1,15 @@
-import React from 'react'
+import React, { type JSX } from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { formatFromNow, formatToDate } from '@/Utils/datetime'
 import { type Board } from '@/types'
-import { router, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import { type HomePageProps } from '@/Pages/Home'
 
 interface Props {
-  onClickEditHandler: (id: string) => void
   onClickDeleteHandler: (id: string) => void
 }
 
-export default function BoardTable ({ onClickEditHandler, onClickDeleteHandler }: Props): JSX.Element {
+export default function BoardTable ({ onClickDeleteHandler }: Props): JSX.Element {
   const { auth, boards } = usePage<HomePageProps>().props
 
   const handleVisit = (board: Board): void => {
@@ -43,7 +42,7 @@ export default function BoardTable ({ onClickEditHandler, onClickDeleteHandler }
                   </div>
                   <ul className="p-0 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-36">
                     <li><a target="_blank" href={route('web.page.board.show', board.aliasId)} rel="noreferrer">Open in New Tab</a></li>
-                    <li><button onClick={() => { onClickEditHandler(board.id) }}>Edit</button></li>
+                    <li><Link as="button" href={route('web.page.board.edit', board.aliasId)}>Edit</Link></li>
                     <li><button onClick={() => { onClickDeleteHandler(board.id) }} className="text-error">Delete</button></li>
                   </ul>
                 </div>
