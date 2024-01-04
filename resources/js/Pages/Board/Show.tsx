@@ -1,9 +1,9 @@
 import ColumnCard from '@/Components/ColumnCard'
-import {ColumnPosition, Permission} from '@/Enums'
+import { ColumnPosition, Permission } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
-import {type Board, type Card, type Column, type PageProps} from '@/types'
-import {Head, Link, router} from '@inertiajs/react'
-import React, {type JSX, useState} from 'react'
+import { type Board, type Card, type Column, type PageProps } from '@/types'
+import { Head, Link, router } from '@inertiajs/react'
+import React, { type JSX, useState } from 'react'
 
 import CreateColumnModal from '@/Components/Modal/CreateColumnModal'
 import EditColumnModal from '@/Components/Modal/EditColumnModal'
@@ -11,7 +11,7 @@ import CreateCardModal from '@/Components/Modal/CreateCardModal'
 import EditCardModal from '@/Components/Modal/EditCardModal'
 import TaskCard from '@/Components/TaskCard'
 import EditBoardModal from '@/Components/Modal/EditBoardModal'
-import {getPermissionLevel} from "@/Utils";
+import { getPermissionLevel } from '@/Utils'
 
 export type BoardShowProps = PageProps<{
   board: Board
@@ -70,7 +70,7 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
             )}
           </div>
         </header>
-        <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-auto">
+        <div className="p-6 flex gap-4 items-start flex-1 flex-nowrap overflow-x-auto overflow-y-hidden">
           {columns.length === 0
             ? (
               <div className="flex-1 self-stretch flex flex-col gap-4 justify-center items-center">
