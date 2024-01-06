@@ -1,5 +1,5 @@
 import React, { useState, type JSX } from 'react'
-import { Head, router } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import { type Board, type PageProps } from '@/types'
 import MainLayout from '@/Layouts/MainLayout'
 import BoardCard from '@/Components/BoardCard'
@@ -25,10 +25,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
     .toSorted((a, b) => differenceByMillis(a.openedAt, b.openedAt))
     .slice(0, 7)
 
-  const handleDelete = (id: string): void => {
-    router.delete(route('web.boards.destroy', id))
-  }
-
   return (
     <MainLayout user={auth.user}>
       <Head title="Home"/>
@@ -47,7 +43,6 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
                 owner={board.user.name + (board.user.id === auth.user.id ? ' (You)' : '')}
                 thumbnailUrl={board.thumbnailUrl}
                 openedAt={board.openedAt}
-                onClickDeleteHandler={handleDelete}
               />
             ))}
           </div>
@@ -68,9 +63,7 @@ export default function Home ({ auth, boards }: HomePageProps): JSX.Element {
             </header>
             <div className="py-2 space-y-4">
               <div>
-                <BoardTable
-                  onClickDeleteHandler={handleDelete}
-                />
+                <BoardTable />
               </div>
             </div>
           </section>
