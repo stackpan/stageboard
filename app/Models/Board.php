@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BoardPermission;
+use App\Events\BoardChangedEvent;
 use App\Events\BoardCreated;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

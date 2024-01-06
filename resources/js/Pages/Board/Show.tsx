@@ -1,9 +1,9 @@
 import ColumnCard from '@/Components/ColumnCard'
 import { ColumnPosition, Permission } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
-import { type Board, type Card, type Column, type PageProps } from '@/types'
+import { type Board, type Card, type Column, type PageProps, type User } from '@/types'
 import { Head, Link, router } from '@inertiajs/react'
-import React, { type JSX, useState } from 'react'
+import React, { type JSX, useEffect, useState } from 'react'
 
 import CreateColumnModal from '@/Components/Modal/CreateColumnModal'
 import EditColumnModal from '@/Components/Modal/EditColumnModal'
@@ -33,10 +33,41 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
   const [editingColumn, setEditingColumn] = useState('')
   const [editingCard, setEditingCard] = useState('')
+  const [activeUsers, setActiveUsers] = useState<User[]>([])
 
   const sortedColumns = columns.toSorted((a, b) => a.order - b.order)
 
   const permissionLevel = getPermissionLevel(permission)
+
+  useEffect(() => {
+    window.Echo.join(`board.${board.id}`)
+      .here((users: User[]) => {
+        setActiveUsers(users.filter((user) => user.id !== auth.user.id))
+      })
+      .joining((user: User) => {
+        // setActiveUsers((prev) => {
+        //   if (prev.find((item) => item.id === user.id) === undefined) {
+        //     prev.push(user)
+        //   }
+        //   return prev
+        // })
+        router.reload()
+      })
+      .leaving((user: User) => {
+        // setActiveUsers((prev) => prev.filter((item) => item.id === user.id))
+        router.reload()
+      })
+      .error((error: User) => {
+        console.error(error)
+      })
+  }, [])
+
+  useEffect(() => {
+    window.Echo.private(`board.${board.id}`)
+      .listen('BoardChangedEvent', (e: any) => {
+        router.reload()
+      })
+  }, [])
 
   const getColumnPosition = (order: number): ColumnPosition => {
     if (order === 0) return ColumnPosition.First
@@ -51,7 +82,7 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
         <header className="px-6 pt-8 pb-2 flex justify-between">
           <h1 className="font-bold text-2xl">{board.name}</h1>
           <div className="flex gap-4 items-center">
-            <ActiveUser />
+            <ActiveUser users={activeUsers} />
             <div className="space-x-2">
               {permissionLevel <= getPermissionLevel(Permission.FullAccess) && (
                 <Link

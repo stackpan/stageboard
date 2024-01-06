@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Board;
+use App\Models\Card;
+use App\Models\Column;
+use App\Observers\BoardObserver;
+use App\Observers\CardObserver;
+use App\Observers\ColumnObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -41,4 +47,10 @@ class EventServiceProvider extends ServiceProvider
             $this->app->path('Listeners'),
         ];
     }
+
+    protected $observers = [
+        Board::class => [BoardObserver::class],
+        Column::class => [ColumnObserver::class],
+        Card::class => [CardObserver::class]
+    ];
 }
