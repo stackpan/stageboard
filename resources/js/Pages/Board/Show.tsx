@@ -29,10 +29,16 @@ enum ActiveModal {
   EditCard,
 }
 
+interface Presence {
+  createdAt: number
+  users: User[]
+}
+
 export default function Show ({ auth, board, columns, permission }: BoardShowProps): JSX.Element {
   const [activeModal, setActiveModal] = useState(ActiveModal.None)
   const [editingColumn, setEditingColumn] = useState('')
   const [editingCard, setEditingCard] = useState('')
+
   const [activeUsers, setActiveUsers] = useState<User[]>([])
 
   const sortedColumns = columns.toSorted((a, b) => a.order - b.order)
@@ -40,34 +46,43 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
   const permissionLevel = getPermissionLevel(permission)
 
   useEffect(() => {
+    const presenceLocalStorage = window.sessionStorage.getItem(`board.${board.id}.presence`)
+    if (presenceLocalStorage !== null) {
+      const parsed: Presence = JSON.parse(presenceLocalStorage)
+      setActiveUsers(parsed.users)
+    }
+
     window.Echo.join(`board.${board.id}`)
       .here((users: User[]) => {
         setActiveUsers(users.filter((user) => user.id !== auth.user.id))
       })
       .joining((user: User) => {
-        // setActiveUsers((prev) => {
-        //   if (prev.find((item) => item.id === user.id) === undefined) {
-        //     prev.push(user)
-        //   }
-        //   return prev
-        // })
-        router.reload()
+        setActiveUsers((prev) => {
+          if (prev.find((item) => item.id === user.id) === undefined) {
+            prev.push(user)
+          }
+          return prev
+        })
       })
       .leaving((user: User) => {
-        // setActiveUsers((prev) => prev.filter((item) => item.id === user.id))
-        router.reload()
+        setActiveUsers((prev) => prev.filter((item) => item.id === user.id))
       })
       .error((error: User) => {
         console.error(error)
       })
-  }, [])
 
-  useEffect(() => {
     window.Echo.private(`board.${board.id}`)
       .listen('BoardChangedEvent', (e: any) => {
         router.reload()
       })
   }, [])
+
+  useEffect(() => {
+    window.sessionStorage.setItem(`board.${board.id}.presence`, JSON.stringify({
+      createdAt: Date.now(),
+      users: activeUsers
+    }))
+  }, [activeUsers])
 
   const getColumnPosition = (order: number): ColumnPosition => {
     if (order === 0) return ColumnPosition.First
