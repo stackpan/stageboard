@@ -54,7 +54,7 @@ export default function ColumnCard ({
 
   return (
     <div className="flex-none card card-compact w-80 mb-8 bg-base-100 shadow-md border border-neutral rounded space-y-4">
-      <div className="h-2" style={convertToBackgroundColor(color)}></div>
+      <div className="h-2 rounded-t" style={convertToBackgroundColor(color)}></div>
       <div className="card-body !mt-0">
         <div className="flex justify-between items-start">
           <h2 className="card-title">{name}</h2>
