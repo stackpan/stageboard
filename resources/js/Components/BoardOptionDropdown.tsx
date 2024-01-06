@@ -20,10 +20,10 @@ export default function BoardOptionDropdown ({ boardId, boardAliasId, className 
         <li onClick={(e) => { e.stopPropagation() }}>
           <a target="_blank" href={route('web.page.board.show', boardAliasId)} rel="noreferrer">Open in New Tab</a>
         </li>
-        <li>
+        <li onClick={(e) => { e.stopPropagation() }}>
           <Link as="button" href={route('web.page.board.edit', boardAliasId)}>Edit</Link>
         </li>
-        <li>
+        <li onClick={(e) => { e.stopPropagation() }}>
           <Link
             as="button"
             method="delete"
