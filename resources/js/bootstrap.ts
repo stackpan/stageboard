@@ -11,6 +11,8 @@ import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 
 window.axios = axios
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 window.Pusher = Pusher
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
