@@ -1,7 +1,7 @@
-import React, {type JSX, useState} from 'react'
+import React, { type JSX, useState } from 'react'
 import BoardSettingSectionLayout from '@/Layouts/BoardSettingSectionLayout'
-import {Link, router, usePage} from "@inertiajs/react";
-import {BoardSettingsProps} from "@/Pages/Board/Settings";
+import { router, usePage } from '@inertiajs/react'
+import { type BoardSettingsProps } from '@/Pages/Board/Settings'
 
 interface Props {
   className?: string
@@ -12,7 +12,7 @@ export default function DeleteBoardSettings ({ className = '' }: Props): JSX.Ele
 
   const [activeModal, setActiveModal] = useState(false)
 
-  const handleDeleteConfirmation = () => {
+  const handleDeleteConfirmation = (): void => {
     router.visit(route('web.page.home'), {
       onFinish: () => {
         router.delete(route('web.boards.destroy', board.id))

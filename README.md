@@ -17,7 +17,7 @@ This project was built using [Laravel](https://laravel.com) and [ReactJS](https:
 ![Move card illustration](docs/img/move-card-illustration.png)
 - Swap Column Order
 ![Swap column illustration](docs/img/swap-column-illustration.png)
-- Collaboration with **realtime** changes and permission management
+- Collaboration with **realtime** changes and Level Based Access Control permission management
 ![Permission level](docs/img/permission-level.png)
 ![Permission table](docs/img/permission-table.png)
 
