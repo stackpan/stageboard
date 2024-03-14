@@ -18,6 +18,7 @@ export interface Board {
   aliasId: string
   name: string
   thumbnailUrl: string
+  isPublic: boolean
   openedAt: string
   createdAt: string
   updatedAt: string

@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(!$this->app->isProduction());
 
-//        if ($this->app->isLocal()) $this->app->register(IdeHelperServiceProvider::class);
+        if ($this->app->isLocal()) $this->app->register(IdeHelperServiceProvider::class);
 
         $this->app->singleton(BoardRepository::class, BoardRepositoryImpl::class);
         $this->app->singleton(ColumnRepository::class, ColumnRepositoryImpl::class);

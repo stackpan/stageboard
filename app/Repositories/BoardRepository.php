@@ -2,7 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Dto\BoardDto;
+use App\Dto\CreateBoardDto;
+use App\Dto\UpdateBoardDto;
 use App\Enums\BoardPermission;
 use App\Models\Board;
 use App\Models\User;
@@ -12,13 +13,13 @@ interface BoardRepository
 {
     public function getAllByUser(User $user): Collection;
 
-    public function create(User $user, BoardDto $data): Board;
+    public function create(User $user, CreateBoardDto $data): Board;
 
     public function getById(string $id, ?array $columns): ?Board;
 
     public function getByAliasId(string $aliasId, ?array $columns): ?Board;
 
-    public function update(Board $board, BoardDto $data): void;
+    public function update(Board $board, UpdateBoardDto $data): void;
 
     public function delete(Board $board): void;
 

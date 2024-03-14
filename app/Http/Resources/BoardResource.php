@@ -26,6 +26,7 @@ class BoardResource extends JsonResource
             'id' => $this->id,
             'aliasId' => $this->alias_id,
             'name' => $this->name,
+            'isPublic' => $this->is_public,
             'createdAt' => $this->whenHas('created_at'),
             'updatedAt' => $this->whenHas('updated_at'),
             'thumbnailUrl' => $this->whenHas('thumbnail_url'),

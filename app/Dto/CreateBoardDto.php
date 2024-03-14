@@ -2,7 +2,8 @@
 
 namespace App\Dto;
 
-class BoardDto {
+class CreateBoardDto
+{
     public function __construct(
         public readonly string $name,
     )

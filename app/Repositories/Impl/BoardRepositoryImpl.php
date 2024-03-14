@@ -2,9 +2,10 @@
 
 namespace App\Repositories\Impl;
 
+use App\Dto\UpdateBoardDto;
 use App\Enums\BoardPermission;
 use App\Models\User;
-use App\Dto\BoardDto;
+use App\Dto\CreateBoardDto;
 use App\Models\Board;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Repositories\BoardRepository;
@@ -25,7 +26,7 @@ class BoardRepositoryImpl implements BoardRepository
             ->get();
     }
 
-    public function create(User $user, BoardDto $data): Board
+    public function create(User $user, CreateBoardDto $data): Board
     {
         $aliasId = $this->generateAliasId();
 
@@ -64,11 +65,9 @@ class BoardRepositoryImpl implements BoardRepository
         return $query->firstOrFail();
     }
 
-    public function update(Board $board, BoardDto $data): void
+    public function update(Board $board, UpdateBoardDto $data): void
     {
-        $board->update([
-                'name' => $data->name,
-            ]);
+        $board->update([ 'name' => $data->name, 'is_public' => $data->isPublic ]);
     }
 
     public function delete(Board $board): void

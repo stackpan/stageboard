@@ -1,4 +1,5 @@
 import { Permission } from '@/Enums'
+
 export const permissionData = {
   FULL_ACCESS: {
     enumeration: Permission.FullAccess,

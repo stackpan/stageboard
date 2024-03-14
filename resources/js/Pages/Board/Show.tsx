@@ -1,7 +1,7 @@
 import ColumnCard from '@/Components/ColumnCard'
 import { ColumnPosition, Permission } from '@/Enums'
 import MainLayout from '@/Layouts/MainLayout'
-import { type Board, type Card, type Column, type PageProps, type User } from '@/types'
+import { type Board, type Card, type Column, type User } from '@/types'
 import { Head, Link, router } from '@inertiajs/react'
 import React, { type JSX, useEffect, useState } from 'react'
 
@@ -12,12 +12,14 @@ import EditCardModal from '@/Components/Modal/EditCardModal'
 import TaskCard from '@/Components/TaskCard'
 import { getPermissionLevel } from '@/Utils'
 import ActiveUser from '@/Components/ActiveUser'
+import GuestableMainLayout from '@/Layouts/GuestableMainLayout'
 
-export type BoardShowProps = PageProps<{
+export interface BoardShowProps {
+  auth: { user: User | null }
   board: Board
   columns: ColumnWithCards[]
   permission: Permission
-}>
+}
 
 type ColumnWithCards = Column & { cards: Card[] }
 
@@ -54,7 +56,7 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
 
     window.Echo.join(`board.${board.id}`)
       .here((users: User[]) => {
-        setActiveUsers(users.filter((user) => user.id !== auth.user.id))
+        setActiveUsers(auth.user !== null ? users.filter((user) => user.id !== auth.user?.id) : users)
       })
       .joining((user: User) => {
         setActiveUsers((prev) => {
@@ -72,7 +74,7 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
       })
 
     window.Echo.private(`board.${board.id}`)
-      .listen('BoardChangedEvent', (e: any) => {
+      .listen('BoardChangedEvent', () => {
         router.reload()
       })
   }, [])
@@ -90,8 +92,8 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
     return ColumnPosition.Middle
   }
 
-  return (
-    <MainLayout user={auth.user}>
+  const Content = (): JSX.Element => (
+    <>
       <Head title={board.name}/>
       <section className="flex-1 flex flex-col">
         <header className="px-6 pt-8 pb-2 flex justify-between">
@@ -201,6 +203,18 @@ export default function Show ({ auth, board, columns, permission }: BoardShowPro
           cardId={editingCard}
         />
       </section>
-    </MainLayout>
+    </>
   )
+
+  return auth.user !== null
+    ? (
+      <MainLayout user={auth.user}>
+        <Content />
+      </MainLayout>
+      )
+    : (
+      <GuestableMainLayout>
+        <Content />
+      </GuestableMainLayout>
+      )
 }

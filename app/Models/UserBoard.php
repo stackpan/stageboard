@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|UserBoard whereBoardId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserBoard whereOpenedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserBoard whereUserId($value)
+ * @property BoardPermission $permission
+ * @method static \Illuminate\Database\Eloquent\Builder|UserBoard wherePermission($value)
  * @mixin \Eloquent
  */
 class UserBoard extends Pivot

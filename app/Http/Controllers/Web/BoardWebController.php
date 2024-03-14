@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Dto\BoardDto;
+use App\Dto\CreateBoardDto;
+use App\Dto\UpdateBoardDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BoardRequest;
+use App\Http\Requests\CreateBoardRequest;
+use App\Http\Requests\UpdateBoardRequest;
 use App\Http\Resources\BoardResource;
 use App\Models\Board;
 use App\Services\BoardService;
@@ -24,13 +26,13 @@ class BoardWebController extends Controller
         return new BoardResource($board);
     }
 
-    public function store(BoardRequest $request): RedirectResponse
+    public function store(CreateBoardRequest $request): RedirectResponse
     {
         $user = $request->user();
 
         $validated = $request->validated();
 
-        $data = new BoardDto(
+        $data = new CreateBoardDto(
             name: $validated['name'],
         );
 
@@ -39,12 +41,13 @@ class BoardWebController extends Controller
         return to_route('web.page.board.show', $board->alias_id);
     }
 
-    public function update(BoardRequest $request, Board $board): RedirectResponse
+    public function update(UpdateBoardRequest $request, Board $board): RedirectResponse
     {
         $validated = $request->validated();
 
-        $data = new BoardDto(
+        $data = new UpdateBoardDto(
             name: $validated['name'],
+            isPublic: $validated['isPublic']
         );
 
         $this->boardService->update($board, $data);

@@ -33,6 +33,7 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+    Route::get('/board/{boardAlias}/public', [BoardPageController::class, 'showPublic'])->name('web.page.board.show.public');
 });
 
 Route::middleware('auth')->group(function () {

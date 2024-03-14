@@ -2,7 +2,8 @@
 
 namespace App\Services\Impl;
 
-use App\Dto\BoardDto;
+use App\Dto\CreateBoardDto;
+use App\Dto\UpdateBoardDto;
 use App\Models\Board;
 use App\Models\User;
 use App\Repositories\BoardRepository;
@@ -28,7 +29,7 @@ class BoardServiceImpl implements BoardService
     /**
      * @throws Throwable
      */
-    public function create(User $user, BoardDto $data): Board
+    public function create(User $user, CreateBoardDto $data): Board
     {
         return DB::transaction(fn () => $this->boardRepository->create($user, $data));
     }
@@ -46,7 +47,7 @@ class BoardServiceImpl implements BoardService
     /**
      * @throws Throwable
      */
-    public function update(Board $board, BoardDto $data): void
+    public function update(Board $board, UpdateBoardDto $data): void
     {
         DB::transaction(fn () => $this->boardRepository->update($board, $data));
     }

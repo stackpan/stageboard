@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * App\Models\Show
+ * App\Models\Board
  *
  * @property string $id
  * @property string $alias_id
@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $owner_id
+ * @property bool $is_public
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Column> $columns
  * @property-read int|null $columns_count
  * @property-read \App\Models\User $owner
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereAliasId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Board whereIsPublic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Board whereThumbnailUrl($value)
@@ -46,6 +48,10 @@ class Board extends Model
 
     protected $fillable = [
         'name',
+    ];
+
+    protected $casts = [
+        'is_public' => 'boolean'
     ];
 
     protected $dispatchesEvents = [
