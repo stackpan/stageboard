@@ -48,6 +48,7 @@ class Board extends Model
 
     protected $fillable = [
         'name',
+        'is_public'
     ];
 
     protected $casts = [

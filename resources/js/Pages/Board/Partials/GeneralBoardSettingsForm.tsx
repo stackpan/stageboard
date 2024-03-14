@@ -1,6 +1,6 @@
 import React, { type FormEventHandler, type JSX } from 'react'
 import BoardSettingSectionLayout from '@/Layouts/BoardSettingSectionLayout'
-import { useForm, usePage } from '@inertiajs/react'
+import {router, useForm, usePage} from '@inertiajs/react'
 import { type BoardSettingsProps } from '@/Pages/Board/Settings'
 
 interface Props {
@@ -59,12 +59,11 @@ export default function GeneralBoardSettingsForm ({ className = '' }: Props): JS
               type="checkbox"
               className="checkbox"
               checked={data.isPublic}
-              onChange={(e) => {
-                e.preventDefault()
-                patch(route('web.boards.update', board.id), {
-                  onBefore: () => {
-                    setData('isPublic', e.target.checked)
-                  }
+              onChange={(event) => {
+                setData('isPublic', event.target.checked)
+                router.patch(route('web.boards.update', board.id), {
+                  ...data,
+                  isPublic: event.target.checked
                 })
               }}
             />
