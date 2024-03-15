@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react'
 import React, { useState } from 'react'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 
-export default function GuestableNavbar (): JSX.Element {
+export default function GuestNavbar (): JSX.Element {
   const [activeModal, setActiveModal] = useState(false)
 
   return (

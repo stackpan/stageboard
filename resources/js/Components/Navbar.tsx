@@ -1,6 +1,6 @@
 import { type User } from '@/types'
 import { Link, router } from '@inertiajs/react'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 
 interface Props {

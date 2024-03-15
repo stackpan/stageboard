@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,7 +43,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e): JsonResponse | Response | RedirectResponse
+    public function render($request, Throwable $e): JsonResponse | Response | RedirectResponse | InertiaResponse
     {
         if ($request->is('api/*')) {
             if ($e instanceof RecordsNotFoundException) {
@@ -58,6 +60,12 @@ class Handler extends ExceptionHandler
                     ->json([
                         'message' => $e->getMessage(),
                     ], 400);
+            }
+        }
+
+        if ($this->isHttpException($e)) {
+            if ($e->getStatusCode() === 404) {
+                return Inertia::render('NotFound');
             }
         }
 

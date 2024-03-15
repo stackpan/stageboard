@@ -1,14 +1,18 @@
 import React, { type PropsWithChildren } from 'react'
-import GuestableNavbar from '@/Components/GuestableNavbar'
+import GuestNavbar from '@/Components/GuestNavbar'
+import { type User } from '@/types'
+import Navbar from '@/Components/Navbar'
 
 interface Props {
+  user?: User
   headerTitle?: string
+  className?: string
 }
 
-export default function GuestableMainLayout ({ headerTitle, children }: PropsWithChildren<Props>): JSX.Element {
+export default function GuestableMainLayout ({ headerTitle, children, user, className }: PropsWithChildren<Props>): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col">
-      <GuestableNavbar />
+      {user !== undefined ? <Navbar user={user} /> : <GuestNavbar />}
 
       {headerTitle !== undefined && (
         <header className="px-6 pt-8 pb-2">
@@ -16,7 +20,7 @@ export default function GuestableMainLayout ({ headerTitle, children }: PropsWit
         </header>
       )}
 
-      <main className="flex-1 flex flex-col">{children}</main>
+      <main className={`flex-1 flex flex-col ${className}`}>{children}</main>
     </div>
   )
 }
