@@ -2,17 +2,19 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Database\RecordsNotFoundException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use Throwable;
+use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
-use Throwable;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\RecordsNotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -41,6 +43,10 @@ class Handler extends ExceptionHandler
                 'message' => $e->getMessage(),
             ], $e->getCode());
         });
+
+        $this->renderable(function (NotFoundHttpException $e, Request $request) {
+            return Inertia::render('NotFound');
+        });
     }
 
     public function render($request, Throwable $e): JsonResponse | Response | RedirectResponse | InertiaResponse
@@ -60,12 +66,6 @@ class Handler extends ExceptionHandler
                     ->json([
                         'message' => $e->getMessage(),
                     ], 400);
-            }
-        }
-
-        if ($this->isHttpException($e)) {
-            if ($e->getStatusCode() === 404) {
-                return Inertia::render('NotFound');
             }
         }
 
