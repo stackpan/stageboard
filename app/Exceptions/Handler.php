@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Http\Resources\UserResource;
 use Throwable;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -12,8 +13,8 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\RecordsNotFoundException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -44,8 +45,21 @@ class Handler extends ExceptionHandler
             ], $e->getCode());
         });
 
-        $this->renderable(function (NotFoundHttpException $e, Request $request) {
-            return Inertia::render('NotFound');
+        $this->renderable(function (HttpException $e, Request $request) {
+            if (!app()->environment(['local', 'testing']) && in_array($e->getStatusCode(), [403, 404, 500, 503])) {
+                return Inertia::render('Error', [
+                    'auth' => [
+                        'user' => is_null($request->user()) ? null : new UserResource($request->user()),
+                    ],
+                    'status' => $e->getStatusCode()
+                ])
+                ->toResponse($request)
+                ->setStatusCode($e->getStatusCode());
+            } else if ($e->getStatusCode() === 419) {
+                return back()->with([
+                    'message' => 'The page is expired, please try again',
+                ]);
+            }
         });
     }
 

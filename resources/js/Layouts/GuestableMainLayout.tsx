@@ -4,7 +4,7 @@ import { type User } from '@/types'
 import Navbar from '@/Components/Navbar'
 
 interface Props {
-  user?: User
+  user?: User | null
   headerTitle?: string
   className?: string
 }
@@ -12,7 +12,7 @@ interface Props {
 export default function GuestableMainLayout ({ headerTitle, children, user, className }: PropsWithChildren<Props>): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col">
-      {user !== undefined ? <Navbar user={user} /> : <GuestNavbar />}
+      {user !== undefined && user !== null ? <Navbar user={user} /> : <GuestNavbar />}
 
       {headerTitle !== undefined && (
         <header className="px-6 pt-8 pb-2">
